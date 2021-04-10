@@ -33,18 +33,19 @@ def on_disconnect():
 
 @socketio.on('send')
 def getSend(data):
-    socketio.emit('send', {data}, broadcast=True)
+    print(data)
+    socketio.emit('send', data, broadcast=True, room=data['room'])
 
 # server side code
-@socketio.on('create')
-def getRoom(data):
+@socketio.on('joinRoom')
+def joinRoom(data):
     join_room(data['room'])
-    socketio.emit('create', {'msg': "New user joined" + data['room']}, broadcast=True, room=data['room'])
+    socketio.emit('joinRoom', {'msg': "New user joined" + data['userName']}, broadcast=True, room=data['room'])
 
-@socketio.on('leave')
-def getLeave(data):
+@socketio.on('leaveRoom')
+def leaveRoom(data):
     leave_room(data['room'])
-    socketio.send({'msg': "user left" + data['room']}, room=data['room'])
+    socketio.emit('leaveRoom', {'msg': data['userName'] + "left"}, broadcast=True, room=data['room'])
 
 app.run(
     host=os.getenv('IP', '0.0.0.0'),
