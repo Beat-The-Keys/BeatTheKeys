@@ -1,16 +1,16 @@
 import logo from './logo.svg';
 import { React, useState, useEffect } from 'react';
 import './App.css';
-import Multiplayer from './Multiplayer.js'
+import Home from './Home.js'
+import io from 'socket.io-client';
+export const socket = io(); // Connects to socket connection
+
 
 function App() {
-  const [joinMulti, isJoinMulti] = useState(false)
+
   return (
     <div className="App">
-      {joinMulti
-          ? <Multiplayer userName="Akash"/>
-          : <button onClick={()=>isJoinMulti(true)}>Join Game</button>
-      }
+      <Home userName="Akash"/>
 
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />

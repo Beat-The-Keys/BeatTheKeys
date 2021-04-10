@@ -1,6 +1,6 @@
 import os
-from flask import Flask, send_from_directory, json
-from flask_socketio import SocketIO, join_room, leave_room
+from flask import Flask, send_from_directory, json, session
+from flask_socketio import SocketIO, join_room, leave_room, rooms
 from flask_cors import CORS
 
 app = Flask(__name__, static_folder='./build/static')
@@ -34,12 +34,14 @@ def on_disconnect():
 @socketio.on('send')
 def getSend(data):
     print(data)
+    print("send\n\n", rooms(), "\n\n")
     socketio.emit('send', data, broadcast=True, room=data['room'])
 
 # server side code
 @socketio.on('joinRoom')
 def joinRoom(data):
     join_room(data['room'])
+    print("join\n\n", rooms(), "\n\n")
     socketio.emit('joinRoom', {'msg': "New user joined" + data['userName']}, broadcast=True, room=data['room'])
 
 @socketio.on('leaveRoom')
