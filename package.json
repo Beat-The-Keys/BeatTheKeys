@@ -4,6 +4,7 @@
     "@testing-library/react": "^11.2.5",
     "@testing-library/user-event": "^12.6.3",
     "bootstrap": "^4.6.0",
+    "@xendora/react-timer": "^1.1.0",
     "prettier": "^2.2.1",
     "react": "^17.0.1",
     "react-bootstrap": "^1.5.2",
