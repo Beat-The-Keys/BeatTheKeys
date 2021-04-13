@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import GoogleLogin from 'react-google-login';
+import MainGameScreen from './MainGameScreen.js';
 
 export function Login(){
   const [isLoggedIn, changeIsLoggedIn] = useState(false);
@@ -27,10 +28,8 @@ export function Login(){
   }
   if(isLoggedIn){ // this is where we will render main menu component
       return (
-    <div>
-    Hello {name}!!
-    </div>
-    );
+        <MainGameScreen name={name}/> // for now, just render the main game after logging in
+      );
   }
 }
 
