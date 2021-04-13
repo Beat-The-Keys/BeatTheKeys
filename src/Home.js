@@ -13,7 +13,7 @@ export default function Home({userName}) {
           : <div> "Home Page"
             <br/>
             <button onClick={()=>{
-              socket.emit('joinRoom', {userName, room})
+              socket.emit('joinRoom', {userName, room, join:true})
               isJoinMulti(true)}}>Join Game</button>
             </div>
       }

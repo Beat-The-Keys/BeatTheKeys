@@ -42,7 +42,7 @@ def getSend(data):
 def joinRoom(data):
     join_room(data['room'])
     print("join\n\n", rooms(), "\n\n")
-    socketio.emit('joinRoom', {'msg': "New user joined" + data['userName']}, broadcast=True, room=data['room'])
+    socketio.emit('joinRoom', {'msg': "New user joined" + data['userName'], 'join':data['room']}, broadcast=True, room=data['room'])
 
 @socketio.on('leaveRoom')
 def leaveRoom(data):
