@@ -6,9 +6,8 @@ import UserList from './UserList.js'
 export default function GamePage({userName,room}) {
   const [join, setJoin] = useState(false)
   const [users, setUsers] = useState([])
-
    useEffect(()=>{
-      socket.emit('send', {userName, room, msg:"hello"})
+     socket.emit('send', {userName, room, msg:"hello"})
       socket.on('send', (data)=>{
           console.log(data)
       })
@@ -17,7 +16,7 @@ export default function GamePage({userName,room}) {
         setUsers(data.users)
         setJoin(true)
       })
-    }, [])
+    }, [room, userName])
   return (
     <div>
       The Game
