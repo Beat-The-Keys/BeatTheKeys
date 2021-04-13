@@ -9,7 +9,7 @@ export default function Home({userName}) {
   return (
     <div>
       {joinMulti
-          ? <GamePage userName="Akash" room={room}/>
+          ? <GamePage userName={userName} room={room}/>
           : <div> "Home Page"
             <br/>
             <button onClick={()=>{
