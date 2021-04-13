@@ -1,1 +1,17 @@
 Flask
+Flask-Cors
+Flask-Migrate
+Flask-SocketIO
+Flask-SQLAlchemy
+psycopg2-binary
+pylint
+pylint-django
+pylint-flask
+pylint-flask-sqlalchemy
+pylint-plugin-utils
+python-dotenv
+python-editor
+python-engineio
+python-socketio
+requests
+SQLAlchemy
