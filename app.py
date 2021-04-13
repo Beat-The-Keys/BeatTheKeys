@@ -37,12 +37,14 @@ def getSend(data):
     print("send\n\n", rooms(), "\n\n")
     socketio.emit('send', data, broadcast=True, room=data['room'])
 
+users = []
 # server side code
 @socketio.on('joinRoom')
 def joinRoom(data):
     join_room(data['room'])
+    users.append(data['userName'])
     print("join\n\n", rooms(), "\n\n")
-    socketio.emit('joinRoom', {'msg': "New user joined" + data['userName'], 'join':data['room']}, broadcast=True, room=data['room'])
+    socketio.emit('joinRoom', {'msg': "New user joined" + data['userName'], 'users':users}, broadcast=True, room=data['room'])
 
 @socketio.on('leaveRoom')
 def leaveRoom(data):
