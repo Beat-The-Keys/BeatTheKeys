@@ -3,7 +3,6 @@ import {Toast} from 'react-bootstrap';
 
 export default function JoinToast({userName}) {
     const [showToast, setToast] = useState(true);
-    console.log('userName')
   return (
     <div>
         <Toast onClose={() => setToast(false)} show={showToast} delay={2000} autohide>

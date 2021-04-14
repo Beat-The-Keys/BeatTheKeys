@@ -1,7 +1,7 @@
 """This is the main app that serves as a server for all the clients"""
 import os
 from flask import Flask, send_from_directory, json
-from flask_socketio import SocketIO, join_room, leave_room, rooms
+from flask_socketio import SocketIO, join_room, leave_room
 from flask_cors import CORS
 
 APP = Flask(__name__, static_folder='./build/static')
@@ -29,8 +29,10 @@ USERS = {
 }
 
 @socketio.on('getUsers')
-def get_send(data):
+def get_users(data):
     '''Send data to all the clients'''
+
+    #if the players is not in the every active player list add it
     if(data['playerName'] not in USERS['everyone']):
         USERS['everyone'].append(data['playerName'])
 
@@ -41,22 +43,25 @@ USER_STATS = {}
 @socketio.on('joinRoom')
 def join_rooms(data):
     '''Put the user in a specified room'''
+
     #Join the specified room
     join_room(data['room'])
+
+    #if the 'room' is not in the USERS dic then add it
     if(data['room'] not in USERS):
         USERS[data['room']] = []
 
+    #if the player is not in the rooms list, add it
     if(data['playerName'] not in USERS[data['room']]):
         USERS[data['room']].append(data['playerName'])
 
-    print("join", USERS, '\n\n')
-    USER_STATS[data['playerName']] = 0
-    print("join\n\n", rooms(), "\n\n")
 
 
 @socketio.on('playerStats')
 def get_player_stats(data):
     '''A client sends their WPM and the server sends the updated stats to all clients'''
+
+    #update the currents users wpm
     USER_STATS[data['playerName']] = data['wpm']
     print(USER_STATS)
     socketio.emit('playerStats', {'playerStats': USER_STATS}, broadcast=True, room=data['room'])
@@ -64,12 +69,14 @@ def get_player_stats(data):
 @socketio.on('leaveRoom')
 def leave_rooms(data):
     '''User leaves the room'''
+
     leave_room(data['room'])
 
     #get the users index in a given room, and get rid of it
     USER_INDEX = USERS[data['room']].index(data['playerName'])
     USERS[data['room']].pop(USER_INDEX)
 
+    #get rid of the wpm for the user that left
     USER_STATS.pop(data['playerName'])
 
     socketio.emit('playerStats', {'playerStats': USER_STATS}, broadcast=True, room=data['room'])
