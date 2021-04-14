@@ -11,26 +11,36 @@ export default function Home ({playerName}) {
   const [activePlayers, setActivePlayers] = useState([])
   const room = 'Multiplayer'
 
+  const leaveRoom = ()=>{
+    socket.emit('leaveRoom', {playerName, room})
+    setPlayerJoinedMultiplayer(false)
+  }
+
+  const joinRoom = ()=>{
+    socket.emit('joinRoom', {playerName, room})
+    setPlayerJoinedMultiplayer(true)
+  }
   useEffect(() => {
-    socket.emit('joinRoom', {'playerName': playerName, 'room': room});
-    socket.on('joinRoom', (data) => {
-      setActivePlayers(data.users);
+    socket.emit('getUsers', {playerName})
+    socket.on('getUsers', (data)=>{
+      setActivePlayers(data);
     })
-  }, [])
+  }, [playerName])
 
   return (
     <div>
-      { playerJoinedMultiplayer 
+      { playerJoinedMultiplayer
       ? <div>
-          <MainGameScreen playerName={playerName} socket={socket} room={room}/>   
+          <button onClick={leaveRoom}>Back to Home-Screen</button>
+          <MainGameScreen playerName={playerName} socket={socket} room={room}/>
           <PlayerStats socket={socket}/>
         </div>
       : <div>
           Hi, {playerName}! Welcome to your lobby.
           <br></br>
-          Current players: 
+          Current players:
           <UserList users={activePlayers}/>
-          <button onClick={() => setPlayerJoinedMultiplayer(true)}> Join Game </button>
+          <button onClick={joinRoom}> Join Game </button>
         </div>
       }
     </div>
