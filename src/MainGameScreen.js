@@ -16,6 +16,7 @@ function MainGameScreen(props) {
     let currentMin = (60 - timeLeft) / 60;
     let wpm = currentMin === 0 ? 0 : Math.round(entries / currentMin);
     setWpm(wpm);
+    props.socket.emit('playerStats', {'playerName': props.playerName, 'wpm': wpm, 'room': props.room});
   }, [highlightedStopIndex, timeLeft])
 
   function onTextChanged() {
@@ -36,7 +37,7 @@ function MainGameScreen(props) {
 
   return (
     <div className="App">
-        <h1>Welcome, {props.name} </h1>
+      <h1>Welcome, {props.name} </h1>
       <div className="Prompt">
         {promptJSX()}
       </div>
