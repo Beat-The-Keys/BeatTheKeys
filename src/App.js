@@ -1,13 +1,8 @@
 import './App.css';
-import { Login } from './LoginScreen.js';
-import io from 'socket.io-client';
-export const socket = io(); // Connects to socket connection
+import LoginScreen from './LoginScreen.js';
 
-function App() {
-
+export default function App() {
   return (
-    <Login/>
+    <LoginScreen />
   );
 }
-
-export default App;

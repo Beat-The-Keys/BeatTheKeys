@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
 import GoogleLogin from 'react-google-login';
-import Home from './Home.js';
+import HomeScreen from './HomeScreen.js';
 
-export function Login(){
+export default function LoginScreen (){
   const [isLoggedIn, changeIsLoggedIn] = useState(false);
-  const [name, setName] = useState("");
+  const [playerName, setPlayerName] = useState("");
 
   function responseGoogle(response){
     console.log(response);
     console.log(response.profileObj);
-    setName(response.profileObj.name);
+    setPlayerName(response.profileObj.name);
     changeIsLoggedIn(true);
   }
 
-  if(!isLoggedIn){
+  if (!isLoggedIn) {
     return (
     <div>
       <meta name="google-signin-client_id" content="427706489011-6rshj7squ73369r4n830rl8cch7q86f2.apps.googleusercontent.com"/>
@@ -26,11 +26,9 @@ export function Login(){
     </div>
     );
   }
-  if(isLoggedIn){ // this is where we will render main menu component
+  if (isLoggedIn) { // This is where we will render main menu component
       return (
-        <Home userName={name}/> // for now, just render the main game after logging in
+        <HomeScreen playerName={playerName}/>
       );
   }
 }
-
-export default Login;

@@ -32,17 +32,26 @@ def get_send(data):
     socketio.emit('send', data, broadcast=True, room=data['room'])
 
 USERS = []
+USER_STATS = {}
 # server side code
 @socketio.on('joinRoom')
 def join_rooms(data):
     '''Put the user in a specified room'''
     join_room(data['room'])
-    USERS.append(data['userName'])
+    USERS.append(data['playerName'])
+    USER_STATS[data['playerName']] = 0
     print("join\n\n", rooms(), "\n\n")
     dic = {}
-    dic['msg'] = "New user joined" + data['userName']
+    dic['msg'] = "New user joined" + data['playerName']
     dic['users'] = USERS
     socketio.emit('joinRoom', dic, broadcast=True, room=data['room'])
+
+@socketio.on('playerStats')
+def get_player_stats(data):
+    '''A client sends their WPM and the server sends the updated stats to all clients'''
+    USER_STATS[data['playerName']] = data['wpm']
+    print(USER_STATS)
+    socketio.emit('playerStats', {'playerStats': USER_STATS}, broadcast=True, room=data['room'])
 
 @socketio.on('leaveRoom')
 def leave_rooms(data):
