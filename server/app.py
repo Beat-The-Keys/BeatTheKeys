@@ -1,7 +1,7 @@
 """This is the main app that serves as a server for all the clients"""
 import os
 from flask import Flask, send_from_directory, json
-from flask_socketio import SocketIO, join_room, leave_room
+from flask_socketio import SocketIO, join_room, leave_room, rooms
 from flask_cors import CORS
 from collections import OrderedDict
 
@@ -25,8 +25,8 @@ def on_disconnect():
     '''When someone disconnects to the server'''
     print('User disconnected!')
 
-ROOMS = {} 
-''' 
+ROOMS = {}
+'''
 ROOMS contains a dictionary of room ids, which maps to an ordered dictionary of player stats.
 Ex: ROOMS[1234] = {
         'John': 97
@@ -41,7 +41,7 @@ def assign_player_to_lobby(data):
     player_name = data['playerName']
     room = data['room']
 
-    # If assign_player_to_lobby is called with an empty room ID, this user is joining for the first time. 
+    # If assign_player_to_lobby is called with an empty room ID, this user is joining for the first time.
     # In the future, we will generate an ID for them. For now, all players join the "Multiplayer" room.
 
     if room == "":
@@ -57,7 +57,7 @@ def assign_player_to_lobby(data):
     # If the player is not in the room then add them
     if player_name not in ROOMS[room]:
         ROOMS[room][player_name] = 0
-    socketio.emit('assignPlayerToLobby', {'activePlayers': list(ROOMS[room].keys()), 'room': room}, room=room) 
+    socketio.emit('assignPlayerToLobby', {'activePlayers': list(ROOMS[room].keys()), 'room': room}, room=room)
 
 @socketio.on('updatePlayerStats')
 def update_player_stats(data):
@@ -74,9 +74,25 @@ def remove_player_from_lobby(data):
     room = data['room']
     player_name = data['playerName']
     # Remove the player from the room
-    ROOMS[room].pop(player_name, None)
-    socketio.emit('removePlayerFromLobby', {'activePlayers': list(ROOMS[room].keys()), 'room': room}, room=room) 
+    ROOMS[room].pop(player_name)
+    socketio.emit('removePlayerFromLobby', {'activePlayers': list(ROOMS[room].keys()), 'room': room}, room=room)
     leave_room(room)
+
+@socketio.on('logout')
+def logout_player(data):
+    '''User logouts out of the entire game'''
+    player_name = data['playerName']
+
+    for i in rooms(): #For each room the user is in
+        if i in ROOMS and player_name in ROOMS[i]: #If the user is in the room and that room exists in list of ROOMS
+            ROOMS[i].pop(player_name) #Get rid of the user in that room
+            #Emit to all the users and get rid of that user if they in the room
+            socketio.emit('updatePlayerStats', {'playerStats': ROOMS[i]})
+            socketio.emit('assignPlayerToLobby', {'activePlayers': list(ROOMS[i].keys()), 'room': i})
+
+            leave_room(i) #Leave the room
+
+
 
 
 @APP.route('/', defaults={"filename": "index.html"})

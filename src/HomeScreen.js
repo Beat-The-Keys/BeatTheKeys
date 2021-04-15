@@ -1,10 +1,8 @@
 import { React, useState, useEffect } from 'react';
-import io from 'socket.io-client';
 import UserList from './UserList.js'
 import MainGameScreen from './MainGameScreen.js';
 import PlayerStats from './PlayerStats.js'
-
-export const socket = io(); // Connects to socket connection
+import {socket} from './LoginScreen'
 
 export default function Home ({playerName}) {
   const [playerStartedGame, setPlayerStartedGame] = useState(false) // State for joining multiplayer room or not
