@@ -3,6 +3,7 @@ import os
 from flask import Flask, send_from_directory, json
 from flask_socketio import SocketIO, join_room, leave_room
 from flask_cors import CORS
+from collections import OrderedDict
 
 APP = Flask(__name__, static_folder='./build/static')
 
@@ -24,62 +25,58 @@ def on_disconnect():
     '''When someone disconnects to the server'''
     print('User disconnected!')
 
-USERS = {
-    'everyone': []
+ROOMS = {} 
+''' 
+ROOMS contains a dictionary of room ids, which maps to an ordered dictionary of player stats.
+Ex: ROOMS[1234] = {
+        'John': 97
+        'Matt': 84
+    }
 }
+'''
 
-@socketio.on('getUsers')
-def get_users(data):
-    '''Send data to all the clients'''
-
-    #if the players is not in the every active player list add it
-    if(data['playerName'] not in USERS['everyone']):
-        USERS['everyone'].append(data['playerName'])
-
-    socketio.emit('getUsers', USERS['everyone'], broadcast=True)
-
-USER_STATS = {}
-# server side code
-@socketio.on('joinRoom')
-def join_rooms(data):
+@socketio.on('assignPlayerToLobby')
+def assign_player_to_lobby(data):
     '''Put the user in a specified room'''
+    player_name = data['playerName']
+    room = data['room']
 
-    #Join the specified room
-    join_room(data['room'])
+    # If assign_player_to_lobby is called with an empty room ID, this user is joining for the first time. 
+    # In the future, we will generate an ID for them. For now, all players join the "Multiplayer" room.
 
-    #if the 'room' is not in the USERS dic then add it
-    if(data['room'] not in USERS):
-        USERS[data['room']] = []
+    if room == "":
+        room = "Multiplayer"
 
-    #if the player is not in the rooms list, add it
-    if(data['playerName'] not in USERS[data['room']]):
-        USERS[data['room']].append(data['playerName'])
+    # Join the specified room
+    join_room(room)
 
+    # If the 'room' is not in ROOMS then add it
+    if room not in ROOMS:
+        ROOMS[room] = OrderedDict()
 
+    # If the player is not in the room then add them
+    if player_name not in ROOMS[room]:
+        ROOMS[room][player_name] = 0
+    socketio.emit('assignPlayerToLobby', {'activePlayers': list(ROOMS[room].keys()), 'room': room}, room=room) 
 
-@socketio.on('playerStats')
-def get_player_stats(data):
-    '''A client sends their WPM and the server sends the updated stats to all clients'''
+@socketio.on('updatePlayerStats')
+def update_player_stats(data):
+    '''A client sends their WPM and the server sends the updated stats to all clients in their room'''
+    room = data['room']
+    player_name = data['playerName']
+    wpm = data['wpm']
+    ROOMS[room][player_name] = wpm
+    socketio.emit('updatePlayerStats', {'playerStats': ROOMS[room]}, broadcast=True, room=room)
 
-    #update the currents users wpm
-    USER_STATS[data['playerName']] = data['wpm']
-    print(USER_STATS)
-    socketio.emit('playerStats', {'playerStats': USER_STATS}, broadcast=True, room=data['room'])
-
-@socketio.on('leaveRoom')
-def leave_rooms(data):
+@socketio.on('removePlayerFromLobby')
+def remove_player_from_lobby(data):
     '''User leaves the room'''
-
-    leave_room(data['room'])
-
-    #get the users index in a given room, and get rid of it
-    USER_INDEX = USERS[data['room']].index(data['playerName'])
-    USERS[data['room']].pop(USER_INDEX)
-
-    #get rid of the wpm for the user that left
-    USER_STATS.pop(data['playerName'])
-
-    socketio.emit('playerStats', {'playerStats': USER_STATS}, broadcast=True, room=data['room'])
+    room = data['room']
+    player_name = data['playerName']
+    # Remove the player from the room
+    ROOMS[room].pop(player_name, None)
+    socketio.emit('removePlayerFromLobby', {'activePlayers': list(ROOMS[room].keys()), 'room': room}, room=room) 
+    leave_room(room)
 
 
 @APP.route('/', defaults={"filename": "index.html"})

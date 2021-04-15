@@ -7,45 +7,32 @@ import PlayerStats from './PlayerStats.js'
 export const socket = io(); // Connects to socket connection
 
 export default function Home ({playerName}) {
-  //state for joining multiplayer room or not
-  const [playerJoinedMultiplayer, setPlayerJoinedMultiplayer] = useState(false)
-  //state list of all players in all the rooms
-  const [activePlayers, setActivePlayers] = useState([])
-  const room = 'Multiplayer'
+  const [playerStartedGame, setPlayerStartedGame] = useState(false) // State for joining multiplayer room or not
+  const [activePlayers, setActivePlayers] = useState([]) // State list of all players in all the rooms
+  const [room, setRoom] = useState(""); // State for keeping track of the room the player is in
 
-  const leaveRoom = ()=>{
-    //when someone clicks the leave room button
-    socket.emit('leaveRoom', {playerName, room})
-    setPlayerJoinedMultiplayer(false)
-  }
-
-  const joinRoom = ()=>{
-    //when someone clicks the join room button
-    socket.emit('joinRoom', {playerName, room})
-    setPlayerJoinedMultiplayer(true)
-  }
   useEffect(() => {
-    //get all the active users from all the room
-    socket.emit('getUsers', {playerName})
-    socket.on('getUsers', (data)=>{
-      setActivePlayers(data);
+    socket.emit('assignPlayerToLobby', {playerName, room});
+    socket.on('assignPlayerToLobby', (data) => {
+      setActivePlayers(data.activePlayers);
+      setRoom(data.room)
     })
   }, [playerName])
 
   return (
     <div>
-      { playerJoinedMultiplayer
+      { playerStartedGame
       ? <div>
-          <button onClick={leaveRoom}>Back to Home-Screen</button>
+          <button onClick={() => setPlayerStartedGame(false)}>Back to Home Screen</button>
           <MainGameScreen playerName={playerName} room={room}/>
-          <PlayerStats />
+          <PlayerStats socket={socket}/>
         </div>
       : <div>
           Hi, {playerName}! Welcome to your lobby.
           <br></br>
           Current players:
           <UserList users={activePlayers}/>
-          <button onClick={joinRoom}> Join Game </button>
+          <button onClick={() => setPlayerStartedGame(true)}> Start Game </button>
         </div>
       }
     </div>
