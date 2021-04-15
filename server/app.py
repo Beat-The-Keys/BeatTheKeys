@@ -41,7 +41,7 @@ def assign_player_to_lobby(data):
     player_name = data['playerName']
     room = data['room']
 
-    # If join_room is called with an empty room ID, this user is joining for the first time. 
+    # If assign_player_to_lobby is called with an empty room ID, this user is joining for the first time. 
     # In the future, we will generate an ID for them. For now, all players join the "Multiplayer" room.
 
     if room == "":
