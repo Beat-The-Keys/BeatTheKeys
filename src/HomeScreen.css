@@ -1,14 +1,22 @@
-table, th, td {
-  /* border: 1px solid black; */
-  border-collapse: collapse;
-}
-th, td {
-  padding: 20px;
+.gridC {
+    display: grid;
+    /* border: 1px solid black; */
+    grid-template-columns: repeat(2, 1fr);
 }
 
-.btn {
-    padding: 20px 30px;
-    font-size: 30px;
+#gridI {
+    /* border: 2px solid black; */
+}
+
+.flexC {
+    flex-direction: column;
+    display: flex;
+    align-items: center;
+}
+
+.flexI {
+    margin: 20px;
+    padding: 20px;
     border-radius: 10px;
-    width:70%;
+    width: 300px;
 }

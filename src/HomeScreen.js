@@ -49,22 +49,17 @@ export default function Home ({playerName}) {
           Current players:
           <UserList users={activePlayers}/>
           <center> <h1> BEAT THE KEYS! </h1> </center>
-          <table width="40%">
-            <tbody>
-            <tr>
-              <td> <center> <button onClick={joinRoom} type="button" class="btn btn-success">Join Game</button> </center> </td>
-            </tr>
-            <tr>
-              <td> <center> <button type="button" class="btn btn-primary">Invite Players</button> </center> </td>
-            </tr>
-            <tr>
-              <td> <center> <button type="button" class="btn btn-danger">Play Solo</button> </center> </td>
-            </tr>
-            <tr>
-              <td> <center> <button type="button" class="btn btn-warning">Achievements</button> </center> </td>
-            </tr>
-            </tbody>
-          </table>
+          <div className="gridC">
+              <div className="flexC" id="gridI">
+                <Button className="flexI" onClick={joinRoom} variant="success" size="lg">Join Game</Button>
+                <Button className="flexI" variant="primary" size="lg">Invite Players</Button>
+                <Button className="flexI" variant="danger" size="lg">Play Solo</Button>
+                <Button className="flexI" variant="warning" size="lg">Achievements</Button>
+              </div>
+            <div id="gridI">
+              <p>LeaderBoard</p>
+            </div>
+          </div>
         </div>
       }
     </div>
