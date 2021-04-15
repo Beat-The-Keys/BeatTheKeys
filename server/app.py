@@ -8,19 +8,19 @@ from collections import OrderedDict
 APP = Flask(__name__, static_folder='./build/static')
 
 cors = CORS(APP, resources={r"/*": {"origins": "*"}})
-socketio = SocketIO(APP,
+SOCKETIO = SocketIO(APP,
                     cors_allowed_origins="*",
                     json=json,
                     manage_session=False)
 
 # When a client connects from this Socket connection, this function is run
-@socketio.on('connect')
+@SOCKETIO.on('connect')
 def on_connect():
     '''When someone connects to the server'''
     print('User connected!')
 
 # When a client disconnects from this Socket connection, this function is run
-@socketio.on('disconnect')
+@SOCKETIO.on('disconnect')
 def on_disconnect():
     '''When someone disconnects to the server'''
     print('User disconnected!')
@@ -35,7 +35,7 @@ Ex: ROOMS[1234] = {
 }
 '''
 
-@socketio.on('assignPlayerToLobby')
+@SOCKETIO.on('assignPlayerToLobby')
 def assign_player_to_lobby(data):
     '''Put the user in a specified room'''
     player_name = data['playerName']
@@ -57,18 +57,19 @@ def assign_player_to_lobby(data):
     # If the player is not in the room then add them
     if player_name not in ROOMS[room]:
         ROOMS[room][player_name] = 0
-    socketio.emit('assignPlayerToLobby', {'activePlayers': list(ROOMS[room].keys()), 'room': room}, room=room)
 
-@socketio.on('updatePlayerStats')
+    SOCKETIO.emit('assignPlayerToLobby', {'activePlayers': list(ROOMS[room].keys()), 'room': room}, room=room) 
+
+@SOCKETIO.on('updatePlayerStats')
 def update_player_stats(data):
     '''A client sends their WPM and the server sends the updated stats to all clients in their room'''
     room = data['room']
     player_name = data['playerName']
     wpm = data['wpm']
     ROOMS[room][player_name] = wpm
-    socketio.emit('updatePlayerStats', {'playerStats': ROOMS[room]}, broadcast=True, room=room)
+    SOCKETIO.emit('updatePlayerStats', {'playerStats': ROOMS[room]}, broadcast=True, room=room)
 
-@socketio.on('removePlayerFromLobby')
+@SOCKETIO.on('removePlayerFromLobby')
 def remove_player_from_lobby(data):
     '''User leaves the room'''
     room = data['room']
@@ -76,6 +77,7 @@ def remove_player_from_lobby(data):
     # Remove the player from the room
     ROOMS[room].pop(player_name)
     socketio.emit('removePlayerFromLobby', {'activePlayers': list(ROOMS[room].keys()), 'room': room}, room=room)
+
     leave_room(room)
 
 @socketio.on('logout')
@@ -102,7 +104,9 @@ def index(filename):
     return send_from_directory('./build', filename)
 
 
-APP.run(
-    host=os.getenv('IP', '0.0.0.0'),
-    port=8081 if os.getenv('C9_PORT') else int(os.getenv('PORT', 8081)),
-)
+if __name__ == "__main__":
+    SOCKETIO.run(
+        APP,
+        host=os.getenv('IP', '0.0.0.0'),
+        port=8081 if os.getenv('C9_PORT') else int(os.getenv('PORT')),
+    )
