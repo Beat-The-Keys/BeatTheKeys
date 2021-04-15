@@ -3,6 +3,9 @@ import io from 'socket.io-client';
 import UserList from './UserList.js'
 import MainGameScreen from './MainGameScreen.js';
 import PlayerStats from './PlayerStats.js'
+import Button from 'react-bootstrap/Button';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './HomeScreen.css';
 
 export const socket = io(); // Connects to socket connection
 
@@ -45,7 +48,23 @@ export default function Home ({playerName}) {
           <br></br>
           Current players:
           <UserList users={activePlayers}/>
-          <button onClick={joinRoom}> Join Game </button>
+          <center> <h1> BEAT THE KEYS! </h1> </center>
+          <table width="40%">
+            <tbody>
+            <tr>
+              <td> <center> <button onClick={joinRoom} type="button" class="btn btn-success">Join Game</button> </center> </td>
+            </tr>
+            <tr>
+              <td> <center> <button type="button" class="btn btn-primary">Invite Players</button> </center> </td>
+            </tr>
+            <tr>
+              <td> <center> <button type="button" class="btn btn-danger">Play Solo</button> </center> </td>
+            </tr>
+            <tr>
+              <td> <center> <button type="button" class="btn btn-warning">Achievements</button> </center> </td>
+            </tr>
+            </tbody>
+          </table>
         </div>
       }
     </div>
