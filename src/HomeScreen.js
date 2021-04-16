@@ -8,10 +8,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './HomeScreen.css';
 import IconPick from './IconPick';
 
-// import { Modal } from 'react-bootstrap';
-// import 'emoji-mart/css/emoji-mart.css'
-// import { Picker } from 'emoji-mart'
-
 export const socket = io(); // Connects to socket connection
 
 export default function Home ({playerName}) {
@@ -40,10 +36,6 @@ export default function Home ({playerName}) {
     })
   }, [playerName])
   
-  // const [show, setShow] = useState(false);
-  // const handleClose = () => setShow(false);
-  // const handleShow = () => setShow(true);
-  
   return (
     <div>
       { playerJoinedMultiplayer
@@ -63,6 +55,7 @@ export default function Home ({playerName}) {
                 <Button className="flexI" onClick={joinRoom} variant="success" size="lg">Start Game</Button>
                 <Button className="flexI" variant="danger" size="lg">Join Game</Button>
                 <Button className="flexI" variant="warning" size="lg">Achievements</Button>
+                <button className="flexI" class="button">Logout</button>
               </div>
             <div id="gridI">
               <IconPick/>

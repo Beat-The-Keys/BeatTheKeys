@@ -21,3 +21,15 @@
     width: 400px;
     height: 100px;
 }
+
+.button {
+  background-color: crimson;
+  border-radius: 10px;
+  border: none;
+  color: white;
+  padding: 10px 30px;
+  text-align: center;
+  font-size: 40px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
