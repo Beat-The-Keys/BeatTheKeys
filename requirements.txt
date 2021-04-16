@@ -109,5 +109,4 @@ Werkzeug==1.0.1
 wrapt==1.12.1
 yapf==0.31.0
 yarl==1.6.3
-yarn==0.0.9
 zipp==3.4.0
