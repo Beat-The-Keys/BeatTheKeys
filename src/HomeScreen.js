@@ -6,6 +6,11 @@ import PlayerStats from './PlayerStats.js'
 import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './HomeScreen.css';
+import IconPick from './IconPick';
+
+// import { Modal } from 'react-bootstrap';
+// import 'emoji-mart/css/emoji-mart.css'
+// import { Picker } from 'emoji-mart'
 
 export const socket = io(); // Connects to socket connection
 
@@ -34,7 +39,11 @@ export default function Home ({playerName}) {
       setActivePlayers(data);
     })
   }, [playerName])
-
+  
+  // const [show, setShow] = useState(false);
+  // const handleClose = () => setShow(false);
+  // const handleShow = () => setShow(true);
+  
   return (
     <div>
       { playerJoinedMultiplayer
@@ -51,13 +60,12 @@ export default function Home ({playerName}) {
           <center> <h1> BEAT THE KEYS! </h1> </center>
           <div className="gridC">
               <div className="flexC" id="gridI">
-                <Button className="flexI" onClick={joinRoom} variant="success" size="lg">Join Game</Button>
-                <Button className="flexI" variant="primary" size="lg">Invite Players</Button>
-                <Button className="flexI" variant="danger" size="lg">Play Solo</Button>
+                <Button className="flexI" onClick={joinRoom} variant="success" size="lg">Start Game</Button>
+                <Button className="flexI" variant="danger" size="lg">Join Game</Button>
                 <Button className="flexI" variant="warning" size="lg">Achievements</Button>
               </div>
             <div id="gridI">
-              <p>LeaderBoard</p>
+              <IconPick/>
             </div>
           </div>
         </div>
