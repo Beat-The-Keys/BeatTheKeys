@@ -5,7 +5,7 @@ from flask_socketio import SocketIO, join_room, leave_room
 from flask_cors import CORS
 from collections import OrderedDict
 
-APP = Flask(__name__, static_folder='./build/static')
+APP = Flask(__name__, static_folder='./build', static_url_path='/')
 
 cors = CORS(APP, resources={r"/*": {"origins": "*"}})
 SOCKETIO = SocketIO(APP,
