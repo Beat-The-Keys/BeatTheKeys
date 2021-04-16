@@ -2,8 +2,13 @@ import { React, useState, useEffect } from 'react';
 import UserList from './UserList.js'
 import MainGameScreen from './MainGameScreen.js';
 import PlayerStats from './PlayerStats.js'
+import Button from 'react-bootstrap/Button';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './HomeScreen.css';
+import IconPick from './IconPick';
 import {GoogleLogout} from 'react-google-login';
 import {socket, client_id} from './LoginScreen'
+
 
 export default function Home ({playerName, responseGoogleLogout}) {
   const [playerStartedGame, setPlayerStartedGame] = useState(false) // State for joining multiplayer room or not
@@ -16,7 +21,6 @@ export default function Home ({playerName, responseGoogleLogout}) {
       setActivePlayers(data.activePlayers);
       setRoom(data.room)
     })
- 
   }, [playerName,room])
 
   return (
@@ -38,7 +42,18 @@ export default function Home ({playerName, responseGoogleLogout}) {
           <br></br>
           Current players:
           <UserList users={activePlayers}/>
-          <button onClick={() => setPlayerStartedGame(true)}> Start Game </button>
+          <center> <h1> BEAT THE KEYS! </h1> </center>
+          <div className="gridC">
+              <div className="flexC" id="gridI">
+                <Button className="flexI" onClick={() => setPlayerStartedGame(true)} variant="success" size="lg">Start Game</Button>
+                <Button className="flexI" variant="danger" size="lg">Join Game</Button>
+                <Button className="flexI" variant="warning" size="lg">Achievements</Button>
+                <button className="flexI" class="button">Logout</button>
+              </div>
+            <div id="gridI">
+              <IconPick/>
+            </div>
+          </div>
         </div>
       }
     </div>
