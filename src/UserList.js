@@ -4,7 +4,7 @@ export default function UserList({users}) {
   //print all the users from all the room
   return (
     <ListGroup>
-        {users.map((user)=>(<ListGroup.Item>{user}</ListGroup.Item>))}
+        {users.map((user, index)=>(<ListGroup.Item key={index}>{user}</ListGroup.Item>))}
     </ListGroup>
   );
 }

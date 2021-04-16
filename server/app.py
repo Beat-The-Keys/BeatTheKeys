@@ -58,7 +58,7 @@ def assign_player_to_lobby(data):
     if player_name not in ROOMS[room]:
         ROOMS[room][player_name] = 0
 
-    SOCKETIO.emit('assignPlayerToLobby', {'activePlayers': list(ROOMS[room].keys()), 'room': room}, room=room) 
+    SOCKETIO.emit('assignPlayerToLobby', {'activePlayers': list(ROOMS[room].keys()), 'room': room}, room=room)
 
 @SOCKETIO.on('updatePlayerStats')
 def update_player_stats(data):
@@ -76,26 +76,11 @@ def remove_player_from_lobby(data):
     player_name = data['playerName']
     # Remove the player from the room
     ROOMS[room].pop(player_name)
-    socketio.emit('removePlayerFromLobby', {'activePlayers': list(ROOMS[room].keys()), 'room': room}, room=room)
+    
+    SOCKETIO.emit('updatePlayerStats', {'playerStats': ROOMS[room]})
+    SOCKETIO.emit('assignPlayerToLobby', {'activePlayers': list(ROOMS[room].keys()), 'room': room}, room=room)
 
     leave_room(room)
-
-@socketio.on('logout')
-def logout_player(data):
-    '''User logouts out of the entire game'''
-    player_name = data['playerName']
-
-    for i in rooms(): #For each room the user is in
-        if i in ROOMS and player_name in ROOMS[i]: #If the user is in the room and that room exists in list of ROOMS
-            ROOMS[i].pop(player_name) #Get rid of the user in that room
-            #Emit to all the users and get rid of that user if they in the room
-            socketio.emit('updatePlayerStats', {'playerStats': ROOMS[i]})
-            socketio.emit('assignPlayerToLobby', {'activePlayers': list(ROOMS[i].keys()), 'room': i})
-
-            leave_room(i) #Leave the room
-
-
-
 
 @APP.route('/', defaults={"filename": "index.html"})
 @APP.route('/<path:filename>')
@@ -108,5 +93,5 @@ if __name__ == "__main__":
     SOCKETIO.run(
         APP,
         host=os.getenv('IP', '0.0.0.0'),
-        port=8081 if os.getenv('C9_PORT') else int(os.getenv('PORT')),
+        port=8081 if os.getenv('C9_PORT') else int(os.getenv('PORT', 8081)),
     )
