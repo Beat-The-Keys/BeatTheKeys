@@ -1,7 +1,7 @@
 """This is the main app that serves as a server for all the clients"""
 import os
 from flask import Flask, send_from_directory, json
-from flask_socketio import SocketIO, join_room, leave_room, rooms
+from flask_socketio import SocketIO, join_room, leave_room
 from flask_cors import CORS
 from collections import OrderedDict
 
@@ -75,8 +75,8 @@ def remove_player_from_lobby(data):
     room = data['room']
     player_name = data['playerName']
     # Remove the player from the room
-    ROOMS[room].pop(player_name)
-    
+    ROOMS[room].pop(player_name, None)
+
     SOCKETIO.emit('updatePlayerStats', {'playerStats': ROOMS[room]})
     SOCKETIO.emit('assignPlayerToLobby', {'activePlayers': list(ROOMS[room].keys()), 'room': room}, room=room)
 
