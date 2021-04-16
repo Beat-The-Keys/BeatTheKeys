@@ -5,7 +5,7 @@ from flask_socketio import SocketIO, join_room, leave_room
 from flask_cors import CORS
 from collections import OrderedDict
 
-APP = Flask(__name__, static_folder='./build', static_url_path='/')
+APP = Flask(__name__, static_folder='../build/static')
 
 cors = CORS(APP, resources={r"/*": {"origins": "*"}})
 SOCKETIO = SocketIO(APP,
@@ -83,7 +83,7 @@ def remove_player_from_lobby(data):
 @APP.route('/<path:filename>')
 def index(filename):
     """Tells python where our index file is that renders our React Components"""
-    return send_from_directory(APP.static_folder, filename)
+    return send_from_directory('../build', filename)
 
 
 if __name__ == "__main__":
