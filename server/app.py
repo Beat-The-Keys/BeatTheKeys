@@ -83,7 +83,7 @@ def remove_player_from_lobby(data):
 @APP.route('/<path:filename>')
 def index(filename):
     """Tells python where our index file is that renders our React Components"""
-    return send_from_directory('./build', filename)
+    return send_from_directory(APP.static_folder, filename)
 
 
 if __name__ == "__main__":
