@@ -1,33 +1,28 @@
 import React, { useRef, useState, useEffect} from 'react';
 import ReactTimer from "@xendora/react-timer";
-import {socket} from './HomeScreen'
 import './MainGameUI.css';
+import {socket} from './LoginScreen'
 
 const prompt = "One study examining 30 subjects, of varying different styles and expertise, has found minimal difference in typing speed between touch typists and self-taught hybrid typists. According to the study, 'The number of fingers does not determine typing speed... People using self-taught typing strategies were found to be as fast as trained typists... instead of the number of fingers, there are other factors that predict typing speed... fast typists... keep their hands fixed on one position, instead of moving them over the keyboard, and more consistently use the same finger to type a certain letter.' To quote doctoral candidate Anna Feit: 'We were surprised to observe that people who took a typing course, performed at similar average speed and accuracy, as those that taught typing to themselves and only used 6 fingers on average' (Wikipedia)";
 
 function MainGameScreen({playerName, room}) {
-  //input box when user types
-  const textboxRef = useRef();
-  //state for highlighting text to bold
-  const [highlightedStopIndex, setHighlightedStopIndex] = useState(0);
-  //state for calculating wpm
-  const [wpm, setWpm] = useState(0);
-  //sate for calculating time for wpm
-  const [timeLeft, setTimeLeft] = useState(60);
-  //state for when typing gets stated and stopped
-  const [typingBegan, setTypingBegan] = useState(false);
+  const textboxRef = useRef(); // Input box reference for when user types
+  const [highlightedStopIndex, setHighlightedStopIndex] = useState(0); // State for keeping track of the last character index to highlight in the prompt
+  const [wpm, setWpm] = useState(0); // State for calculating wpm
+  const [timeLeft, setTimeLeft] = useState(60); // State for keeping track of the time so that the wpm can be calculated
+  const [typingBegan, setTypingBegan] = useState(false); // State for checking if the userr started typing
 
   useEffect(() => {
-    //calculate wpm and set it in the state
+    // Calculate wpm and set it in the state
     let entries = highlightedStopIndex / 5;
     let currentMin = (60 - timeLeft) / 60;
     let wpm = currentMin === 0 ? 0 : Math.round(entries / currentMin);
     setWpm(wpm);
-    socket.emit('playerStats', {'playerName': playerName, 'wpm': wpm, 'room': room});
+    socket.emit('updatePlayerStats', {'playerName': playerName, 'wpm': wpm, 'room': room});
   }, [highlightedStopIndex, playerName, room, timeLeft])
 
   function onTextChanged() {
-    //called when user starts typing
+    // Called when user starts typing
     setTypingBegan(true);
     if (prompt.startsWith(textboxRef.current.value)) {
       setHighlightedStopIndex(textboxRef.current.value.length);
@@ -35,12 +30,12 @@ function MainGameScreen({playerName, room}) {
   }
 
   function promptJSX() {
-    //highlight the text
+    // Highlight the text
     return (<p><b>{prompt.substring(0, highlightedStopIndex)}</b>{prompt.substring(highlightedStopIndex)}</p>);
   }
 
   function handleTime(t) {
-    //calculate the time
+    // Decrement the timer and set the timeLeft state
     setTimeLeft(t);
     return t-1;
   }

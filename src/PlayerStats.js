@@ -1,20 +1,18 @@
 import { React, useState, useEffect } from 'react';
-import {socket} from './HomeScreen'
 
-export default function PlayerStats () {
-  //state to keep track of all the active users wpm
-  const [activePlayerStats, setActivePlayerStats] = useState({})
+export default function PlayerStats ({socket}) {
+  const [activePlayerStats, setActivePlayerStats] = useState({}) // State to keep track of all the active users wpm
 
   useEffect( ()=> {
-    socket.on('playerStats', (data) => {
+    socket.on('updatePlayerStats', (data) => {
       setActivePlayerStats(data.playerStats);
     })
-  }, [])
+  }, [socket])
 
   return ( // We can eventually replace this with a chart
     <ul>
-      { Object.entries(activePlayerStats).map(([key, index]) => {
-        return <li key={index}><b>{key}:</b> {activePlayerStats[key]}</li>
+      { Object.entries(activePlayerStats).map(([key]) => {
+        return <li key={key}><b>{key}:</b> {activePlayerStats[key]}</li>
       })}
     </ul>
   );
