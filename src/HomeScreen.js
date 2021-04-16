@@ -1,12 +1,11 @@
 import { React, useState, useEffect } from 'react';
-import io from 'socket.io-client';
 import UserList from './UserList.js'
 import MainGameScreen from './MainGameScreen.js';
 import PlayerStats from './PlayerStats.js'
+import {GoogleLogout} from 'react-google-login';
+import {socket, client_id} from './LoginScreen'
 
-export const socket = io(); // Connects to socket connection
-
-export default function Home ({playerName}) {
+export default function Home ({playerName, responseGoogleLogout}) {
   const [playerStartedGame, setPlayerStartedGame] = useState(false) // State for joining multiplayer room or not
   const [activePlayers, setActivePlayers] = useState([]) // State list of all players in all the rooms
   const [room, setRoom] = useState(""); // State for keeping track of the room the player is in
@@ -17,10 +16,17 @@ export default function Home ({playerName}) {
       setActivePlayers(data.activePlayers);
       setRoom(data.room)
     })
-  }, [playerName])
+ 
+  }, [playerName,room])
 
   return (
     <div>
+      <GoogleLogout
+        clientId={client_id}
+        buttonText="Logout"
+        onFailure={()=>responseGoogleLogout(room)}
+        onLogoutSuccess={()=>responseGoogleLogout(room)}
+        />
       { playerStartedGame
       ? <div>
           <button onClick={() => setPlayerStartedGame(false)}>Back to Home Screen</button>

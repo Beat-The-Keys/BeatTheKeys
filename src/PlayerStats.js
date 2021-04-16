@@ -7,11 +7,11 @@ export default function PlayerStats ({socket}) {
     socket.on('updatePlayerStats', (data) => {
       setActivePlayerStats(data.playerStats);
     })
-  }, [])
+  }, [socket])
 
   return ( // We can eventually replace this with a chart
     <ul>
-      { Object.entries(activePlayerStats).map(([key, index]) => {
+      { Object.entries(activePlayerStats).map(([key]) => {
         return <li key={key}><b>{key}:</b> {activePlayerStats[key]}</li>
       })}
     </ul>
