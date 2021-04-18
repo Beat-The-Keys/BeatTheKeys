@@ -1,7 +1,7 @@
 """This is the main app that serves as a server for all the clients"""
 import os
 from collections import OrderedDict
-from flask import Flask, send_from_directory, json
+from flask import Flask, send_from_directory, json, request
 from flask_socketio import SocketIO, join_room, leave_room
 from flask_cors import CORS
 from dotenv import load_dotenv, find_dotenv
@@ -25,6 +25,10 @@ SOCKETIO = SocketIO(APP,
                     cors_allowed_origins="*",
                     json=json,
                     manage_session=False)
+SESSIONS = {}
+'''
+SESSIONS contains a dictionary of session ids which map to corresponding player names.
+'''
 
 # When a client connects from this Socket connection, this function is run
 @SOCKETIO.on('connect')
@@ -35,8 +39,14 @@ def on_connect():
 # When a client disconnects from this Socket connection, this function is run
 @SOCKETIO.on('disconnect')
 def on_disconnect():
-    '''When someone disconnects to the server'''
-    print('User disconnected!')
+    '''When a player disconnects from the server, we get their name
+    from their session id and remove them from the lobby'''
+    if request.sid in SESSIONS:
+        disconnected_player = SESSIONS[request.sid]
+        for room in ROOMS:
+            if disconnected_player in ROOMS[room]['activePlayers']:
+                remove_player_from_lobby({'playerName':disconnected_player, 'room':room})
+                print(disconnected_player + ' disconnected!')
 
 ROOMS = {}
 '''
@@ -72,6 +82,7 @@ def assign_player_to_lobby(data):
     # If the player is not in the room then add them
     if player_name not in ROOMS[room]:
         ROOMS[room]['activePlayers'][player_name] = 0
+        SESSIONS[request.sid] = player_name
     active_players = list(ROOMS[room]['activePlayers'].keys())
     SOCKETIO.emit('assignPlayerToLobby', {'activePlayers': active_players, 'room': room}, room=room)
 
