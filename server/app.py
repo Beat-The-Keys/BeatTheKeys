@@ -4,8 +4,20 @@ from flask import Flask, send_from_directory, json
 from flask_socketio import SocketIO, join_room, leave_room
 from flask_cors import CORS
 from collections import OrderedDict
+from dotenv import load_dotenv, find_dotenv
+from flask_sqlalchemy import SQLAlchemy
+
+load_dotenv(find_dotenv())
 
 APP = Flask(__name__, static_folder='../build/static')
+
+APP.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+APP.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+DB = SQLAlchemy(APP)
+
+# import models  # pylint: disable=wrong-import-position
+# DB.create_all()
 
 cors = CORS(APP, resources={r"/*": {"origins": "*"}})
 SOCKETIO = SocketIO(APP,
@@ -91,6 +103,7 @@ def index(filename):
 
 if __name__ == "__main__":
     SOCKETIO.run(
+        DB.create_all(),
         APP,
         host=os.getenv('IP', '0.0.0.0'),
         port=8081 if os.getenv('C9_PORT') else int(os.getenv('PORT', 8081)),
