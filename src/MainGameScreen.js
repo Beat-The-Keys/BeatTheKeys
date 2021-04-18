@@ -49,7 +49,7 @@ function MainGameScreen({playerName, room}) {
         end={t => t === 0}
         onTick={t => handleTime(t)}
       >
-        {time => <span>TIMER: {time}</span>}
+        {time => <span>Timer: {time}</span>}
       </ReactTimer>);
     }
     // Otherwise, if the player is not finished then we are at the start of the game.
@@ -73,11 +73,11 @@ function MainGameScreen({playerName, room}) {
       <div className = "topright">
         <p>Logged In: {playerName} </p>
       </div>
-      <div class="grid-container">
+      <div className="grid-container">
         <div className="Prompt">
           {promptJSX()}
         </div>
-        <div class="bar">
+        <div className="bar">
           <div className="Wpm">
             <p>WPM: {wpm}</p>
           </div>
