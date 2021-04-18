@@ -4,3 +4,13 @@ Flask-Cors
 Flask-SQLAlchemy
 psycopg2-binary
 python-dotenv
+Flask-Migrate
+pylint
+pylint-django
+pylint-flask
+pylint-flask-sqlalchemy
+pylint-plugin-utils
+python-editor
+python-engineio
+python-socketio
+SQLAlchemy
