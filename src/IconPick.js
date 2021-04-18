@@ -1,4 +1,4 @@
-import { React, useState, useEffect } from 'react';
+import { React, useState } from 'react';
 import { Modal } from 'react-bootstrap';
 import 'emoji-mart/css/emoji-mart.css'
 import Button from 'react-bootstrap/Button';

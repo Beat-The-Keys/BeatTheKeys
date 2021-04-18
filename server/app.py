@@ -1,9 +1,9 @@
 """This is the main app that serves as a server for all the clients"""
 import os
+from collections import OrderedDict
 from flask import Flask, send_from_directory, json
 from flask_socketio import SocketIO, join_room, leave_room
 from flask_cors import CORS
-from collections import OrderedDict
 from dotenv import load_dotenv, find_dotenv
 from flask_sqlalchemy import SQLAlchemy
 
@@ -20,6 +20,7 @@ DB = SQLAlchemy(APP)
 # DB.create_all()
 
 cors = CORS(APP, resources={r"/*": {"origins": "*"}})
+
 SOCKETIO = SocketIO(APP,
                     cors_allowed_origins="*",
                     json=json,
@@ -39,47 +40,53 @@ def on_disconnect():
 
 ROOMS = {}
 '''
-ROOMS contains a dictionary of room ids, which maps to an ordered dictionary of player stats.
+ROOMS contains a dictionary of room ids, which maps to a dictionary
+that contains the active and finished players in that room.
+
 Ex: ROOMS[1234] = {
-        'John': 97
-        'Matt': 84
+        'activePlayers': {
+            'John': 97
+            'Matt': 84
+        },
+        'finishedPlayers': ['John']
     }
 }
 '''
-
 @SOCKETIO.on('assignPlayerToLobby')
 def assign_player_to_lobby(data):
     '''Put the user in a specified room'''
     player_name = data['playerName']
     room = data['room']
-
-    # If assign_player_to_lobby is called with an empty room ID, this user is joining for the first time.
-    # In the future, we will generate an ID for them. For now, all players join the "Multiplayer" room.
-
+    # If this function is called with an empty room ID, user is joining for the first time.
+    # In the future, we will generate an ID for them.
+    # For now, all players join the "Multiplayer" room.
     if room == "":
         room = "Multiplayer"
-
     # Join the specified room
     join_room(room)
-
     # If the 'room' is not in ROOMS then add it
     if room not in ROOMS:
-        ROOMS[room] = OrderedDict()
-
+        ROOMS[room] = {}
+        ROOMS[room]['activePlayers'] = OrderedDict()
+        ROOMS[room]['playersFinished'] = []
     # If the player is not in the room then add them
     if player_name not in ROOMS[room]:
-        ROOMS[room][player_name] = 0
-
-    SOCKETIO.emit('assignPlayerToLobby', {'activePlayers': list(ROOMS[room].keys()), 'room': room}, room=room)
+        ROOMS[room]['activePlayers'][player_name] = 0
+    active_players = list(ROOMS[room]['activePlayers'].keys())
+    SOCKETIO.emit('assignPlayerToLobby', {'activePlayers': active_players, 'room': room}, room=room)
 
 @SOCKETIO.on('updatePlayerStats')
 def update_player_stats(data):
-    '''A client sends their WPM and the server sends the updated stats to all clients in their room'''
+    '''Clients send their WPM and the server sends updated stats to all clients in the room'''
     room = data['room']
     player_name = data['playerName']
     wpm = data['wpm']
-    ROOMS[room][player_name] = wpm
-    SOCKETIO.emit('updatePlayerStats', {'playerStats': ROOMS[room]}, broadcast=True, room=room)
+    ROOMS[room]['activePlayers'][player_name] = wpm
+    SOCKETIO.emit(
+        'updatePlayerStats', {'playerStats': ROOMS[room]['activePlayers']},
+        broadcast=True,
+        room=room
+    )
 
 @SOCKETIO.on('removePlayerFromLobby')
 def remove_player_from_lobby(data):
@@ -87,12 +94,60 @@ def remove_player_from_lobby(data):
     room = data['room']
     player_name = data['playerName']
     # Remove the player from the room
-    ROOMS[room].pop(player_name, None)
-
-    SOCKETIO.emit('updatePlayerStats', {'playerStats': ROOMS[room]})
-    SOCKETIO.emit('assignPlayerToLobby', {'activePlayers': list(ROOMS[room].keys()), 'room': room}, room=room)
-
+    ROOMS[room]['activePlayers'].pop(player_name, None)
+    if player_name in ROOMS[room]['playersFinished']:
+        ROOMS[room]['playersFinished'].remove(player_name)
+    SOCKETIO.emit(
+        'updatePlayerStats', {'playerStats': ROOMS[room]['activePlayers']},
+        broadcast=True,
+        room=room
+    )
+    active_players = list(ROOMS[room]['activePlayers'].keys())
+    # assignPlayerToLobby is used to refresh the lobby for all players.
+    # We can change up the name later to avoid confusion.
+    SOCKETIO.emit(
+        'assignPlayerToLobby', {'activePlayers': active_players, 'room': room},
+        broadcast=True,
+        room=room
+    )
     leave_room(room)
+
+@SOCKETIO.on('startGame')
+def start_game(data):
+    '''Starts the game for all players in a lobby'''
+    SOCKETIO.emit('startGame', broadcast=True, include_self=False, room=data['room'])
+
+@SOCKETIO.on('playerFinished')
+def player_finished(data):
+    '''
+    A client sends a message when they finished the game
+    Eventually we should check if the user achieved their best WPM here and store it in our db.
+
+    '''
+    room = data['room']
+    player_name = data['playerName']
+    ROOMS[room]['playersFinished'].append(player_name)
+    SOCKETIO.emit(
+        'playersFinished', {'playersFinished': ROOMS[room]['playersFinished']},
+        broadcast=True,
+        room=room
+    )
+    # If all the players in the room are finished, send a 'gameComplete' message to every client
+    # Comparing lists will also check item order by default, so instead we can use sets.
+    active_players_set = set(ROOMS[room]['activePlayers'].keys())
+    players_finished_set = set(ROOMS[room]['playersFinished'])
+    if players_finished_set == active_players_set:
+        SOCKETIO.emit('gameComplete', broadcast=True, room=room)
+
+@SOCKETIO.on('goBackToLobby')
+def go_back_to_lobby(data):
+    '''
+    This function is called when a player goes back to their lobby.
+    All of the players will follow and 'playersFinished' will be cleared.
+    '''
+    room = data['room']
+    ROOMS[room]['playersFinished'].clear()
+    SOCKETIO.emit('goBackToLobby', include_self=False, broadcast=True, room=room)
 
 @APP.route('/', defaults={"filename": "index.html"})
 @APP.route('/<path:filename>')
