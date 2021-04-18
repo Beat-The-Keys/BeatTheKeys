@@ -73,11 +73,11 @@ function MainGameScreen({playerName, room}) {
       <div className = "topright">
         <p>Logged In: {playerName} </p>
       </div>
-      <div class="grid-container">
+      <div className="grid-container">
         <div className="Prompt">
           {promptJSX()}
         </div>
-        <div class="bar">
+        <div className="bar">
           <div className="Wpm">
             <p>WPM: {wpm}</p>
           </div>
