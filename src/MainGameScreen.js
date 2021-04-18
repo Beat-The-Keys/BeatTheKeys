@@ -8,6 +8,7 @@ const prompt = "One study examining 30 subjects, of varying different styles and
 function MainGameScreen({playerName, room}) {
   const textboxRef = useRef(); // Input box reference for when user types
   const [highlightedStopIndex, setHighlightedStopIndex] = useState(0); // State for keeping track of the last character index to highlight in the prompt
+  const [incorrectHighlight, setIncorrectHighlight] = useState(0); // State for keeping track of the last character index to highlight in the prompt
   const [wpm, setWpm] = useState(0); // State for calculating wpm
   const [timeLeft, setTimeLeft] = useState(60); // State for keeping track of the time so that the wpm can be calculated
   const [typingBegan, setTypingBegan] = useState(false); // State for checking if the user started typing
@@ -32,12 +33,19 @@ function MainGameScreen({playerName, room}) {
     }
     if (prompt.startsWith(textboxRef.current.value)) {
       setHighlightedStopIndex(textboxRef.current.value.length);
+      setIncorrectHighlight(textboxRef.current.value.length)
+    }else{
+      setIncorrectHighlight(textboxRef.current.value.length)
     }
   }
 
   function promptJSX() {
     // Highlight the text
-    return (<p><b>{prompt.substring(0, highlightedStopIndex)}</b>{prompt.substring(highlightedStopIndex)}</p>);
+    return (<p>
+              <b style={{color:'green'}}>{prompt.substring(0, highlightedStopIndex)}</b>
+              <b style={{color:'red'}}>{prompt.substring(highlightedStopIndex, incorrectHighlight)}</b>
+              {prompt.substring(incorrectHighlight)}
+            </p>);
   }
 
   function gameStateJSX() {
