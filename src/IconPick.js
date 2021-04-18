@@ -1,8 +1,8 @@
 import { React, useState } from 'react';
 import { Modal } from 'react-bootstrap';
-import 'emoji-mart/css/emoji-mart.css'
+import 'emoji-mart/css/emoji-mart.css';
 import Button from 'react-bootstrap/Button';
-import { Picker } from 'emoji-mart'
+import { Picker } from 'emoji-mart';
 
 function IconPick(){
     const [show, setShow] = useState(false);

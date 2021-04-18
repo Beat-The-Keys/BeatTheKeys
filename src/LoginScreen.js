@@ -4,7 +4,7 @@ import HomeScreen from './HomeScreen.js';
 import io from 'socket.io-client';
 
 export const socket = io(); // Connects to socket connection
-export const client_id = "427706489011-6rshj7squ73369r4n830rl8cch7q86f2.apps.googleusercontent.com"
+export const client_id = "427706489011-6rshj7squ73369r4n830rl8cch7q86f2.apps.googleusercontent.com";
 
 export default function LoginScreen (){
   const [isLoggedIn, changeIsLoggedIn] = useState(false);
@@ -36,5 +36,5 @@ export default function LoginScreen (){
         </div>
     }
     </div>
-  )
+  );
 }

@@ -8,18 +8,18 @@ export default function PlayerStats ({room, socket}) {
   useEffect(() => {
     socket.on('updatePlayerStats', (data) => {
       setActivePlayerStats(data.playerStats);
-    })
+    });
     socket.on('playersFinished', (data) => {
       setPlayersFinished(data.playersFinished);
-    })
-  }, [socket])
+    });
+  }, [socket]);
 
   return ( // We can eventually replace this with a chart
     <ul>
       { Object.entries(activePlayerStats).map(([key, index]) => {
         return (
           <li style={playersFinished.includes(key) ? highlightStyle : {}} key={key}><b>{key}:</b> {activePlayerStats[key]}</li>
-        )
+        );
       })}
     </ul>
   );
