@@ -49,7 +49,7 @@ function MainGameScreen({playerName, room}) {
         end={t => t === 0}
         onTick={t => handleTime(t)}
       >
-        {time => <span>Timer: {time}</span>}
+        {time => <span>TIMER: {time}</span>}
       </ReactTimer>);
     }
     // Otherwise, if the player is not finished then we are at the start of the game.
