@@ -11,10 +11,11 @@ export default function LoginScreen (){
   const [playerName, setPlayerName] = useState("");
 
   function responseGoogle(response){
-    console.log(response);
-    console.log(response.profileObj);
-    setPlayerName(response.profileObj.name);
+    setPlayerName(response.profileObj.givenName); // changed it to first name only
     changeIsLoggedIn(true);
+    let name = response.profileObj.name;
+    let email = response.profileObj.email;
+    socket.emit('login', {name, email});
   }
   function responseGoogleLogout(room){
     changeIsLoggedIn(false);

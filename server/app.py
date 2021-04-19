@@ -16,8 +16,8 @@ APP.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 DB = SQLAlchemy(APP)
 
-# import models  # pylint: disable=wrong-import-position
-# DB.create_all()
+import models  # pylint: disable=wrong-import-position
+DB.create_all()
 
 CORS = CORS(APP, resources={r"/*": {"origins": "*"}})
 
@@ -62,6 +62,21 @@ Ex: ROOMS[1234] = {
     }
 }
 '''
+# When a client successfully logs in with their Google Account
+@SOCKETIO.on('login')
+def on_login(data):
+    """This is ran when someone presses the login button, it checks to see if that login is already
+    in our db, if it isnt, add it! This returns an updated list to the clients"""
+    this_user_email = data["email"]
+    print(this_user_email)
+    this_user_name = data["name"]
+    print(this_user_name)
+    db_usersnames, db_emails, db_icons, db_wpms = fetch_db("email") # fetch all users in DB
+    
+    # checks to see if the email exists in our DB, if not add the new users
+    db_users = user_db_check(this_user_email, db_emails, this_user_name) 
+    #  SOCKETIO.emit()
+
 @SOCKETIO.on('assignPlayerToLobby')
 def assign_player_to_lobby(data):
     '''Put the user in a specified room'''
@@ -166,6 +181,54 @@ def index(filename):
     """Tells python where our index file is that renders our React Components"""
     return send_from_directory('../build', filename)
 
+
+def fetch_db(sort_by):
+    """This is how we fetch all of the information from Heroku's DB, it also allows us to order
+    the information by best wpm or usernames(alphabetical)"""
+    if sort_by == "wpm":
+        all_users = DB.session.query(models.Users).order_by(
+            models.Users.bestwpm.desc()).all()
+        print(all_users)
+        return fetch_db_helper(all_users)
+
+    if sort_by == "email":
+        all_users = DB.session.query(models.Users).order_by(
+            models.Users.email.desc()).all()
+        print(all_users)
+        return fetch_db_helper(all_users)
+
+    all_users = DB.session.query(models.Users).order_by(
+        models.Users.username.asc()).all()
+    print(all_users)
+    return fetch_db_helper(all_users)
+
+
+def user_db_check(this_user_email, db_users_emails, this_user_name):
+    """This is to check if the email is already in our database, if it is don't add to the
+    database, it is isn't add a new user to the database"""
+    if this_user_email in db_users_emails:
+        print("Welcome back {}!".format(this_user_email))
+    else:
+        new_user = models.Users(username=this_user_name, email=this_user_email)
+        DB.session.add(new_user)
+        DB.session.commit()
+        db_users_emails.append(this_user_email)
+    return db_users_emails
+
+
+def fetch_db_helper(all_users):
+    """This will help fetch the information from the db and return 4 lists, a username list
+    an emails list, an icons list, and a bestWPM's list"""
+    db_usersnames = []
+    db_emails = []
+    db_icons = []
+    db_bestwpm = []
+    for users in all_users:
+        db_usersnames.append(users.username)
+        db_emails.append(users.email)
+        db_icons.append(users.icon)
+        db_bestwpm.append(users.bestwpm)
+    return db_usersnames, db_emails, db_icons, db_bestwpm
 
 if __name__ == "__main__":
     DB.create_all()
