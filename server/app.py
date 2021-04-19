@@ -169,8 +169,9 @@ def index(filename):
 
 if __name__ == "__main__":
     DB.create_all()
+    # pylint: disable=invalid-envvar-default
     SOCKETIO.run(
         APP,
         host=os.getenv('IP', '0.0.0.0'),
-        port=8081 if os.getenv('C9_PORT') else int(os.getenv('PORT')),
+        port=8081 if os.getenv('C9_PORT') else int(os.getenv('PORT', 8081))
     )
