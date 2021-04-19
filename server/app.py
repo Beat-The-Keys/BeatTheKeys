@@ -98,6 +98,7 @@ def update_player_stats(data):
         broadcast=True,
         room=room
     )
+    return ROOMS[room]['activePlayers']
 
 @SOCKETIO.on('removePlayerFromLobby')
 def remove_player_from_lobby(data):
@@ -168,7 +169,6 @@ def index(filename):
 
 
 if __name__ == "__main__":
-    DB.create_all()
     # pylint: disable=invalid-envvar-default
     SOCKETIO.run(
         APP,
