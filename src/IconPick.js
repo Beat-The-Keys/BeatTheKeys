@@ -8,6 +8,7 @@ function IconPick(){
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+    const [icon, SetIcon] = useState("");
     
     return(
         <>
@@ -27,7 +28,16 @@ function IconPick(){
               <Modal.Title>Pick an Emoji</Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <Picker set='apple' />
+              <Picker
+                  title="Pick your emoji…"
+                  emoji="point_up"
+                  onSelect={emoji => SetIcon(emoji.native)}
+              />
+              <div>
+                <h1>
+                  You Picked: {icon}
+                </h1>
+              </div>
             </Modal.Body>
             <Modal.Footer>
               <Button variant="secondary" onClick={handleClose}>
@@ -35,6 +45,7 @@ function IconPick(){
               </Button>
             </Modal.Footer>
           </Modal>
+          <h3> Your Icon: {icon} </h3>
         </>
         );
 }
