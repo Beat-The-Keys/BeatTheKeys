@@ -67,12 +67,12 @@ function MainGameScreen({playerName, room}) {
   }
 
   function handleTime(t) {
-    if (t === 0) {
+    // Decrement the timer and set the timeLeft state
+    setTimeLeft(t);
+    if (t === 1) {
       socket.emit('playerFinished', {'playerName': playerName, 'room': room});
       setPlayerFinished(true);
     }
-    // Decrement the timer and set the timeLeft state
-    setTimeLeft(t);
     return t-1;
   }
 
