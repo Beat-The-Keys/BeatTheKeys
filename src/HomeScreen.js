@@ -1,18 +1,18 @@
 import { React, useState, useEffect } from 'react';
-import UserList from './UserList.js'
+import UserList from './UserList.js';
 import MainGameScreen from './MainGameScreen.js';
-import PlayerStats from './PlayerStats.js'
+import PlayerStats from './PlayerStats.js';
 import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './HomeScreen.css';
 import IconPick from './IconPick';
 import {GoogleLogout} from 'react-google-login';
-import {socket, client_id} from './LoginScreen'
+import {socket, client_id} from './LoginScreen';
 
 
 export default function Home ({playerName, responseGoogleLogout}) {
-  const [playerStartedGame, setPlayerStartedGame] = useState(false) // State for joining multiplayer room or not
-  const [activePlayers, setActivePlayers] = useState([]) // State list of all players in all the rooms
+  const [playerStartedGame, setPlayerStartedGame] = useState(false); // State for joining multiplayer room or not
+  const [activePlayers, setActivePlayers] = useState([]); // State list of all players in all the rooms
   const [room, setRoom] = useState(""); // State for keeping track of the room the player is in
   const [allPlayersFinished, setAllPlayersFinished] = useState(false); // State for checking if all users finished the game
 
@@ -23,7 +23,7 @@ export default function Home ({playerName, responseGoogleLogout}) {
   }
 
   function goBackToLobby() {
-    setPlayerStartedGame(false)
+    setPlayerStartedGame(false);
     socket.emit('goBackToLobby', {room});
   }
 
@@ -32,18 +32,18 @@ export default function Home ({playerName, responseGoogleLogout}) {
     socket.on('assignPlayerToLobby', (data) => {
       setActivePlayers(data.activePlayers);
       setRoom(data.room);
-    })
+    });
     socket.on('startGame', () => {
       setPlayerStartedGame(true);
-    })
+    });
     socket.on('gameComplete', (data) => {
       setAllPlayersFinished(true);
-    })
+    });
     socket.on('goBackToLobby', (data) => {
       setPlayerStartedGame(false);
-    })
+    });
  
-  }, [playerName, room])
+  }, [playerName, room]);
 
   return (
     <div>
