@@ -30,7 +30,7 @@ export default function LoginScreen (){
           <GoogleLogin
           clientID={client_id}
           onSuccess={responseGoogle}
-          onFailure={responseGoogle}
+          onFailure={() => alert('Please try logging in again.')}
           cookiePolicy={'single_host_origin'}
           />
         </div>
