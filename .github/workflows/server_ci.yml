@@ -27,7 +27,7 @@ jobs:
           architecture: x64
           
       - name: Install dependencies
-        run: pip install -r requirements.txt 
+        run: pip install -r requirements.txt
         
       - name: Lint files
-        run: pylint server
+        run: pylint server --rcfile=.pylintrc ../server/pylintrc
