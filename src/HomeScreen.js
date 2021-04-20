@@ -10,7 +10,7 @@ import {GoogleLogout} from 'react-google-login';
 import {socket, client_id} from './LoginScreen';
 
 
-export default function Home ({playerName, responseGoogleLogout}) {
+export default function Home ({playerName, playerEmail, responseGoogleLogout}) {
   const [playerStartedGame, setPlayerStartedGame] = useState(false); // State for joining multiplayer room or not
   const [activePlayers, setActivePlayers] = useState([]); // State list of all players in all the rooms
   const [room, setRoom] = useState(""); // State for keeping track of the room the player is in
@@ -47,6 +47,9 @@ export default function Home ({playerName, responseGoogleLogout}) {
 
   return (
     <div>
+      <div className = "logged-in-status">
+        <p>Logged In: {playerEmail} </p>
+      </div>
       { playerStartedGame
       ? <div>
           {allPlayersFinished && <button onClick={goBackToLobby}>Back to Home Screen</button>}
