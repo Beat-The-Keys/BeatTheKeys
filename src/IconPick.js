@@ -8,7 +8,7 @@ function IconPick(){
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-    const [icon, SetIcon] = useState("");
+    const [icon, setIcon] = useState("");
     
     return(
         <>
