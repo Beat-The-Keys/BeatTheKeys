@@ -2,13 +2,14 @@
 from app import DB
 
 class Users(DB.Model):
-    """This is the schema for our users. It includes a username, email, selected icon, and best WPM"""
+    """This is the schema for our users. It includes a username, email, selected icon,
+    and best WPM"""
     username = DB.Column(DB.String(80),
                          nullable=False)
     email = DB.Column(DB.String(80),
-                         unique=True,
-                         primary_key=True,
-                         nullable=False)
+                      unique=True,
+                      primary_key=True,
+                      nullable=False)
     icon = DB.Column(DB.String(80))
     bestwpm = DB.Column(DB.Integer)
 
