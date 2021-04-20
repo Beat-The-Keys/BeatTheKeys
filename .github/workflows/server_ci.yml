@@ -30,4 +30,4 @@ jobs:
         run: pip install -r requirements.txt
         
       - name: Lint files
-        run: pylint server --rcfile=.pylintrc ../server/pylintrc
+        run: pylint server --rcfile=.pylintrc ../server
