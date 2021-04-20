@@ -72,9 +72,10 @@ def on_login(data):
     this_user_name = data["name"]
     print(this_user_name)
     db_usersnames, db_emails, db_icons, db_wpms = fetch_db("email") # fetch all users in DB
-    
+
     # checks to see if the email exists in our DB, if not add the new users
-    db_users = user_db_check(this_user_email, db_emails, this_user_name) 
+    db_users = user_db_check(this_user_email, db_emails, this_user_name)
+    print(db_usersnames, db_emails, db_icons, db_wpms, db_users)
     #  SOCKETIO.emit()
 
 @SOCKETIO.on('assignPlayerToLobby')
