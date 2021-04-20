@@ -29,10 +29,13 @@ export default function LoginScreen (){
     {isLoggedIn
       ? <HomeScreen playerName={playerName} responseGoogleLogout={responseGoogleLogout}/>
       : <div class="login-page">
-        <center> <h1> BEAT THE KEYS! <Emoji emoji='keyboard' set='twitter' size={40} /> </h1>  </center>
-        <center> <h5> "Multiplayer typeracing" </h5> </center>
+        <center>
+        <h1> BEAT THE KEYS!</h1>
+        <Emoji emoji='keyboard' set='twitter' size={40}/>
+        <h5> Multiplayer typeracing game </h5>
         <div class="form">
           <form class="login-form">
+            <p>Join game:</p>
             <meta name="google-signin-client_id" content={client_id}/>
                 <GoogleLogin
                 buttonText="Login"
@@ -43,7 +46,14 @@ export default function LoginScreen (){
                 />
           </form>
         </div>
-        <center> <h5> Features coming soon: <br/>"Private lobbies, achievements, etc.." </h5> </center>
+        <h5>Features coming soon:</h5>
+        <ul>
+          <li>Private lobbies</li>
+          <li>Achievements</li>
+          <li>Leaderboard</li>
+          <li>More text prompts</li>
+        </ul>
+        </center>
         </div>
     }
     </div>
