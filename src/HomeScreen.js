@@ -15,10 +15,12 @@ export default function Home ({playerName, responseGoogleLogout}) {
   const [activePlayers, setActivePlayers] = useState([]); // State list of all players in all the rooms
   const [room, setRoom] = useState(""); // State for keeping track of the room the player is in
   const [allPlayersFinished, setAllPlayersFinished] = useState(false); // State for checking if all users finished the game
+  const [winningPlayer, setWinningPlayer] = useState(); // State which holds the winning player name
 
   function startGame() {
     setPlayerStartedGame(true);
     setAllPlayersFinished(false);
+    setWinningPlayer(null);
     socket.emit('startGame', {room});
   }
 
@@ -35,9 +37,12 @@ export default function Home ({playerName, responseGoogleLogout}) {
     });
     socket.on('startGame', () => {
       setPlayerStartedGame(true);
+      setAllPlayersFinished(false);
+      setWinningPlayer(null);
     });
     socket.on('gameComplete', (data) => {
       setAllPlayersFinished(true);
+      setWinningPlayer(data.winningPlayer);
     });
     socket.on('goBackToLobby', (data) => {
       setPlayerStartedGame(false);
@@ -49,7 +54,12 @@ export default function Home ({playerName, responseGoogleLogout}) {
     <div>
       { playerStartedGame
       ? <div>
-          {allPlayersFinished && <button onClick={goBackToLobby}>Back to Home Screen</button>}
+          {allPlayersFinished &&
+          <div>
+          <button onClick={goBackToLobby}>Back to Lobby</button>
+          <h3>{winningPlayer} is the winner! Please go back to the lobby.</h3>
+          </div>
+          }
           <MainGameScreen playerName={playerName} room={room}/>
           <PlayerStats room={room} socket={socket}/>
         </div>
