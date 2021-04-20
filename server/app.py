@@ -151,6 +151,8 @@ def player_finished(data):
     if players_finished_set == active_players_set:
         SOCKETIO.emit('gameComplete', broadcast=True, room=room)
 
+    return ROOMS[room]['playersFinished']
+
 @SOCKETIO.on('goBackToLobby')
 def go_back_to_lobby(data):
     '''

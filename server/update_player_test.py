@@ -1,10 +1,10 @@
 '''Test file when user logs out and appropriately reassign players'''
+from collections import OrderedDict
 import os
 import sys
 import unittest
-sys.path.append(os.path.abspath('./'))
 import app
-from collections import OrderedDict
+sys.path.append(os.path.abspath('../'))
 
 
 KEY_INPUT = "input"
@@ -51,20 +51,27 @@ class UserLogoutTest(unittest.TestCase):
 
         }]
 
-    def test_logout_success(self):
+    def tests_update_player_stats_success(self):
         '''Test function to check all the players are reassigned appropriately'''
         for test in self.success_test_params:
             actual_result = app.update_player_stats(test[KEY_INPUT])
             expected_result = test[KEY_EXPECTED]
 
-            self.assertEqual(actual_result, expected_result)
-            self.assertEqual(actual_result[test[KEY_INPUT]['playerName']], expected_result[test[KEY_INPUT]['playerName']])
+            print("Success", actual_result, expected_result)
 
-    def test_logout_failure(self):
+
+            self.assertEqual(actual_result, expected_result)
+            self.assertEqual(actual_result[test[KEY_INPUT]['playerName']],
+                                expected_result[test[KEY_INPUT]['playerName']])
+
+    def tests_update_player_stats_failure(self):
         '''Test function to check all the players are reassigned (not)appropriately'''
         for test in self.failure_test_params:
             actual_result = app.update_player_stats(test[KEY_INPUT])
             expected_result = test[KEY_EXPECTED]
+
+            print("Failure", actual_result, expected_result)
+
 
             self.assertNotEqual(actual_result, expected_result)
             self.assertNotEqual(actual_result[test[KEY_INPUT]['playerName']], expected_result)
