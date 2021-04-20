@@ -193,7 +193,7 @@ def fetch_db(sort_by):
 
     if sort_by == "email":
         all_users = DB.session.query(models.Users).order_by(
-            models.Users.email.desc()).all()
+            models.Users.email.asc()).all()
         print(all_users)
         return fetch_db_helper(all_users)
 
