@@ -68,15 +68,26 @@ def on_login(data):
     """This is ran when someone presses the login button, it checks to see if that login is already
     in our db, if it isnt, add it! This returns an updated list to the clients"""
     this_user_email = data["email"]
-    print(this_user_email)
     this_user_name = data["name"]
+    print(this_user_email)
     print(this_user_name)
     db_usersnames, db_emails, db_icons, db_wpms = fetch_db("email") # fetch all users in DB
 
     # checks to see if the email exists in our DB, if not add the new users
     db_users = user_db_check(this_user_email, db_emails, this_user_name)
     print(db_usersnames, db_emails, db_icons, db_wpms, db_users)
-    #  SOCKETIO.emit()
+    print("ICON FOR THIS USER IS:", db_icons[db_emails.index(this_user_email)])
+    SOCKETIO.emit('iconFromDB', {'icon': db_icons[db_emails.index(this_user_email)], 'email': this_user_email}, broadcast=True)
+    
+# When a client successfully logs in with their Google Account
+@SOCKETIO.on('iconToDB')
+def icon_to_db(data):
+    """This is ran everytime someone picks a new Icon"""
+    user = DB.session.query(models.Users).get(data['email'])
+    user.icon = data['emojiID']
+    DB.session.commit()
+    db_usersnames, db_emails, db_icons, db_wpms = fetch_db(" ")
+    print(db_usersnames, db_emails, db_icons, db_wpms)
 
 @SOCKETIO.on('assignPlayerToLobby')
 def assign_player_to_lobby(data):
@@ -189,18 +200,15 @@ def fetch_db(sort_by):
     if sort_by == "wpm":
         all_users = DB.session.query(models.Users).order_by(
             models.Users.bestwpm.desc()).all()
-        print(all_users)
         return fetch_db_helper(all_users)
 
     if sort_by == "email":
         all_users = DB.session.query(models.Users).order_by(
             models.Users.email.desc()).all()
-        print(all_users)
         return fetch_db_helper(all_users)
 
     all_users = DB.session.query(models.Users).order_by(
         models.Users.username.asc()).all()
-    print(all_users)
     return fetch_db_helper(all_users)
 
 
