@@ -31,3 +31,6 @@ jobs:
         
       - name: Lint files
         run: pylint server --rcfile=./server/.pylintrc
+
+      - name: Run Tests
+        run: python -m unittest

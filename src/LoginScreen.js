@@ -11,12 +11,14 @@ export const client_id = "427706489011-6rshj7squ73369r4n830rl8cch7q86f2.apps.goo
 export default function LoginScreen (){
   const [isLoggedIn, changeIsLoggedIn] = useState(false);
   const [playerName, setPlayerName] = useState("");
+  const [playerEmail, setPlayerEmail] = useState("");
 
   function responseGoogle(response){
     setPlayerName(response.profileObj.givenName); // changed it to first name only
+    let email = response.profileObj.email;
+    setPlayerEmail(email)
     changeIsLoggedIn(true);
     let name = response.profileObj.name;
-    let email = response.profileObj.email;
     socket.emit('login', {name, email});
   }
   function responseGoogleLogout(room){
@@ -27,7 +29,7 @@ export default function LoginScreen (){
   return (
     <div>
     {isLoggedIn
-      ? <HomeScreen playerName={playerName} responseGoogleLogout={responseGoogleLogout}/>
+      ? <HomeScreen playerName={playerName} playerEmail={playerEmail} responseGoogleLogout={responseGoogleLogout}/>
       : <div class="login-page">
         <center>
         <h1> BEAT THE KEYS!</h1>

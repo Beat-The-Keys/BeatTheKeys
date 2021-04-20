@@ -126,6 +126,7 @@ def update_player_stats(data):
         broadcast=True,
         room=room
     )
+    return ROOMS[room]['activePlayers']
 
 @SOCKETIO.on('removePlayerFromLobby')
 def remove_player_from_lobby(data):
@@ -176,7 +177,11 @@ def player_finished(data):
     active_players_set = set(ROOMS[room]['activePlayers'].keys())
     players_finished_set = set(ROOMS[room]['playersFinished'])
     if players_finished_set == active_players_set:
-        SOCKETIO.emit('gameComplete', broadcast=True, room=room)
+        # We also include the winning player name in the 'gameComplete' message.
+        winning_player = max(ROOMS[room]['activePlayers'], key=ROOMS[room]['activePlayers'].get)
+        SOCKETIO.emit('gameComplete', {'winningPlayer': winning_player}, broadcast=True, room=room)
+
+    return ROOMS[room]['playersFinished']
 
 @SOCKETIO.on('goBackToLobby')
 def go_back_to_lobby(data):
@@ -206,6 +211,7 @@ def fetch_db(sort_by):
     if sort_by == "email":
         all_users = DB.session.query(models.Users).order_by(
             models.Users.email.desc()).all()
+        print(all_users)
         return fetch_db_helper(all_users)
 
     all_users = DB.session.query(models.Users).order_by(
@@ -241,7 +247,6 @@ def fetch_db_helper(all_users):
     return db_usersnames, db_emails, db_icons, db_bestwpm
 
 if __name__ == "__main__":
-    DB.create_all()
     # pylint: disable=invalid-envvar-default
     SOCKETIO.run(
         APP,
