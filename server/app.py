@@ -77,8 +77,9 @@ def on_login(data):
     db_users = user_db_check(this_user_email, db_emails, this_user_name)
     print(db_usersnames, db_emails, db_icons, db_wpms, db_users)
     print("ICON FOR THIS USER IS:", db_icons[db_emails.index(this_user_email)])
-    SOCKETIO.emit('iconFromDB', {'icon': db_icons[db_emails.index(this_user_email)], 'email': this_user_email}, broadcast=True)
-    
+    SOCKETIO.emit('iconFromDB', {'icon': db_icons[db_emails.index(this_user_email)],
+                  'email': this_user_email}, broadcast=True)
+
 # When a client successfully logs in with their Google Account
 @SOCKETIO.on('iconToDB')
 def icon_to_db(data):
