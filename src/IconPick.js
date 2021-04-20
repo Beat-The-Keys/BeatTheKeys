@@ -31,7 +31,7 @@ function IconPick(){
               <Picker
                   title="Pick your emoji…"
                   emoji="point_up"
-                  onSelect={emoji => SetIcon(emoji.native)}
+                  onSelect={emoji => setIcon(emoji.native)}
               />
               <div>
                 <h1>
