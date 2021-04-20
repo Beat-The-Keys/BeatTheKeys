@@ -35,6 +35,7 @@ export default function Home ({playerName, playerEmail, responseGoogleLogout}) {
     });
     socket.on('startGame', () => {
       setPlayerStartedGame(true);
+      setAllPlayersFinished(false);
     });
     socket.on('gameComplete', (data) => {
       setAllPlayersFinished(true);
