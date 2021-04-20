@@ -78,9 +78,6 @@ function MainGameScreen({playerName, room}) {
 
   return (
     <div className="App">
-      <div className = "topright">
-        <p>Logged In: {playerName} </p>
-      </div>
       <div className="grid-container">
         <div className="Prompt">
           {promptJSX()}
