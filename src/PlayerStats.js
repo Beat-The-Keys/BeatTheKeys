@@ -18,7 +18,7 @@ export default function PlayerStats ({room, socket}) {
     <ul>
       { Object.entries(activePlayerStats).map(([key, index]) => {
         return (
-          <li style={playersFinished.includes(key) ? highlightStyle : {}} key={key}><b>{key}:</b> {activePlayerStats[key]}</li>
+          <li style={playersFinished.includes(key) ? highlightStyle : {}} key={key}><b>{key}:</b> {activePlayerStats[key]} WPM</li>
         );
       })}
     </ul>
