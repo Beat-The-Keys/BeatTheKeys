@@ -3,8 +3,8 @@ from collections import OrderedDict
 import os
 import sys
 import unittest
+sys.path.append(os.path.abspath('../'))
 import app
-sys.path.append(os.path.abspath('./'))
 
 
 KEY_INPUT = "input"
