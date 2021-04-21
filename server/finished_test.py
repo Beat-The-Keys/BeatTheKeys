@@ -16,8 +16,12 @@ class UserLogoutTest(unittest.TestCase):
     def setUp(self):
         app.ROOMS['Multiplayer'] = {}
         app.ROOMS['Multiplayer']['playersFinished'] = []
-        app.ROOMS['Multiplayer']['activePlayers'] = OrderedDict([('AJ', 200),
-                ('Akash', 13), ('Yusef', 130), ('Mann', 1)])
+        app.ROOMS['Multiplayer']['activePlayers'] = OrderedDict([
+            ('AJ', 200),
+            ('Akash', 13),
+            ('Yusef', 130),
+            ('Mann', 1)
+        ])
 
         self.success_test_params = [{
             KEY_INPUT: {'playerName': 'Akash', 'room': 'Multiplayer'},
@@ -26,7 +30,7 @@ class UserLogoutTest(unittest.TestCase):
             KEY_INPUT: {'playerName': 'AJ', 'room': 'Multiplayer'},
             KEY_EXPECTED: ['Akash', 'AJ']
 
-        },{
+        }, {
             KEY_INPUT: {'playerName': 'Yusef', 'room': 'Multiplayer'},
             KEY_EXPECTED: ['Akash', 'AJ', 'Yusef']
 
@@ -43,7 +47,7 @@ class UserLogoutTest(unittest.TestCase):
             KEY_INPUT: {'playerName': 'AJ', 'room': 'Multiplayer'},
             KEY_EXPECTED: ['Mann']
 
-        },{
+        }, {
             KEY_INPUT: {'playerName': 'Yusef', 'room': 'Multiplayer'},
             KEY_EXPECTED: ['AJ', 'Yusef', 'Mann']
 
@@ -62,8 +66,10 @@ class UserLogoutTest(unittest.TestCase):
             print("Success", actual_result, expected_result)
 
             self.assertEqual(actual_result, expected_result)
-            self.assertEqual(actual_result[len(actual_result)-1],
-                                expected_result[len(expected_result)-1])
+            self.assertEqual(
+                actual_result[len(actual_result)-1],
+                expected_result[len(expected_result)-1]
+            )
 
     def test_player_finished_failure(self):
         '''Test function to check all the players are not in the finished list'''
@@ -74,8 +80,10 @@ class UserLogoutTest(unittest.TestCase):
             print("Failure", actual_result, expected_result)
 
             self.assertNotEqual(actual_result, expected_result)
-            self.assertNotEqual(actual_result[len(actual_result)-1],
-                                    expected_result[len(expected_result)-1])
+            self.assertNotEqual(
+                actual_result[len(actual_result)-1],
+                expected_result[len(expected_result)-1]
+            )
 
 if __name__ == '__main__':
     unittest.main()

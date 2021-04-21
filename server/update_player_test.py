@@ -24,7 +24,7 @@ class UserLogoutTest(unittest.TestCase):
             KEY_INPUT: {'playerName': 'AJ', 'room': 'Multiplayer', 'wpm': 130},
             KEY_EXPECTED: app.ROOMS['Multiplayer']['activePlayers']
 
-        },{
+        }, {
             KEY_INPUT: {'playerName': 'Yusef', 'room': 'Multiplayer', 'wpm': 200},
             KEY_EXPECTED: app.ROOMS['Multiplayer']['activePlayers']
 
@@ -41,7 +41,7 @@ class UserLogoutTest(unittest.TestCase):
             KEY_INPUT: {'playerName': 'AJ', 'room': 'Multiplayer', 'wpm': 130},
             KEY_EXPECTED: OrderedDict([('AJ', 200), ('Akash', 13)])
 
-        },{
+        }, {
             KEY_INPUT: {'playerName': 'Yusef', 'room': 'Multiplayer', 'wpm': 200},
             KEY_EXPECTED: OrderedDict([('Akash', 13), ('AJ', 200)])
 
@@ -61,8 +61,9 @@ class UserLogoutTest(unittest.TestCase):
 
 
             self.assertEqual(actual_result, expected_result)
-            self.assertEqual(actual_result[test[KEY_INPUT]['playerName']],
-                                expected_result[test[KEY_INPUT]['playerName']])
+            self.assertEqual(
+                actual_result[test[KEY_INPUT]['playerName']],
+                expected_result[test[KEY_INPUT]['playerName']])
 
     def tests_update_player_stats_failure(self):
         '''Test function to check all the players are reassigned (not)appropriately'''
