@@ -3,6 +3,7 @@ import unittest
 from unittest.mock import patch
 import os
 import sys
+sys.path.append('../')
 from app import fetch_db
 import models
 
