@@ -20,8 +20,9 @@ function IconPick(){
     
     useEffect(() => {
       socket.on('iconFromDB', (data) => {
-        setIcon(data.icon);
-        setEmail(data.email);
+        if(data.icon !== null)
+          setIcon(data.icon);
+          setEmail(data.email);
       });
  
   }, [icon]);
