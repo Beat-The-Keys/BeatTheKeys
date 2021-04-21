@@ -246,6 +246,7 @@ def fetch_db_helper(all_users):
     return db_usersnames, db_emails, db_icons, db_bestwpm
 
 if __name__ == "__main__":
+    DB.create_all()
     # pylint: disable=invalid-envvar-default
     SOCKETIO.run(
         APP,
