@@ -47,5 +47,6 @@ We plan to add several features during sprint 2:
  
 ## Linting
 Disabled lint rules below:
-  * wrong-import-position:
-  * invalid-envvar-default:
+  * wrong-import-position: disabled in app.py for the `import models` statement
+  * invalid-envvar-default: disabled in app.py to avoid errors for `int(os.getenv('PORT', 8081)`. We may remove this in sprint 2.
+  * ignored-classes=scoped_session,SQLAlchemy: added `scoped_session` and `SQLAlchemy` to avoid `no-member` errors
