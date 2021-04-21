@@ -22,7 +22,7 @@ function IconPick(){
       socket.on('iconFromDB', (data) => {
         if(data.icon !== null)
           setIcon(data.icon);
-          setEmail(data.email);
+        setEmail(data.email);
       });
  
   }, [icon]);
