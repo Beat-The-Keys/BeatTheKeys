@@ -63,7 +63,8 @@ class UserLogoutTest(unittest.TestCase):
             self.assertEqual(actual_result, expected_result)
             self.assertEqual(
                 actual_result[test[KEY_INPUT]['playerName']],
-                expected_result[test[KEY_INPUT]['playerName']])
+                expected_result[test[KEY_INPUT]['playerName']]
+            )
 
     def tests_update_player_stats_failure(self):
         '''Test function to check all the players are reassigned (not)appropriately'''
