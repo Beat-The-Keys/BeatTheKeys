@@ -16,9 +16,7 @@ INITIAL_USERNAME = 'user1'
 INITIAL_EMAIL = 'email@host.com'
 INITIAL_ICON = 'smiley'
 INITIAL_WPM = 60
-INITIAL_LIST = [['Alexander Ong', 'Group2 YWCC 307', 'Group 4 CS 490'],
-                ['ajo28@njit.edu', 'group2ywcc@gmail.com', 'beat.the.keys4@gmail.com'],
-                ['smiley', 'grinning', 'smiling_imp'], [50, 20, 80]]
+INITIAL_LIST = [['Mann Patel', 'Yusef Mustafa', 'Akash Patel', 'Akash', 'Alexander Ong', 'AJ Ong', 'Yusef Mustafa', 'Group 4 CS 490', 'Alexander Ong', 'Group2 YWCC 307'], ['mmp224@njit.edu', 'yjm4@njit.edu', 'adp77@njit.edu', 'ap.akash.patel1999@gmail.com', 'mr.alexander.ong@gmail.com', 'ajong816@gmail.com', 'yusefm8@gmail.com', 'beat.the.keys4@gmail.com', 'ajo28@njit.edu', 'group2ywcc@gmail.com'], [None, 'joy', 'waffle', '+1', None, None, '+1', 'smiling_imp', 'crossed_fingers', 'grinning'], [None, None, None, None, None, None, None, 80, 50, 20]]
 
 class GetUserFromDBTest(unittest.TestCase):
     """Main class to test DB logic"""
@@ -26,21 +24,15 @@ class GetUserFromDBTest(unittest.TestCase):
         self.success_test_params = [
             {
                 KEY_INPUT: 'wpm',
-                KEY_EXPECTED: (['Group 4 CS 490', 'Alexander Ong', 'Group2 YWCC 307'],
-                               ['beat.the.keys4@gmail.com', 'ajo28@njit.edu',
-                                'group2ywcc@gmail.com'],
-                               ['smiling_imp', 'smiley', 'grinning'], [80, 50, 20])
+                KEY_EXPECTED: (['Mann Patel', 'Yusef Mustafa', 'Akash Patel', 'Akash', 'Alexander Ong', 'AJ Ong', 'Yusef Mustafa', 'Group 4 CS 490', 'Alexander Ong', 'Group2 YWCC 307'], ['mmp224@njit.edu', 'yjm4@njit.edu', 'adp77@njit.edu', 'ap.akash.patel1999@gmail.com', 'mr.alexander.ong@gmail.com', 'ajong816@gmail.com', 'yusefm8@gmail.com', 'beat.the.keys4@gmail.com', 'ajo28@njit.edu', 'group2ywcc@gmail.com'], [None, 'joy', 'waffle', '+1', None, None, '+1', 'smiling_imp', 'crossed_fingers', 'grinning'], [None, None, None, None, None, None, None, 80, 50, 20])
             },
             {
                 KEY_INPUT: 'email',
-                KEY_EXPECTED: (['Alexander Ong', 'Group 4 CS 490', 'Group2 YWCC 307'],
-                               ['ajo28@njit.edu', 'beat.the.keys4@gmail.com',
-                                'group2ywcc@gmail.com'],
-                               ['smiley', 'smiling_imp', 'grinning'], [50, 80, 20])
+                KEY_EXPECTED: (['Yusef Mustafa', 'Yusef Mustafa', 'Alexander Ong', 'Mann Patel', 'Group2 YWCC 307', 'Group 4 CS 490', 'Akash', 'AJ Ong', 'Alexander Ong', 'Akash Patel'], ['yusefm8@gmail.com', 'yjm4@njit.edu', 'mr.alexander.ong@gmail.com', 'mmp224@njit.edu', 'group2ywcc@gmail.com', 'beat.the.keys4@gmail.com', 'ap.akash.patel1999@gmail.com', 'ajong816@gmail.com', 'ajo28@njit.edu', 'adp77@njit.edu'], ['+1', 'joy', None, None, 'grinning', 'smiling_imp', '+1', None, 'crossed_fingers', 'waffle'], [None, None, None, None, 20, 80, None, None, 50, None])
             },
             {
                 KEY_INPUT: ' ',
-                KEY_EXPECTED: (INITIAL_LIST[0], INITIAL_LIST[1], INITIAL_LIST[2], INITIAL_LIST[3]),
+                KEY_EXPECTED: (['AJ Ong', 'Akash', 'Akash Patel', 'Alexander Ong', 'Alexander Ong', 'Group2 YWCC 307', 'Group 4 CS 490', 'Mann Patel', 'Yusef Mustafa', 'Yusef Mustafa'], ['ajong816@gmail.com', 'ap.akash.patel1999@gmail.com', 'adp77@njit.edu', 'mr.alexander.ong@gmail.com', 'ajo28@njit.edu', 'group2ywcc@gmail.com', 'beat.the.keys4@gmail.com', 'mmp224@njit.edu', 'yjm4@njit.edu', 'yusefm8@gmail.com'], [None, '+1', 'waffle', None, 'crossed_fingers', 'grinning', 'smiling_imp', None, 'joy', '+1'], [None, None, None, None, 50, 20, 80, None, None, None]),
             },
         ]
 
