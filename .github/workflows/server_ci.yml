@@ -30,7 +30,7 @@ jobs:
         run: pip install -r requirements.txt
         
       - name: Lint files
-        run: pylint server --rcfile=./server/.pylintrc
+        run: pylint server/app.py --rcfile=./server/.pylintrc
 
       - name: Run Tests
-        run: python -m unittest
+        run: python -m unittest discover -s server -p '*_test.py'
