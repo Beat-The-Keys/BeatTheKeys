@@ -11,7 +11,7 @@ KEY_INPUT = "input"
 KEY_EXPECTED = "expected"
 
 
-class UserLogoutTest(unittest.TestCase):
+class UserFinishTest(unittest.TestCase):
     '''Test class to check player-finished function works correctly'''
     def setUp(self):
         app.ROOMS['Multiplayer'] = {}

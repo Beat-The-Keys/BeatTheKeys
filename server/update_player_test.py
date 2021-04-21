@@ -1,4 +1,4 @@
-'''Test file when user logs out and appropriately reassign players'''
+'''Test file when users wpm updates'''
 from collections import OrderedDict
 import os
 import sys
@@ -11,8 +11,8 @@ KEY_INPUT = "input"
 KEY_EXPECTED = "expected"
 
 
-class UserLogoutTest(unittest.TestCase):
-    '''Test class to check user-logout function works correctly'''
+class UserUpdateTest(unittest.TestCase):
+    '''Test class to check update_player_stats function works correctly'''
     def setUp(self):
         app.ROOMS['Multiplayer'] = {}
         app.ROOMS['Multiplayer']['activePlayers'] = OrderedDict()
@@ -52,7 +52,7 @@ class UserLogoutTest(unittest.TestCase):
         }]
 
     def tests_update_player_stats_success(self):
-        '''Test function to check all the players are reassigned appropriately'''
+        '''Test function to check all the players wpm updates appropriately'''
         for test in self.success_test_params:
             actual_result = app.update_player_stats(test[KEY_INPUT])
             expected_result = test[KEY_EXPECTED]
@@ -67,7 +67,7 @@ class UserLogoutTest(unittest.TestCase):
             )
 
     def tests_update_player_stats_failure(self):
-        '''Test function to check all the players are reassigned (not)appropriately'''
+        '''Test function to check all the players wpm does not update appropriately'''
         for test in self.failure_test_params:
             actual_result = app.update_player_stats(test[KEY_INPUT])
             expected_result = test[KEY_EXPECTED]
