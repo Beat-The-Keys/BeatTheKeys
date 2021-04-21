@@ -33,4 +33,4 @@ jobs:
         run: pylint server/app.py --rcfile=./server/.pylintrc
 
       - name: Run Tests
-        run: python -m unittest discover -s server -p '*_test.py'
+        run: python -m unittest
