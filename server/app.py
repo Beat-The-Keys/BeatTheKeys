@@ -17,7 +17,6 @@ APP.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 DB = SQLAlchemy(APP)
 
 import models  # pylint: disable=wrong-import-position
-DB.create_all()
 
 CORS = CORS(APP, resources={r"/*": {"origins": "*"}})
 
