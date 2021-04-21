@@ -34,4 +34,4 @@ jobs:
       
       # removing automated test cases for now to pass all checks on github for final commit for milestone_1
       - name: Run Tests
-        run: python -m unittest discover -s ./server/test-p '*_test.py'
+        run: python -m unittest discover -s ./server/test -p '*_test.py'
