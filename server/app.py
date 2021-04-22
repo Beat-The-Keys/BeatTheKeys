@@ -29,6 +29,12 @@ SESSIONS = {}
 SESSIONS contains a dictionary of session ids which map to corresponding player names.
 '''
 
+@APP.route('/', defaults={"filename": "index.html"})
+@APP.route('/<path:filename>')
+def index(filename):
+    """Tells python where our index file is that renders our React Components"""
+    return send_from_directory('../build', filename)
+
 # When a client connects from this Socket connection, this function is run
 @SOCKETIO.on('connect')
 def on_connect():
@@ -71,13 +77,12 @@ def on_login(data):
     print(this_user_email)
     print(this_user_name)
     db_usersnames, db_emails, db_icons, db_wpms = fetch_db("email") # fetch all users in DB
-
     # checks to see if the email exists in our DB, if not add the new users
-    db_users = user_db_check(this_user_email, db_emails, this_user_name)
-    print(db_usersnames, db_emails, db_icons, db_wpms, db_users)
+    user_db_check(this_user_email, db_emails, this_user_name)
+    print(db_usersnames, db_emails, db_icons, db_wpms)
     print("ICON FOR THIS USER IS:", db_icons[db_emails.index(this_user_email)])
     SOCKETIO.emit('iconFromDB', {'icon': db_icons[db_emails.index(this_user_email)],
-                  'email': this_user_email}, broadcast=True)
+                  'email': this_user_email}, broadcast=True, room=request.sid)
 
 # When a client successfully logs in with their Google Account
 @SOCKETIO.on('iconToDB')
@@ -87,7 +92,7 @@ def icon_to_db(data):
     user.icon = data['emojiID']
     DB.session.commit()
     db_usersnames, db_emails, db_icons, db_wpms = fetch_db(" ")
-    print(db_usersnames, db_emails, db_icons, db_wpms)
+    print("iconToDB ", db_usersnames, db_emails, db_icons, db_wpms)
 
 @SOCKETIO.on('assignPlayerToLobby')
 def assign_player_to_lobby(data):
@@ -191,13 +196,6 @@ def go_back_to_lobby(data):
     room = data['room']
     ROOMS[room]['playersFinished'].clear()
     SOCKETIO.emit('goBackToLobby', include_self=False, broadcast=True, room=room)
-
-@APP.route('/', defaults={"filename": "index.html"})
-@APP.route('/<path:filename>')
-def index(filename):
-    """Tells python where our index file is that renders our React Components"""
-    return send_from_directory('../build', filename)
-
 
 def fetch_db(sort_by):
     """This is how we fetch all of the information from Heroku's DB, it also allows us to order
