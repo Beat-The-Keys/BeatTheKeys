@@ -27,6 +27,7 @@ export default function Home ({playerName, playerEmail, responseGoogleLogout}) {
   function goBackToLobby() {
     setPlayerStartedGame(false);
     socket.emit('goBackToLobby', {room});
+    socket.emit('login', {name:playerName, email:playerEmail});
   }
 
   useEffect(() => {
@@ -47,8 +48,8 @@ export default function Home ({playerName, playerEmail, responseGoogleLogout}) {
     socket.on('goBackToLobby', (data) => {
       setPlayerStartedGame(false);
     });
- 
-  }, [playerName, room]);
+
+  }, [playerName, room, playerEmail]);
 
   return (
     <div>
@@ -67,7 +68,6 @@ export default function Home ({playerName, playerEmail, responseGoogleLogout}) {
           <PlayerStats room={room} socket={socket}/>
         </div>
       : <div>
-         
           <h2>Hi, {playerName}! Welcome to your lobby.</h2>
           Current players:
           <UserList users={activePlayers}/>

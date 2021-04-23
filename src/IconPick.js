@@ -11,22 +11,22 @@ function IconPick(){
     const handleShow = () => setShow(true);
     const [icon, setIcon] = useState("");
     const [email, setEmail] = useState("");
-    
+
     function emojiUpdate(emoji) {
       setIcon(emoji.id);
       let emojiID = emoji.id;
       socket.emit('iconToDB', {emojiID, email});
     }
-    
+
     useEffect(() => {
       socket.on('iconFromDB', (data) => {
         if(data.icon !== null)
           setIcon(data.icon);
         setEmail(data.email);
       });
- 
+
   }, [icon]);
-    
+
     return(
         <>
          <center>
@@ -34,7 +34,7 @@ function IconPick(){
             Select Icon
           </Button>
          </center>
-    
+
           <Modal
             show={show}
             onHide={handleClose}
