@@ -1,14 +1,10 @@
 import { React, useState, useEffect } from 'react';
 import UserList from './UserList.js';
-import MainGameScreen from './MainGameScreen.js';
-import PlayerStats from './PlayerStats.js';
-import Button from 'react-bootstrap/Button';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './HomeScreen.css';
-import IconPick from './IconPick';
-import {GoogleLogout} from 'react-google-login';
-import {socket, client_id} from './LoginScreen';
-
+import MainGameScreen from '../main/MainGameScreen.js';
+import PlayerStats from '../main/PlayerStats.js';
+import IconPick from '../IconPick';
+import {socket} from '../LoginScreen';
+import HomeButtons from './HomeButtons.js';
 
 export default function Home ({playerName, playerEmail, responseGoogleLogout}) {
   const [playerStartedGame, setPlayerStartedGame] = useState(false); // State for joining multiplayer room or not
@@ -60,8 +56,8 @@ export default function Home ({playerName, playerEmail, responseGoogleLogout}) {
       ? <div>
           {allPlayersFinished &&
           <div>
-          <button onClick={goBackToLobby}>Back to Lobby</button>
-          <h3>{winningPlayer} is the winner! Please go back to the lobby.</h3>
+            <button onClick={goBackToLobby}>Back to Lobby</button>
+            <h3>{winningPlayer} is the winner! Please go back to the lobby.</h3>
           </div>
           }
           <MainGameScreen playerName={playerName} room={room}/>
@@ -69,23 +65,11 @@ export default function Home ({playerName, playerEmail, responseGoogleLogout}) {
         </div>
       : <div>
           <h2>Hi, {playerName}! Welcome to your lobby.</h2>
-          Current players:
-          <UserList users={activePlayers}/>
+          Current players: <UserList users={activePlayers}/>
           <center> <h1> BEAT THE KEYS! </h1> </center>
           <div className="gridC">
-              <div className="flexC" id="gridI">
-                <Button className="flexI" onClick={startGame} variant="success" size="lg">Start Game</Button>
-                <Button className="flexI" variant="danger" size="lg">Join Game</Button>
-                <Button className="flexI" variant="warning" size="lg">Achievements</Button>
-                <GoogleLogout
-                  clientId={client_id}
-                  buttonText="Logout"
-                  onFailure={()=>responseGoogleLogout(room)}
-                  onLogoutSuccess={()=>responseGoogleLogout(room)
-                  }
-                />
-              </div>
-            <div id="gridI">
+            <HomeButtons room={room} startGame={startGame} responseGoogleLogout={responseGoogleLogout}/>
+            <div>
               <IconPick/>
             </div>
           </div>

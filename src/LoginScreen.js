@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import {GoogleLogin} from 'react-google-login';
-import HomeScreen from './HomeScreen.js';
+import HomeScreen from './home/HomeScreen.js';
 import io from 'socket.io-client';
-import './LoginUI.css';
 import { Emoji } from 'emoji-mart'
 
 export const socket = io(); // Connects to socket connection
