@@ -1,7 +1,7 @@
 import { React, useState, useEffect } from 'react';
 import UserList from './UserList.js';
-import MainGameScreen from '../main/MainGameScreen.js';
-import PlayerStats from '../main/PlayerStats.js';
+import MainGameScreen from '../game/MainGameScreen.js';
+import PlayerStats from '../game/PlayerStats.js';
 import IconPick from '../IconPick';
 import {socket} from '../LoginScreen';
 import HomeButtons from './HomeButtons.js';
