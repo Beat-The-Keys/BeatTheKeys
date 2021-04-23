@@ -41,7 +41,7 @@ function IconPick(){
             backdrop="static"
             keyboard={false}
           >
-            <Modal.Header className="header" closeButton>
+            <Modal.Header closeButton>
               <Modal.Title>Pick an Emoji</Modal.Title>
             </Modal.Header>
             <Modal.Body>
