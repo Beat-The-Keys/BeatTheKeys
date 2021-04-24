@@ -1,29 +1,20 @@
 .grid-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  grid-template-rows: 1fr 1fr 1fr;
-  gap: 0px 0px;
-  grid-template-areas:
-    "Prompt Prompt bar bar"
-    "Prompt Prompt bar bar"
-    "Text-box Text-box bar bar";
+	display: grid;
+	grid-template-columns: auto auto;
+	padding: 10px;
+	margin-top: 40px;
 }
-.Prompt { 
-  grid-area: Prompt;
-  border: 3px solid black;
-  padding: 50px;
+.grid-Item {
+	border: 3px solid black;
+	padding: 50px;
 }
-.Text-box { 
-    grid-area: Text-box;
-    /* border: 3px solid black; */
+/* .Text-box {
+    border: 3px solid black;
     padding: 10px;
 }
-.bar { 
-    grid-area: bar; 
-    text-align: center;
-}
+
 
 input {
   height:100px;
   width: 600px;
-}
+} */

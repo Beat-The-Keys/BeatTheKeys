@@ -1,10 +1,10 @@
 import { React, useState, useEffect } from 'react';
 import UserList from './UserList.js';
 import MainGameScreen from '../game/MainGameScreen.js';
-import PlayerStats from '../game/PlayerStats.js';
 import IconPick from '../IconPick';
 import {socket} from '../LoginScreen';
 import HomeButtons from './HomeButtons.js';
+import Charts from '../game/Charts.js';
 
 export default function Home ({playerName, playerEmail, responseGoogleLogout}) {
   const [playerStartedGame, setPlayerStartedGame] = useState(false); // State for joining multiplayer room or not
@@ -61,7 +61,6 @@ export default function Home ({playerName, playerEmail, responseGoogleLogout}) {
           </div>
           }
           <MainGameScreen playerName={playerName} room={room}/>
-          <PlayerStats room={room} socket={socket}/>
         </div>
       : <div>
           <h2>Hi, {playerName}! Welcome to your lobby.</h2>
