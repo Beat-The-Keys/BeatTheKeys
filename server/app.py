@@ -1,12 +1,12 @@
 """This is the main app that serves as a server for all the clients"""
 import os
 from collections import OrderedDict
+from random import randrange
 from flask import Flask, send_from_directory, json, request
 from flask_socketio import SocketIO, join_room, leave_room
 from flask_cors import CORS
 from dotenv import load_dotenv, find_dotenv
 from flask_sqlalchemy import SQLAlchemy
-from random import randrange
 
 load_dotenv(find_dotenv())
 
@@ -82,8 +82,12 @@ def on_login(data):
     user_db_check(this_user_email, db_emails, this_user_name)
     print(db_usersnames, db_emails, db_icons, db_wpms)
     print("ICON FOR THIS USER IS:", db_icons[db_emails.index(this_user_email)])
-    SOCKETIO.emit('iconFromDB', {'icon': db_icons[db_emails.index(this_user_email)],
-                  'email': this_user_email}, broadcast=True, room=request.sid)
+    SOCKETIO.emit(
+        'iconFromDB',
+        {'icon': db_icons[db_emails.index(this_user_email)], 'email': this_user_email},
+        broadcast=True,
+        room=request.sid
+    )
 
 # When a client successfully logs in with their Google Account
 @SOCKETIO.on('iconToDB')

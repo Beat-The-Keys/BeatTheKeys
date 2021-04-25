@@ -52,7 +52,7 @@ function IconPick(){
               />
               <div>
                 <h1>
-                  You Picked: <Emoji emoji={icon} set='apple' size={32} native='true'/>
+                  You Picked: <Emoji emoji={icon} set='apple' size={32} native={true}/>
                 </h1>
               </div>
             </Modal.Body>
@@ -62,7 +62,7 @@ function IconPick(){
               </Button>
             </Modal.Footer>
           </Modal>
-          <h3> Your Icon: <Emoji emoji={icon} set='apple' size={32} native='true'/> </h3>
+          <h3> Your Icon: <Emoji emoji={icon} set='apple' size={32} native={true}/> </h3>
         </>
         );
 }
