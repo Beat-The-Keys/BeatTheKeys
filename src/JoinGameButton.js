@@ -13,7 +13,6 @@ export default function JoinGameButton({playerName, room, socket}) {
             setShowJoinGameModal(false);
             return;
         }
-
         if (joinGameTextBoxRef.current.value == room) {
             setAlreadyInRoomError(true);
             return;

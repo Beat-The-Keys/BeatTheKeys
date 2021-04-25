@@ -123,12 +123,12 @@ def assign_player_to_lobby(data):
 
 @SOCKETIO.on('attemptToJoinGame')
 def attempt_to_join_game(data):
-    '''Put the user in a specified room'''
+    '''Attempts to put the player in a room using the room ID they provided'''
     player_name = data['playerName']
     old_room = data['oldRoom']
     new_room = data['newRoom']
     # If the user tries to join a lobby that does not exist, just return
-    # We can choose to display an error here later
+    # We can choose to display an error on the client-side later
     if new_room != "" and new_room not in ROOMS:
         return
     remove_player_from_lobby({'playerName':player_name, 'room':old_room})
