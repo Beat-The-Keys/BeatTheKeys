@@ -9,11 +9,11 @@ export default function JoinGameButton({playerName, room, socket}) {
     const joinGameTextBoxRef = useRef(null);
 
     function handleJoinGame() {
-        if (joinGameTextBoxRef.current.value == "") {
+        if (joinGameTextBoxRef.current.value === "") {
             setShowJoinGameModal(false);
             return;
         }
-        if (joinGameTextBoxRef.current.value == room) {
+        if (joinGameTextBoxRef.current.value === room) {
             setAlreadyInRoomError(true);
             return;
         }
