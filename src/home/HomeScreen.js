@@ -5,6 +5,7 @@ import PlayerStats from '../game/PlayerStats.js';
 import IconPick from '../IconPick';
 import {socket} from '../LoginScreen';
 import HomeButtons from './HomeButtons.js';
+import styled from 'styled-components';
 
 export default function Home ({playerName, playerEmail, responseGoogleLogout}) {
   const [playerStartedGame, setPlayerStartedGame] = useState(false); // State for joining multiplayer room or not
@@ -49,14 +50,12 @@ export default function Home ({playerName, playerEmail, responseGoogleLogout}) {
 
   return (
     <div>
-      <div className = "logged-in-status">
-        <p>Logged In: {playerEmail} </p>
-      </div>
+        <LoggedIn>Logged In: {playerEmail} </LoggedIn>
       { playerStartedGame
       ? <div>
           {allPlayersFinished &&
           <div>
-            <button onClick={goBackToLobby}>Back to Lobby</button>
+            <Button onClick={goBackToLobby}>Back to Lobby</Button>
             <h3>{winningPlayer} is the winner! Please go back to the lobby.</h3>
           </div>
           }
@@ -67,14 +66,36 @@ export default function Home ({playerName, playerEmail, responseGoogleLogout}) {
           <h2>Hi, {playerName}! Welcome to your lobby.</h2>
           Current players: <UserList users={activePlayers}/>
           <center> <h1> BEAT THE KEYS! </h1> </center>
-          <div className="gridC">
+          <GridContainer>
             <HomeButtons room={room} startGame={startGame} responseGoogleLogout={responseGoogleLogout}/>
-            <div>
-              <IconPick/>
-            </div>
-          </div>
+            <IconPick/>
+          </GridContainer>
         </div>
       }
     </div>
   );
 }
+
+const LoggedIn = styled.p`
+  position: absolute;
+  top: 8px;
+  right: 5px;
+  font-size: 18px;
+`;
+
+const GridContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+`;
+
+const Button = styled.button`
+  background-color: crimson;
+  border-radius: 10px;
+  border: none;
+  color: white;
+  padding: 10px 30px;
+  text-align: center;
+  font-size: 40px;
+  margin: 4px 2px;
+  cursor: pointer;
+`;
