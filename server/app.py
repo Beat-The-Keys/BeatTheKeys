@@ -6,6 +6,7 @@ from flask_socketio import SocketIO, join_room, leave_room
 from flask_cors import CORS
 from dotenv import load_dotenv, find_dotenv
 from flask_sqlalchemy import SQLAlchemy
+from random import randrange
 
 load_dotenv(find_dotenv())
 
@@ -99,11 +100,13 @@ def assign_player_to_lobby(data):
     '''Put the user in a specified room'''
     player_name = data['playerName']
     room = data['room']
-    # If this function is called with an empty room ID, user is joining for the first time.
-    # In the future, we will generate an ID for them.
-    # For now, all players join the "Multiplayer" room.
+    # If this function is called with an empty room ID, user is joining for the first time
+    # We will generate a 4-digit lobby ID for them
     if room == "":
-        room = "Multiplayer"
+        while True:
+            room = str(randrange(10)) + str(randrange(10)) + str(randrange(10)) + str(randrange(10))
+            if room not in ROOMS:
+                break
     # Join the specified room
     join_room(room)
     # If the 'room' is not in ROOMS then add it
@@ -117,6 +120,19 @@ def assign_player_to_lobby(data):
         SESSIONS[request.sid] = player_name
     active_players = list(ROOMS[room]['activePlayers'].keys())
     SOCKETIO.emit('assignPlayerToLobby', {'activePlayers': active_players, 'room': room}, room=room)
+
+@SOCKETIO.on('attemptToJoinGame')
+def attempt_to_join_game(data):
+    '''Put the user in a specified room'''
+    player_name = data['playerName']
+    old_room = data['oldRoom']
+    new_room = data['newRoom']
+    # If the user tries to join a lobby that does not exist, just return
+    # We can choose to display an error here later
+    if new_room != "" and new_room not in ROOMS:
+        return
+    remove_player_from_lobby({'playerName':player_name, 'room':old_room})
+    assign_player_to_lobby({'playerName':player_name, 'room':new_room})
 
 @SOCKETIO.on('updatePlayerStats')
 def update_player_stats(data):

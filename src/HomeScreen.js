@@ -1,4 +1,4 @@
-import { React, useState, useEffect } from 'react';
+import { React, useState, useEffect, useRef } from 'react';
 import UserList from './UserList.js';
 import MainGameScreen from './MainGameScreen.js';
 import PlayerStats from './PlayerStats.js';
@@ -8,7 +8,7 @@ import './HomeScreen.css';
 import IconPick from './IconPick';
 import {GoogleLogout} from 'react-google-login';
 import {socket, client_id} from './LoginScreen';
-
+import JoinGameButton from './JoinGameButton';
 
 export default function Home ({playerName, playerEmail, responseGoogleLogout}) {
   const [playerStartedGame, setPlayerStartedGame] = useState(false); // State for joining multiplayer room or not
@@ -68,14 +68,14 @@ export default function Home ({playerName, playerEmail, responseGoogleLogout}) {
           <PlayerStats room={room} socket={socket}/>
         </div>
       : <div>
-          <h2>Hi, {playerName}! Welcome to your lobby.</h2>
+          <h2>Hi, {playerName}! Welcome to your lobby. Your invite code is {room}</h2>
           Current players:
           <UserList users={activePlayers}/>
           <center> <h1> BEAT THE KEYS! </h1> </center>
           <div className="gridC">
               <div className="flexC" id="gridI">
                 <Button className="flexI" onClick={startGame} variant="success" size="lg">Start Game</Button>
-                <Button className="flexI" variant="danger" size="lg">Join Game</Button>
+                <JoinGameButton playerName={playerName} room={room} socket={socket}/>
                 <Button className="flexI" variant="warning" size="lg">Achievements</Button>
                 <GoogleLogout
                   clientId={client_id}
@@ -84,7 +84,7 @@ export default function Home ({playerName, playerEmail, responseGoogleLogout}) {
                   onLogoutSuccess={()=>responseGoogleLogout(room)
                   }
                 />
-              </div>
+            </div>
             <div id="gridI">
               <IconPick/>
             </div>
