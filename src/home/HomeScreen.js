@@ -10,6 +10,7 @@ export default function Home ({playerName, playerEmail, responseGoogleLogout}) {
   const [playerStartedGame, setPlayerStartedGame] = useState(false); // State for joining multiplayer room or not
   const [activePlayers, setActivePlayers] = useState([]); // State list of all players in all the rooms
   const [room, setRoom] = useState(""); // State for keeping track of the room the player is in
+  const [originalRoom, setOriginalRoom] = useState(""); // State which contains the original room the player was assigned to
   const [allPlayersFinished, setAllPlayersFinished] = useState(false); // State for checking if all users finished the game
   const [winningPlayer, setWinningPlayer] = useState(); // State which holds the winning player name
 
@@ -30,6 +31,9 @@ export default function Home ({playerName, playerEmail, responseGoogleLogout}) {
     socket.emit('assignPlayerToLobby', {playerName, room});
     socket.on('assignPlayerToLobby', (data) => {
       setActivePlayers(data.activePlayers);
+      if (data.isOriginalRoom) {
+        setOriginalRoom(data.room);
+      }
       setRoom(data.room);
     });
     socket.on('startGame', () => {
@@ -68,7 +72,7 @@ export default function Home ({playerName, playerEmail, responseGoogleLogout}) {
           Current players: <UserList users={activePlayers}/>
           <center> <h1> BEAT THE KEYS! </h1> </center>
           <div className="gridC">
-            <HomeButtons playerName={playerName} room={room} startGame={startGame} responseGoogleLogout={responseGoogleLogout}/>
+            <HomeButtons playerName={playerName} room={room} originalRoom={originalRoom} startGame={startGame} responseGoogleLogout={responseGoogleLogout}/>
             <div>
               <IconPick/>
             </div>
