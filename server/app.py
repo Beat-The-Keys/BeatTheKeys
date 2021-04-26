@@ -132,6 +132,16 @@ def update_player_stats(data):
     )
     return ROOMS[room]['activePlayers']
 
+@SOCKETIO.on('getUpdatePlayerStats')
+def get_update_player_stats(data):
+    '''Clients send their WPM and the server sends updated stats to all clients in the room'''
+    room = data['room']
+    SOCKETIO.emit(
+        'getUpdatePlayerStats', {'playerStats': ROOMS[room]['activePlayers']},
+        broadcast=True,
+        room=room
+    )
+
 @SOCKETIO.on('removePlayerFromLobby')
 def remove_player_from_lobby(data):
     '''User leaves the room'''
