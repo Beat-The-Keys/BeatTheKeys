@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import HomeScreen from "./HomeScreen";
+import HomeScreen from "./home/HomeScreen";
 
 const playerName = "Group 4";
 
@@ -14,7 +14,7 @@ test("Lobby UI rendered", () => {
     expect(screen.getByText("Select Icon")).toBeInTheDocument();
     expect(screen.getByText("Logout")).toBeInTheDocument();
 });
-  
+
 test("Typeracer renders after starting game", () => {
     render(<HomeScreen playerName={playerName}/>);
     const startGameButton = screen.getByText("Start Game");
