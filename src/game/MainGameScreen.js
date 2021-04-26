@@ -2,7 +2,8 @@ import React, { useRef, useState, useEffect} from 'react';
 import ReactTimer from "@xendora/react-timer";
 import {socket} from '../LoginScreen';
 import PlayerStats from '../game/PlayerStats.js';
-import Charts from './Charts';
+import Charts from '../game/Charts';
+import styled from 'styled-components';
 
 const prompt = "One study examining 30 subjects, of varying different styles and expertise, has found minimal difference in typing speed between touch typists and self-taught hybrid typists. According to the study, 'The number of fingers does not determine typing speed... People using self-taught typing strategies were found to be as fast as trained typists... instead of the number of fingers, there are other factors that predict typing speed... fast typists... keep their hands fixed on one position, instead of moving them over the keyboard, and more consistently use the same finger to type a certain letter.' To quote doctoral candidate Anna Feit: 'We were surprised to observe that people who took a typing course, performed at similar average speed and accuracy, as those that taught typing to themselves and only used 6 fingers on average' (Wikipedia)";
 
@@ -78,20 +79,33 @@ function MainGameScreen({playerName, room}) {
   }
 
   return (
-    <div>
-      <div className="grid-container">
-        <div className="grid-Item">
+      <GridContainer>
+        <GirdItem>
           {promptJSX()}
           {gameStateJSX()}
           <input type="text" name="name" ref={textboxRef} onChange={onTextChanged} />
-        </div>
-        <div className="grid-Item">
+        </GirdItem>
+        <GirdItem>
           <p>WPM: {wpm}</p>
-          <Charts room={room}/>
-        </div>
-      </div>
-    </div>
+          <PlayerStats room={room}/>
+        </GirdItem>
+      </GridContainer>
   );
 }
 
 export default MainGameScreen;
+
+const GridContainer = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0px 0px;
+  @media (max-width:960px){
+    display: flex;
+    flex-direction: column;
+  }
+`;
+
+const GirdItem = styled.div`
+  border: 1px solid black;
+  padding: 50px;
+`;

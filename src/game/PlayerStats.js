@@ -1,9 +1,8 @@
 import { React, useState, useEffect, useRef } from 'react';
+import {socket} from '../LoginScreen'
 import { Bar } from "react-chartjs-2";
 
-
-// const chartReference = {};
-export default function PlayerStats ({room, socket}) {
+export default function PlayerStats ({room}) {
   const [activePlayerStats, setActivePlayerStats] = useState({}); // State to keep track of all the active users wpm
   const [playersFinished, setPlayersFinished] = useState([]); // State to keep track of which players finished
   const highlightStyle = {color: 'green'};
@@ -20,10 +19,10 @@ export default function PlayerStats ({room, socket}) {
     },
   };
 
-  const updateBar = ()=>{
-    console.log(activePlayerStats)
-  }
   useEffect(() => {
+    const updateBar = ()=>{
+      console.log(activePlayerStats)
+    }
     socket.on('updatePlayerStats', (data) => {
       setActivePlayerStats(data.playerStats);
       updateBar();
@@ -37,7 +36,7 @@ export default function PlayerStats ({room, socket}) {
         barChart.current.data.datasets[0].data[index] = activePlayerStats[key]
         return barChart.update()
     })
-  }, [socket]);
+  }, [activePlayerStats, updateBar]);
 //   function addData(chart, label, data) {
 //     chart.data.labels.push(label);
 //     chart.data.datasets.forEach((dataset) => {

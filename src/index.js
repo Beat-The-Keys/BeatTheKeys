@@ -1,12 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './css/index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import './css/IconPick.css';
-import './css/LoginUI.css';
-import './css/MainGameUI.css';
-import './css/HomeScreen.css';
 
 ReactDOM.render(
   <React.StrictMode>
