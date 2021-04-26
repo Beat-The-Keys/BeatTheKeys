@@ -28,14 +28,14 @@ function IconPick(){
   }, [icon]);
 
     return(
-        <>
-         <center>
-          <Button variant="primary" onClick={handleShow} size="lg">
-            Select Icon
-          </Button>
-         </center>
-
+        <div>
+          <center>
+            <Button variant="primary" onClick={handleShow} size="lg">
+              Select Icon
+            </Button>
+          </center>
           <Modal
+            className="coustom_modal"
             show={show}
             onHide={handleClose}
             backdrop="static"
@@ -45,6 +45,10 @@ function IconPick(){
               <Modal.Title>Pick an Emoji</Modal.Title>
             </Modal.Header>
             <Modal.Body>
+            <center>
+              <h3>
+                You Picked: <Emoji emoji={icon} set='apple' size={32} native='true'/>
+              </h3>
               <Picker
                   title="Pick your emoji…"
                   emoji="point_up"
@@ -55,15 +59,11 @@ function IconPick(){
                   You Picked: <Emoji emoji={icon} set='apple' size={32} native={true}/>
                 </h1>
               </div>
+            </center>
             </Modal.Body>
-            <Modal.Footer>
-              <Button variant="secondary" onClick={handleClose}>
-                Close
-              </Button>
-            </Modal.Footer>
           </Modal>
           <h3> Your Icon: <Emoji emoji={icon} set='apple' size={32} native={true}/> </h3>
-        </>
+        </div>
         );
 }
 
