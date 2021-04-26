@@ -2,7 +2,7 @@ import React from 'react'
 import {GoogleLogout} from 'react-google-login';
 import Button from 'react-bootstrap/Button';
 import {client_id, socket} from '../LoginScreen';
-import JoinGameButton from '../JoinGameButton';
+import JoinGameButton from './JoinGameButton';
 
 export default function HomeButtons({playerName, responseGoogleLogout, startGame, room}) {
     return (
