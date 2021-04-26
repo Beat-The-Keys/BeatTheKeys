@@ -60,10 +60,9 @@ export default function Home ({playerName, playerEmail, responseGoogleLogout}) {
           </div>
           }
           <MainGameScreen playerName={playerName} room={room}/>
-          <PlayerStats room={room} socket={socket}/>
         </div>
       : <div>
-          <h2>Hi, {playerName}! Welcome to your lobby.</h2>
+          <H2>Hi, {playerName}! Welcome to your lobby.</H2>
           Current players: <UserList users={activePlayers}/>
           <center> <h1> BEAT THE KEYS! </h1> </center>
           <GridContainer>
@@ -86,6 +85,10 @@ const LoggedIn = styled.p`
 const GridContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
+  @media (max-width:615px){
+    display:flex;
+    flex-direction:column-reverse
+  }
 `;
 
 const Button = styled.button`
@@ -98,4 +101,10 @@ const Button = styled.button`
   font-size: 40px;
   margin: 4px 2px;
   cursor: pointer;
+`;
+
+const H2 = styled.h2`
+  @media (max-width:718px){
+    display:none;
+  }
 `;

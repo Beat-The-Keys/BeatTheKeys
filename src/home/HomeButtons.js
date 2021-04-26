@@ -34,4 +34,8 @@ const FlexItem = styled(Button)`
   border-radius: 10px;
   width: 400px;
   height: 100px;
+  @media (max-width:420px){
+    width: auto;
+    height: auto;
+  }
 `;
