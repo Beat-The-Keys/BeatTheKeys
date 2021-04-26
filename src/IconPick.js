@@ -47,18 +47,13 @@ function IconPick(){
             <Modal.Body>
             <center>
               <h3>
-                You Picked: <Emoji emoji={icon} set='apple' size={32} native='true'/>
+                You Picked: <Emoji emoji={icon} set='apple' size={32} native={true}/>
               </h3>
               <Picker
                   title="Pick your emoji…"
                   emoji="point_up"
                   onSelect={emoji => emojiUpdate(emoji)}
               />
-              <div>
-                <h1>
-                  You Picked: <Emoji emoji={icon} set='apple' size={32} native={true}/>
-                </h1>
-              </div>
             </center>
             </Modal.Body>
           </Modal>
