@@ -4,8 +4,8 @@ import { Bar } from "react-chartjs-2";
 
 export default function PlayerStats ({room}) {
   const [activePlayerStats, setActivePlayerStats] = useState({}); // State to keep track of all the active users wpm
-  const [playersFinished, setPlayersFinished] = useState([]); // State to keep track of which players finished
-  const highlightStyle = {color: 'green'};
+  // const [playersFinished, setPlayersFinished] = useState([]); // State to keep track of which players finished
+  // const highlightStyle = {color: 'green'};
   const barChart = useRef(null)
 
   const config = {
@@ -27,16 +27,16 @@ export default function PlayerStats ({room}) {
       setActivePlayerStats(data.playerStats);
       updateBar();
     });
-    socket.on('playersFinished', (data) => {
-      setPlayersFinished(data.playersFinished);
-    });
+    // socket.on('playersFinished', (data) => {
+    //   setPlayersFinished(data.playersFinished);
+    // });
     console.log(activePlayerStats)
     Object.entries(activePlayerStats).map((key, index) => {
         console.log('here')
         barChart.current.data.datasets[0].data[index] = activePlayerStats[key]
         return barChart.update()
     })
-  }, [activePlayerStats, updateBar]);
+  }, [activePlayerStats]);
 //   function addData(chart, label, data) {
 //     chart.data.labels.push(label);
 //     chart.data.datasets.forEach((dataset) => {

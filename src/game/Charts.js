@@ -1,7 +1,8 @@
 import React, {useEffect, useRef, useState} from 'react'
-import { Chart } from 'chart.js';
 import { Bar } from "react-chartjs-2";
+import styled from 'styled-components';
 import { socket } from "../LoginScreen";
+
 var config = {
     type:'bar',
   data: {
@@ -27,14 +28,26 @@ export default function Charts({room}) {
         console.log(data)
         setActivePlayerStats(data.playerStats);
       });
-        setInterval(() => {
+      const interval = setInterval(() => {
             console.log(barChart.current)
             barChart.current.data.datasets[0].data[Math.floor(Math.random() * 6)] = Math.floor(Math.random() * 200);
             barChart.current.update();
         }, 1000);
+        return () => {
+          clearInterval(interval)
+        }
     }, [])
 
     return (
-        <Bar ref={barChart} data={config.data}></Bar>
+        <BarChart ref={barChart} data={config.data}></BarChart>
     )
 }
+
+const BarChart = styled(Bar)`
+  @media (min-width:960px){
+    display: block;
+    box-sizing: border-box;
+    height: 198px;
+    width: 397.7px;
+  }
+`;

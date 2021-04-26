@@ -83,11 +83,11 @@ function MainGameScreen({playerName, room}) {
         <GirdItem>
           {promptJSX()}
           {gameStateJSX()}
-          <input type="text" name="name" ref={textboxRef} onChange={onTextChanged} />
+          <Input type="text" name="name" ref={textboxRef} onChange={onTextChanged} />
         </GirdItem>
         <GirdItem>
           <p>WPM: {wpm}</p>
-          <PlayerStats room={room}/>
+          <Charts room={room}/>
         </GirdItem>
       </GridContainer>
   );
@@ -97,7 +97,8 @@ export default MainGameScreen;
 
 const GridContainer = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  /* grid-template-columns: 1fr 1fr; */
+  grid-template-columns: 1fr 51%;
   gap: 0px 0px;
   @media (max-width:960px){
     display: flex;
@@ -106,6 +107,14 @@ const GridContainer = styled.div`
 `;
 
 const GirdItem = styled.div`
-  border: 1px solid black;
   padding: 50px;
+`;
+
+const Input = styled.textarea`
+ overflow: hidden;
+ padding: 12px 20px;
+ resize: none;
+ &:focus{
+  background-color: lightblue;
+ }
 `;

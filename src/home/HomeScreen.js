@@ -5,7 +5,7 @@ import IconPick from '../IconPick';
 import {socket} from '../LoginScreen';
 import HomeButtons from './HomeButtons.js';
 import Charts from '../game/Charts.js';
-import styled from 'styled-components';
+import styled, {css} from 'styled-components';
 
 export default function Home ({playerName, playerEmail, responseGoogleLogout}) {
   const [playerStartedGame, setPlayerStartedGame] = useState(false); // State for joining multiplayer room or not
@@ -54,10 +54,10 @@ export default function Home ({playerName, playerEmail, responseGoogleLogout}) {
       { playerStartedGame
       ? <div>
           {allPlayersFinished &&
-          <div>
-            <Button onClick={goBackToLobby}>Back to Lobby</Button>
+          <Winner>
+            <button onClick={goBackToLobby}>Back to Lobby</button>
             <h3>{winningPlayer} is the winner! Please go back to the lobby.</h3>
-          </div>
+          </Winner>
           }
           <MainGameScreen playerName={playerName} room={room}/>
         </div>
@@ -96,9 +96,9 @@ const Button = styled.button`
   border-radius: 10px;
   border: none;
   color: white;
-  padding: 10px 30px;
+  padding: 5px;
   text-align: center;
-  font-size: 40px;
+  font-size: 20px;
   margin: 4px 2px;
   cursor: pointer;
 `;
@@ -106,5 +106,24 @@ const Button = styled.button`
 const H2 = styled.h2`
   @media (max-width:718px){
     display:none;
+  }
+`;
+
+const Winner = styled.div`
+ display:flex;
+  button{
+    background-color: crimson;
+    border-radius: 10px;
+    border: none;
+    color: white;
+    padding: 5px;
+    text-align: center;
+    font-size: 20px;
+    margin: 4px 2px;
+    cursor: pointer;
+  }
+  h3{
+    align-self:center;
+    font-size:20px;
   }
 `;
