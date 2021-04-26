@@ -80,6 +80,7 @@ const LoggedIn = styled.p`
   top: 8px;
   right: 5px;
   font-size: 18px;
+  z-index:1
 `;
 
 const GridContainer = styled.div`
