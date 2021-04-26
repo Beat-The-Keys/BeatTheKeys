@@ -2,7 +2,7 @@ import { React, useState, useEffect } from 'react';
 import UserList from './UserList.js';
 import MainGameScreen from '../main/MainGameScreen.js';
 import PlayerStats from '../main/PlayerStats.js';
-import IconPick from '../IconPick';
+import IconPick from './IconPick';
 import {socket} from '../LoginScreen';
 import HomeButtons from './HomeButtons.js';
 
@@ -64,11 +64,11 @@ export default function Home ({playerName, playerEmail, responseGoogleLogout}) {
           <PlayerStats room={room} socket={socket}/>
         </div>
       : <div>
-          <h2>Hi, {playerName}! Welcome to your lobby.</h2>
+          <h2>Hi, {playerName}! Welcome to your lobby. Your invite code is {room}</h2>
           Current players: <UserList users={activePlayers}/>
           <center> <h1> BEAT THE KEYS! </h1> </center>
           <div className="gridC">
-            <HomeButtons room={room} startGame={startGame} responseGoogleLogout={responseGoogleLogout}/>
+            <HomeButtons playerName={playerName} room={room} startGame={startGame} responseGoogleLogout={responseGoogleLogout}/>
             <div>
               <IconPick/>
             </div>
