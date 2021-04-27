@@ -1,7 +1,7 @@
 import { React, useState, useEffect } from 'react';
 import UserList from './UserList.js';
 import MainGameScreen from '../game/MainGameScreen.js';
-import IconPick from '../IconPick';
+import IconPick from './IconPick';
 import {socket} from '../LoginScreen';
 import HomeButtons from './HomeButtons.js';
 import styled from 'styled-components';
@@ -61,8 +61,8 @@ export default function Home ({playerName, playerEmail, responseGoogleLogout}) {
           <MainGameScreen playerName={playerName} room={room}/>
         </div>
       : <div>
-          <H2>Hi, {playerName}! Welcome to your lobby.</H2>
-          Current players: <UserList users={activePlayers}/>
+      <H2>Hi, {playerName}! Welcome to your lobby. Your invite code is {room}</H2>
+      Current players: <UserList users={activePlayers}/>
           <center> <h1> BEAT THE KEYS! </h1> </center>
           <GridContainer>
             <HomeButtons room={room} startGame={startGame} responseGoogleLogout={responseGoogleLogout}/>

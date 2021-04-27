@@ -1,6 +1,7 @@
 """This is the main app that serves as a server for all the clients"""
 import os
 from collections import OrderedDict
+from random import randrange
 from flask import Flask, send_from_directory, json, request
 from flask_socketio import SocketIO, join_room, leave_room
 from flask_cors import CORS
@@ -81,8 +82,12 @@ def on_login(data):
     user_db_check(this_user_email, db_emails, this_user_name)
     print(db_usersnames, db_emails, db_icons, db_wpms)
     print("ICON FOR THIS USER IS:", db_icons[db_emails.index(this_user_email)])
-    SOCKETIO.emit('iconFromDB', {'icon': db_icons[db_emails.index(this_user_email)],
-                  'email': this_user_email}, broadcast=True, room=request.sid)
+    SOCKETIO.emit(
+        'iconFromDB',
+        {'icon': db_icons[db_emails.index(this_user_email)], 'email': this_user_email},
+        broadcast=True,
+        room=request.sid
+    )
 
 # When a client successfully logs in with their Google Account
 @SOCKETIO.on('iconToDB')
@@ -99,11 +104,13 @@ def assign_player_to_lobby(data):
     '''Put the user in a specified room'''
     player_name = data['playerName']
     room = data['room']
-    # If this function is called with an empty room ID, user is joining for the first time.
-    # In the future, we will generate an ID for them.
-    # For now, all players join the "Multiplayer" room.
+    # If this function is called with an empty room ID, user is joining for the first time
+    # We will generate a 4-digit lobby ID for them
     if room == "":
-        room = "Multiplayer"
+        while True:
+            room = str(randrange(10)) + str(randrange(10)) + str(randrange(10)) + str(randrange(10))
+            if room not in ROOMS:
+                break
     # Join the specified room
     join_room(room)
     # If the 'room' is not in ROOMS then add it
@@ -117,6 +124,19 @@ def assign_player_to_lobby(data):
         SESSIONS[request.sid] = player_name
     active_players = list(ROOMS[room]['activePlayers'].keys())
     SOCKETIO.emit('assignPlayerToLobby', {'activePlayers': active_players, 'room': room}, room=room)
+
+@SOCKETIO.on('attemptToJoinGame')
+def attempt_to_join_game(data):
+    '''Attempts to put the player in a room using the room ID they provided'''
+    player_name = data['playerName']
+    old_room = data['oldRoom']
+    new_room = data['newRoom']
+    # If the user tries to join a lobby that does not exist, just return
+    # We can choose to display an error on the client-side later
+    if new_room != "" and new_room not in ROOMS:
+        return
+    remove_player_from_lobby({'playerName':player_name, 'room':old_room})
+    assign_player_to_lobby({'playerName':player_name, 'room':new_room})
 
 @SOCKETIO.on('updatePlayerStats')
 def update_player_stats(data):

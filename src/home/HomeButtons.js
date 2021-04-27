@@ -1,16 +1,17 @@
 import React from 'react'
 import {GoogleLogout} from 'react-google-login';
 import Button from 'react-bootstrap/Button';
-import {client_id} from '../LoginScreen';
 import styled from 'styled-components';
+import {client_id, socket} from '../LoginScreen';
+import JoinGameButton from './JoinGameButton';
 
-export default function HomeButtons({responseGoogleLogout, startGame, room}) {
+export default function HomeButtons({playerName, responseGoogleLogout, startGame, room}) {
     return (
         <FlexContainer>
             <FlexItem onClick={startGame} variant="success" size="lg">Start Game</FlexItem>
-            <FlexItem variant="danger" size="lg">Join Game</FlexItem>
+            <JoinGameButton playerName={playerName} room={room} socket={socket}/>
             <FlexItem variant="warning" size="lg">Achievements</FlexItem>
-            <GoogleLogout
+        <GoogleLogout
             clientId={client_id}
             buttonText="Logout"
             onFailure={()=>responseGoogleLogout(room)}
