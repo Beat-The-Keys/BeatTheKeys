@@ -104,9 +104,11 @@ def assign_player_to_lobby(data):
     '''Put the user in a specified room'''
     player_name = data['playerName']
     room = data['room']
+    is_original_room = False
     # If this function is called with an empty room ID, user is joining for the first time
     # We will generate a 4-digit lobby ID for them
     if room == "":
+        is_original_room = True
         while True:
             room = str(randrange(10)) + str(randrange(10)) + str(randrange(10)) + str(randrange(10))
             if room not in ROOMS:
@@ -123,7 +125,11 @@ def assign_player_to_lobby(data):
         ROOMS[room]['activePlayers'][player_name] = 0
         SESSIONS[request.sid] = player_name
     active_players = list(ROOMS[room]['activePlayers'].keys())
-    SOCKETIO.emit('assignPlayerToLobby', {'activePlayers': active_players, 'room': room}, room=room)
+    SOCKETIO.emit(
+        'assignPlayerToLobby',
+        {'activePlayers': active_players, 'room': room, 'isOriginalRoom':is_original_room},
+        room=room
+    )
 
 @SOCKETIO.on('attemptToJoinGame')
 def attempt_to_join_game(data):

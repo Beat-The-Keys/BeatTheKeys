@@ -5,11 +5,17 @@ import {client_id, socket} from '../LoginScreen';
 import JoinGameButton from './JoinGameButton';
 import styled from 'styled-components';
 
-export default function HomeButtons({playerName, responseGoogleLogout, startGame, room}) {
+export default function HomeButtons({playerName, responseGoogleLogout, startGame, room, originalRoom}) {
+
+    function rejoinOriginalLobby() {
+        socket.emit('attemptToJoinGame', {playerName, oldRoom:room, newRoom: originalRoom})
+    }    
+
     return (
         <FlexContainer>
             <FlexItem onClick={startGame} variant="success" size="lg">Start Game</FlexItem>
             <JoinGameButton playerName={playerName} room={room} socket={socket}/>
+            { room !== originalRoom && <FlexItem onClick={rejoinOriginalLobby} variant="danger" size="lg">Leave Lobby</FlexItem>}
             <FlexItem variant="warning" size="lg">Achievements</FlexItem>
             <GoogleLogout
             clientId={client_id}
