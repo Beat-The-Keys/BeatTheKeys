@@ -42,7 +42,7 @@ function MainGameScreen({playerName, room}) {
 
   function promptJSX() {
     // Highlight the text
-    return (<p>
+    return (<p className="prompt-text">
               <b style={{color:'green'}}>{prompt.substring(0, highlightedStopIndex)}</b>
               <b style={{color:'red'}}>{prompt.substring(highlightedStopIndex, incorrectHighlight)}</b>
               {prompt.substring(incorrectHighlight)}
@@ -82,7 +82,7 @@ function MainGameScreen({playerName, room}) {
         <GirdItem>
           {promptJSX()}
           {gameStateJSX()}
-          <input type="text" name="name" ref={textboxRef} onChange={onTextChanged} />
+          <input className="player-input" type="text" name="name" ref={textboxRef} onChange={onTextChanged} />
         </GirdItem>
         <GirdItem>
           <p>WPM: {wpm}</p>
