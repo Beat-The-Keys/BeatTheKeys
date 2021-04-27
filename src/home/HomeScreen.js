@@ -23,6 +23,7 @@ export default function Home ({playerName, playerEmail, responseGoogleLogout}) {
   function goBackToLobby() {
     setPlayerStartedGame(false);
     socket.emit('goBackToLobby', {room});
+    console.log('here')
     socket.emit('login', {name:playerName, email:playerEmail});
   }
 

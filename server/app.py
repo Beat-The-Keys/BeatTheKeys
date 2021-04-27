@@ -80,7 +80,7 @@ def on_login(data):
     db_usersnames, db_emails, db_icons, db_wpms = fetch_db("email") # fetch all users in DB
     # checks to see if the email exists in our DB, if not add the new users
     user_db_check(this_user_email, db_emails, this_user_name)
-    print(db_usersnames, db_emails, db_icons, db_wpms)
+    # print(db_usersnames, db_emails, db_icons, db_wpms)
     print("ICON FOR THIS USER IS:", db_icons[db_emails.index(this_user_email)])
     SOCKETIO.emit(
         'iconFromDB',
@@ -97,7 +97,7 @@ def icon_to_db(data):
     user.icon = data['emojiID']
     DB.session.commit()
     db_usersnames, db_emails, db_icons, db_wpms = fetch_db(" ")
-    print("iconToDB ", db_usersnames, db_emails, db_icons, db_wpms)
+    # print("iconToDB ", db_usersnames, db_emails, db_icons, db_wpms)
 
 @SOCKETIO.on('assignPlayerToLobby')
 def assign_player_to_lobby(data):
@@ -151,18 +151,6 @@ def update_player_stats(data):
         room=room
     )
     return ROOMS[room]['activePlayers']
-
-@SOCKETIO.on('getUpdatePlayerStats')
-def get_update_player_stats(data):
-    '''Clients send their WPM and the server sends updated stats to all clients in the room'''
-    print(data)
-    print(ROOMS)
-    room = data['room']
-    SOCKETIO.emit(
-        'getUpdatePlayerStats', {'playerStats': ROOMS[room]['activePlayers']},
-        broadcast=True,
-        room=room
-    )
 
 @SOCKETIO.on('removePlayerFromLobby')
 def remove_player_from_lobby(data):
@@ -240,7 +228,7 @@ def fetch_db(sort_by):
     if sort_by == "email":
         all_users = DB.session.query(models.Users).order_by(
             models.Users.email.desc()).all()
-        print(all_users)
+        # print(all_users)
         return fetch_db_helper(all_users)
 
     all_users = DB.session.query(models.Users).order_by(

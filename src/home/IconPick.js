@@ -58,6 +58,7 @@ function IconPick(){
               </center>
             </Body>
           </Modal>
+          <h3> Your Icon: <Emoji emoji={icon} set='apple' size={32} native={true}/> </h3>
         </div>
         );
 }
