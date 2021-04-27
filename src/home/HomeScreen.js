@@ -1,10 +1,10 @@
 import { React, useState, useEffect } from 'react';
 import UserList from './UserList.js';
-import MainGameScreen from '../main/MainGameScreen.js';
-import PlayerStats from '../main/PlayerStats.js';
+import MainGameScreen from '../game/MainGameScreen.js';
 import IconPick from './IconPick';
 import {socket} from '../LoginScreen';
 import HomeButtons from './HomeButtons.js';
+import styled from 'styled-components';
 
 export default function Home ({playerName, playerEmail, responseGoogleLogout}) {
   const [playerStartedGame, setPlayerStartedGame] = useState(false); // State for joining multiplayer room or not
@@ -49,32 +49,74 @@ export default function Home ({playerName, playerEmail, responseGoogleLogout}) {
 
   return (
     <div>
-      <div className = "logged-in-status">
-        <p>Logged In: {playerEmail} </p>
-      </div>
+        <LoggedIn>Logged In: {playerEmail} </LoggedIn>
       { playerStartedGame
       ? <div>
           {allPlayersFinished &&
           <div>
-            <button onClick={goBackToLobby}>Back to Lobby</button>
+            <Button onClick={goBackToLobby}>Back to Lobby</Button>
             <h3>{winningPlayer} is the winner! Please go back to the lobby.</h3>
           </div>
           }
           <MainGameScreen playerName={playerName} room={room}/>
-          <PlayerStats room={room} socket={socket}/>
         </div>
       : <div>
-          <h2>Hi, {playerName}! Welcome to your lobby. Your invite code is {room}</h2>
+          <H2>Hi, {playerName}! Welcome to your lobby.</H2>
+          <H3>Invite Code: {room}</H3>
           Current players: <UserList users={activePlayers}/>
           <center> <h1> BEAT THE KEYS! </h1> </center>
-          <div className="gridC">
+          <GridContainer>
             <HomeButtons playerName={playerName} room={room} startGame={startGame} responseGoogleLogout={responseGoogleLogout}/>
-            <div>
-              <IconPick/>
-            </div>
-          </div>
+            <IconPick/>
+          </GridContainer>
         </div>
       }
     </div>
   );
 }
+
+const LoggedIn = styled.p`
+  position: absolute;
+  top: 8px;
+  right: 5px;
+  font-size: 20px;
+  z-index:1;
+  width:min-content;
+  @media (max-width:796px){
+    font-size:15px;
+  }
+`;
+
+const GridContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  @media (max-width:615px){
+    display:flex;
+    flex-direction:column-reverse
+  }
+`;
+
+const Button = styled.button`
+  background-color: crimson;
+  border-radius: 10px;
+  border: none;
+  color: white;
+  padding: 10px 30px;
+  text-align: center;
+  font-size: 40px;
+  margin: 4px 2px;
+  cursor: pointer;
+`;
+
+const H2 = styled.h2`
+  @media (max-width:718px){
+    display:none;
+  }
+`;
+
+const H3 = styled.h3`
+  border-bottom: 5px solid red;
+  @media (max-width:718px){
+    margin-top:20px;
+  }
+`;

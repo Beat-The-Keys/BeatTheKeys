@@ -1,4 +1,3 @@
-import './css/App.css';
 import LoginScreen from './LoginScreen.js';
 import 'bootstrap/dist/css/bootstrap.css';
 

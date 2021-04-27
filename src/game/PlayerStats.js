@@ -1,6 +1,6 @@
 import { React, useState, useEffect } from 'react';
-
-export default function PlayerStats ({room, socket}) {
+import {socket} from '../LoginScreen'
+export default function PlayerStats ({room}) {
   const [activePlayerStats, setActivePlayerStats] = useState({}); // State to keep track of all the active users wpm
   const [playersFinished, setPlayersFinished] = useState([]); // State to keep track of which players finished
   const highlightStyle = {color: 'green'};

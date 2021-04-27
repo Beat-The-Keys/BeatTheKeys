@@ -4,6 +4,7 @@ import 'emoji-mart/css/emoji-mart.css';
 import Button from 'react-bootstrap/Button';
 import { Picker,  Emoji } from 'emoji-mart';
 import {socket} from '../LoginScreen';
+import styled from 'styled-components';
 
 function IconPick(){
     const [show, setShow] = useState(false);
@@ -41,10 +42,10 @@ function IconPick(){
             backdrop="static"
             keyboard={false}
           >
-            <Modal.Header closeButton>
+            <Header closeButton>
               <Modal.Title>Pick an Emoji</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
+            </Header>
+            <Body>
             <center>
               <h3>
                 You Picked: <Emoji emoji={icon} set='apple' size={32} native={true}/>
@@ -54,12 +55,19 @@ function IconPick(){
                   emoji="point_up"
                   onSelect={emoji => emojiUpdate(emoji)}
               />
-            </center>
-            </Modal.Body>
+              </center>
+            </Body>
           </Modal>
-          <h3> Your Icon: <Emoji emoji={icon} set='apple' size={32} native={true}/> </h3>
         </div>
         );
 }
 
 export default IconPick;
+
+const Header = styled(Modal.Header)`
+  padding: 0.4rem 2rem;
+`;
+
+const Body = styled(Modal.Body)`
+	padding: 0.2rem;
+`;
