@@ -4,8 +4,7 @@ import MainGameScreen from '../game/MainGameScreen.js';
 import IconPick from '../IconPick';
 import {socket} from '../LoginScreen';
 import HomeButtons from './HomeButtons.js';
-import Charts from '../game/Charts.js';
-import styled, {css} from 'styled-components';
+import styled from 'styled-components';
 
 export default function Home ({playerName, playerEmail, responseGoogleLogout}) {
   const [playerStartedGame, setPlayerStartedGame] = useState(false); // State for joining multiplayer room or not
@@ -92,18 +91,6 @@ const GridContainer = styled.div`
   }
 `;
 
-const Button = styled.button`
-  background-color: crimson;
-  border-radius: 10px;
-  border: none;
-  color: white;
-  padding: 5px;
-  text-align: center;
-  font-size: 20px;
-  margin: 4px 2px;
-  cursor: pointer;
-`;
-
 const H2 = styled.h2`
   @media (max-width:718px){
     display:none;
@@ -112,6 +99,8 @@ const H2 = styled.h2`
 
 const Winner = styled.div`
  display:flex;
+ flex-direction:column;
+ width: 20%;
   button{
     background-color: crimson;
     border-radius: 10px;

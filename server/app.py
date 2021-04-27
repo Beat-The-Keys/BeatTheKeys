@@ -135,6 +135,8 @@ def update_player_stats(data):
 @SOCKETIO.on('getUpdatePlayerStats')
 def get_update_player_stats(data):
     '''Clients send their WPM and the server sends updated stats to all clients in the room'''
+    print(data)
+    print(ROOMS)
     room = data['room']
     SOCKETIO.emit(
         'getUpdatePlayerStats', {'playerStats': ROOMS[room]['activePlayers']},
