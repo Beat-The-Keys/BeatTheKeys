@@ -126,8 +126,8 @@ def assign_player_to_lobby(data):
         SESSIONS[request.sid] = player_name
     active_players = list(ROOMS[room]['activePlayers'].keys())
     SOCKETIO.emit(
-        'assignPlayerToLobby', 
-        {'activePlayers': active_players, 'room': room, 'isOriginalRoom':is_original_room}, 
+        'assignPlayerToLobby',
+        {'activePlayers': active_players, 'room': room, 'isOriginalRoom':is_original_room},
         room=room
     )
 
