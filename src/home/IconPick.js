@@ -34,7 +34,6 @@ function IconPick(){
             <Button variant="primary" onClick={handleShow} size="lg">
               Select Icon
             </Button>
-          </center>
           <Modal
             className="coustom_modal"
             show={show}
@@ -59,7 +58,8 @@ function IconPick(){
             </Body>
           </Modal>
           <h3> Your Icon: <Emoji emoji={icon} set='apple' size={32} native={true}/> </h3>
-        </div>
+          </center>
+          </div>
         );
 }
 
