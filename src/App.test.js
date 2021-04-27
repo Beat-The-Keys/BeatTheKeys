@@ -12,7 +12,7 @@ test("Lobby UI rendered", () => {
     expect(screen.getByText("Achievements")).toBeInTheDocument();
     expect(screen.getByText("Select Icon")).toBeInTheDocument();
     expect(screen.getByText("Logout")).toBeInTheDocument();
-    expect(screen.getByText("Hi, " + playerName + "! Welcome to your lobby. Your invite code is")).toBeInTheDocument();
+    expect(screen.getByText("Hi, " + playerName + "! Welcome to your lobby.")).toBeInTheDocument();
 });
 
 test("Typeracer renders after starting game", () => {
@@ -21,6 +21,6 @@ test("Typeracer renders after starting game", () => {
     userEvent.click(startGameButton);
     // Verify that the typeracer UI is displayed after clicking "Start Game"
     expect(screen.getByText("Begin typing:")).toBeInTheDocument();
-    expect(document.querySelector(".Prompt")).toBeInTheDocument();
-    expect(document.querySelector(".Text-box")).toBeInTheDocument();
+    expect(document.querySelector(".prompt-text")).toBeInTheDocument();
+    expect(document.querySelector(".player-input")).toBeInTheDocument();
 });

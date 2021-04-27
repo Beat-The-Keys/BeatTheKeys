@@ -24,7 +24,7 @@ export default function JoinGameButton({playerName, room, socket}) {
 
     return (
         <div>
-            <FlexItem onClick={() => setShowJoinGameModal(true)} variant="danger" size="lg">Join Game</FlexItem>
+            <FlexItem onClick={() => setShowJoinGameModal(true)} variant="info" size="lg">Join Game</FlexItem>
             <Modal
             onShow={() => setAlreadyInRoomError(false)}
             onHide={() => setShowJoinGameModal(false)}

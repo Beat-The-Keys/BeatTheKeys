@@ -43,7 +43,7 @@ function MainGameScreen({playerName, room}) {
 
   function promptJSX() {
     // Highlight the text
-    return (<p>
+    return (<p className="prompt-text">
               <b style={{color:'green'}}>{prompt.substring(0, highlightedStopIndex)}</b>
               <b style={{color:'red'}}>{prompt.substring(highlightedStopIndex, incorrectHighlight)}</b>
               {prompt.substring(incorrectHighlight)}
