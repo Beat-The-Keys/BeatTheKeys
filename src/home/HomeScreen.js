@@ -61,11 +61,12 @@ export default function Home ({playerName, playerEmail, responseGoogleLogout}) {
           <MainGameScreen playerName={playerName} room={room}/>
         </div>
       : <div>
-      <H2>Hi, {playerName}! Welcome to your lobby. Your invite code is {room}</H2>
-      Current players: <UserList users={activePlayers}/>
+          <H2>Hi, {playerName}! Welcome to your lobby.</H2>
+          <H3>Invite Code: {room}</H3>
+          Current players: <UserList users={activePlayers}/>
           <center> <h1> BEAT THE KEYS! </h1> </center>
           <GridContainer>
-            <HomeButtons room={room} startGame={startGame} responseGoogleLogout={responseGoogleLogout}/>
+            <HomeButtons playerName={playerName} room={room} startGame={startGame} responseGoogleLogout={responseGoogleLogout}/>
             <IconPick/>
           </GridContainer>
         </div>
@@ -78,8 +79,12 @@ const LoggedIn = styled.p`
   position: absolute;
   top: 8px;
   right: 5px;
-  font-size: 18px;
-  z-index:1
+  font-size: 20px;
+  z-index:1;
+  width:min-content;
+  @media (max-width:796px){
+    font-size:15px;
+  }
 `;
 
 const GridContainer = styled.div`
@@ -115,5 +120,13 @@ const Winner = styled.div`
   h3{
     align-self:center;
     font-size:20px;
+  }
+`;
+
+
+const H3 = styled.h3`
+  border-bottom: 5px solid red;
+  @media (max-width:718px){
+    margin-top:20px;
   }
 `;

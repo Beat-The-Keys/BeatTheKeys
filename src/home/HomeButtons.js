@@ -1,9 +1,9 @@
 import React from 'react'
 import {GoogleLogout} from 'react-google-login';
 import Button from 'react-bootstrap/Button';
-import styled from 'styled-components';
 import {client_id, socket} from '../LoginScreen';
 import JoinGameButton from './JoinGameButton';
+import styled from 'styled-components';
 
 export default function HomeButtons({playerName, responseGoogleLogout, startGame, room}) {
     return (
@@ -11,7 +11,7 @@ export default function HomeButtons({playerName, responseGoogleLogout, startGame
             <FlexItem onClick={startGame} variant="success" size="lg">Start Game</FlexItem>
             <JoinGameButton playerName={playerName} room={room} socket={socket}/>
             <FlexItem variant="warning" size="lg">Achievements</FlexItem>
-        <GoogleLogout
+            <GoogleLogout
             clientId={client_id}
             buttonText="Logout"
             onFailure={()=>responseGoogleLogout(room)}
@@ -29,7 +29,7 @@ const FlexContainer = styled.div`
   align-items: center;
 `;
 
-const FlexItem = styled(Button)`
+export const FlexItem = styled(Button)`
   margin: 20px;
   padding: 20px;
   border-radius: 10px;

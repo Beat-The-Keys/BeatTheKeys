@@ -1,6 +1,7 @@
 import { React, useState, useRef } from 'react';
 import { Modal, FormControl} from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
+import {FlexItem} from './HomeButtons';
 
 export default function JoinGameButton({playerName, room, socket}) {
 
@@ -23,7 +24,7 @@ export default function JoinGameButton({playerName, room, socket}) {
 
     return (
         <div>
-            <Button className="flexI" onClick={() => setShowJoinGameModal(true)} variant="danger" size="lg">Join Game</Button>
+            <FlexItem onClick={() => setShowJoinGameModal(true)} variant="danger" size="lg">Join Game</FlexItem>
             <Modal
             onShow={() => setAlreadyInRoomError(false)}
             onHide={() => setShowJoinGameModal(false)}

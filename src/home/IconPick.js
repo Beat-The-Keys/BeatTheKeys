@@ -3,8 +3,8 @@ import { Modal } from 'react-bootstrap';
 import 'emoji-mart/css/emoji-mart.css';
 import Button from 'react-bootstrap/Button';
 import { Picker,  Emoji } from 'emoji-mart';
-import styled from 'styled-components';
 import {socket} from '../LoginScreen';
+import styled from 'styled-components';
 
 function IconPick(){
     const [show, setShow] = useState(false);
