@@ -3,7 +3,7 @@ import { Modal } from 'react-bootstrap';
 import 'emoji-mart/css/emoji-mart.css';
 import Button from 'react-bootstrap/Button';
 import { Picker,  Emoji } from 'emoji-mart';
-import {socket} from './LoginScreen';
+import {socket} from '../LoginScreen';
 import styled from 'styled-components';
 
 function IconPick(){
@@ -48,7 +48,7 @@ function IconPick(){
             <Body>
             <center>
               <h3>
-                You Picked: <Emoji emoji={icon} set='apple' size={32} native='true'/>
+                You Picked: <Emoji emoji={icon} set='apple' size={32} native={true}/>
               </h3>
               <Picker
                   title="Pick your emoji…"
@@ -58,7 +58,6 @@ function IconPick(){
               </center>
             </Body>
           </Modal>
-          <h3> Your Icon: <Emoji emoji={icon} set='apple' size={32} native='true'/> </h3>
         </div>
         );
 }

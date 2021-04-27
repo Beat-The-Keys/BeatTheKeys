@@ -11,5 +11,7 @@ export default function UserList({users}) {
 }
 
 const List = styled(ListGroup)`
-  width: fit-content
+  display:flex;
+  flex-direction:row;
+  width: fit-content;
 `;
