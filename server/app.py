@@ -18,8 +18,6 @@ DB = SQLAlchemy(APP)
 
 import models  # pylint: disable=wrong-import-position
 
-models.Users.query = DB.query_property()
-
 CORS = CORS(APP, resources={r"/*": {"origins": "*"}})
 
 SOCKETIO = SocketIO(APP,
