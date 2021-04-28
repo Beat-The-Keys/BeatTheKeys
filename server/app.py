@@ -77,7 +77,7 @@ def on_login(data):
     print(db_usersnames, db_emails, db_icons, db_wpms, db_users)
     print("ICON FOR THIS USER IS:", db_icons[db_emails.index(this_user_email)])
     SOCKETIO.emit('iconFromDB', {'icon': db_icons[db_emails.index(this_user_email)],
-                  'email': this_user_email}, broadcast=True)
+                                 'email': this_user_email}, broadcast=True)
 
 # When a client successfully logs in with their Google Account
 @SOCKETIO.on('iconToDB')
@@ -215,6 +215,12 @@ def fetch_db(sort_by):
 
     all_users = DB.session.query(models.Users).order_by(
         models.Users.username.asc()).all()
+    return fetch_db_helper(all_users)
+
+
+def simple_fetch_db():
+    """Simple function to see test DB query"""
+    all_users = models.Users.query.all()
     return fetch_db_helper(all_users)
 
 
