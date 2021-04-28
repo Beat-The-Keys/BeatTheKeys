@@ -1,26 +1,66 @@
-import { React, useState, useEffect } from 'react';
+import React,{useEffect, useRef } from 'react';
 import {socket} from '../LoginScreen'
-export default function PlayerStats ({room}) {
-  const [activePlayerStats, setActivePlayerStats] = useState({}); // State to keep track of all the active users wpm
-  const [playersFinished, setPlayersFinished] = useState([]); // State to keep track of which players finished
-  const highlightStyle = {color: 'green'};
+import { Bar } from "react-chartjs-2";
+import styled from 'styled-components';
+
+const colorGenerator = ()=>{
+  const red = Math.floor(Math.random() * 256);
+  const blue = Math.floor(Math.random() * 256);
+  return `rgb(${red}, 0, ${blue}, 0.2)`;
+}
+var config = {
+  data: {
+    labels: [],
+    datasets: [{
+      label: "WPM",
+      data: [],
+      fill: false,
+      backgroundColor: []
+    }]
+  },
+  };
+const PlayerStats = React.memo(({room}) => {
+  const barChart = useRef(null)
 
   useEffect(() => {
     socket.on('updatePlayerStats', (data) => {
-      setActivePlayerStats(data.playerStats);
+      if(barChart.current){
+        Object.entries(data.playerStats).map((key, index) => {
+          if(barChart.current.data.labels.indexOf(key[0]) === -1){
+            barChart.current.data.labels.push(key[0]);
+            barChart.current.data.datasets[0].backgroundColor.push(colorGenerator())
+          }
+          barChart.current.data.datasets[0].data[index] = key[1];
+          barChart.current.update();
+          return null;
+        })
+      }
     });
     socket.on('playersFinished', (data) => {
-      setPlayersFinished(data.playersFinished);
+      if(barChart.current){
+        const len = data.playersFinished.length;
+        const index = barChart.current.data.labels.indexOf(data.playersFinished[len-1])
+        console.log(len, index, data.playersFinished[len-1])
+        console.log(barChart.current.data.datasets[0].backgroundColor)
+        barChart.current.data.datasets[0].backgroundColor[index] = "rgb(0,255,0)"
+        barChart.current.update();
+      }
     });
-  }, [socket]);
 
-  return ( // We can eventually replace this with a chart
-    <ul>
-      { Object.entries(activePlayerStats).map(([key, index]) => {
-        return (
-          <li style={playersFinished.includes(key) ? highlightStyle : {}} key={key}><b>{key}:</b> {activePlayerStats[key]} WPM</li>
-        );
-      })}
-    </ul>
+  }, [room, barChart]);
+
+  return (
+    <BarChart ref={barChart} data={config.data}/>
   );
-}
+});
+
+export default PlayerStats;
+
+const BarChart = styled(Bar)`
+  @media (min-width:960px){
+    display: block;
+    box-sizing: border-box;
+    height: 198px;
+    width: 397.7px;
+  }
+`;

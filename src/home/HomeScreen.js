@@ -24,6 +24,7 @@ export default function Home ({playerName, playerEmail, responseGoogleLogout}) {
   function goBackToLobby() {
     setPlayerStartedGame(false);
     socket.emit('goBackToLobby', {room});
+    console.log('here')
     socket.emit('login', {name:playerName, email:playerEmail});
   }
 
@@ -57,10 +58,10 @@ export default function Home ({playerName, playerEmail, responseGoogleLogout}) {
       { playerStartedGame
       ? <div>
           {allPlayersFinished &&
-          <div>
-            <Button onClick={goBackToLobby}>Back to Lobby</Button>
+          <Winner>
+            <button onClick={goBackToLobby}>Back to Lobby</button>
             <h3>{winningPlayer} is the winner! Please go back to the lobby.</h3>
-          </div>
+          </Winner>
           }
           <MainGameScreen playerName={playerName} room={room}/>
         </div>
@@ -100,23 +101,33 @@ const GridContainer = styled.div`
   }
 `;
 
-const Button = styled.button`
-  background-color: crimson;
-  border-radius: 10px;
-  border: none;
-  color: white;
-  padding: 10px 30px;
-  text-align: center;
-  font-size: 40px;
-  margin: 4px 2px;
-  cursor: pointer;
-`;
-
 const H2 = styled.h2`
   @media (max-width:718px){
     display:none;
   }
 `;
+
+const Winner = styled.div`
+ display:flex;
+ flex-direction:column;
+ width: 20%;
+  button{
+    background-color: crimson;
+    border-radius: 10px;
+    border: none;
+    color: white;
+    padding: 5px;
+    text-align: center;
+    font-size: 20px;
+    margin: 4px 2px;
+    cursor: pointer;
+  }
+  h3{
+    align-self:center;
+    font-size:20px;
+  }
+`;
+
 
 const H3 = styled.h3`
   border-bottom: 5px solid red;
