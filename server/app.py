@@ -78,6 +78,7 @@ def on_login(data):
     db_usersnames, db_emails, db_icons, db_wpms = fetch_db("email") # fetch all users in DB
     print(db_usersnames, db_emails, db_wpms)
     # checks to see if the email exists in our DB, if not add the new users
+
     user_db_check(this_user_email, db_emails, this_user_name)
     db_usersnames, db_emails, db_icons, db_wpms = fetch_db("email") # refetch all users in DB
     SOCKETIO.emit(
@@ -236,6 +237,12 @@ def fetch_db(sort_by):
 
     all_users = DB.session.query(models.Users).order_by(
         models.Users.username.asc()).all()
+    return fetch_db_helper(all_users)
+
+
+def simple_fetch_db():
+    """Simple function to see test DB query"""
+    all_users = models.Users.query.all()
     return fetch_db_helper(all_users)
 
 
