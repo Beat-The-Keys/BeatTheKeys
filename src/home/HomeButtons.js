@@ -36,7 +36,7 @@ export const FlexItem = styled(Button)`
   width: 400px;
   height: 100px;
   @media (max-width:420px){
-    width: auto;
+    width: 200px;
     height: auto;
   }
 `;

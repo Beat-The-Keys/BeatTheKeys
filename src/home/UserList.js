@@ -8,7 +8,10 @@ export default function UserList({prop}) {
   //print all the users from all the room
   return (
     <List>
-        {activePlayers.map((user, index)=>(<ListGroup.Item key={index}><IconPick prop={[{user, playerName}]}/></ListGroup.Item>))}
+        {activePlayers.map((user, index)=>(
+          <ListGroup.Item key={index}>
+            <IconPick prop={[{user, playerName}]}/>
+          </ListGroup.Item>))}
     </List>
   );
 }

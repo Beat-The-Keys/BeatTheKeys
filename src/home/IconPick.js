@@ -17,12 +17,12 @@ function IconPick({prop}){
       setIcon(emoji.id);
       let emojiID = emoji.id;
       socket.emit('iconToDB', {emojiID, email});
+      handleClose()
     }
 
     useEffect(() => {
       socket.on('iconFromDB', (data) => {
         if(data.icon !== null)
-          console.log(data.icon, playerName)
           setIcon(data.icon);
         setEmail(data.email);
       });
@@ -32,9 +32,9 @@ function IconPick({prop}){
     return(
         <div>
           <center>
-            <div onClick={()=>{if(user === playerName){handleShow()}}}>
+            <Div current={user === playerName} onClick={()=>{if(user === playerName){handleShow()}}}>
               <Emoji emoji={icon} set='apple' size={32} native={true}/> {user}
-            </div>
+            </Div>
             <Modal
               className="coustom_modal"
               show={show}
@@ -71,4 +71,9 @@ const Header = styled(Modal.Header)`
 
 const Body = styled(Modal.Body)`
 	padding: 0.2rem;
+`;
+
+const Div = styled.div`
+  cursor: ${props=>props.current ? "pointer" : "auto"};
+
 `;

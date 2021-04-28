@@ -11,7 +11,7 @@ export default function Home({prop}) {
                     <HomeButtons prop={prop}/>
                 </Col>
                 <Col><Middle>Best WPM/Total Wins<br/>Leaderboard</Middle></Col>
-                <Col md="auto">Current players: <UserList prop={prop}/></Col>
+                <Col md="auto"><Middle>Current players: <UserList prop={prop}/></Middle></Col>
             </Row>
         </Container>
     )
@@ -19,8 +19,10 @@ export default function Home({prop}) {
 
 const Middle = styled.div`
     display:flex;
+    align-items:center;
     justify-content: center;
     margin-top: 20px;
+    flex-direction:column
 `;
 // const GridContainer = styled.div`
 //   display: grid;
