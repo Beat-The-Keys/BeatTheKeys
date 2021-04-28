@@ -59,17 +59,14 @@ class AddToDBTest(unittest.TestCase):
         for test in self.success_test_params:
             with patch('app.DB.session.add', self.mocked_db_session_add):
                 with patch('app.DB.session.commit', self.mocked_db_session_commit):
-                    with patch('models.Users.query') as mocked_query:
-                        mocked_query.all = self.mocked_person_query_all
+                    actual_result = user_db_check(test[KEY_INPUT], [INITIAL_EMAIL],
+                                                  [INITIAL_USERNAME])
+                    expected_result = test[KEY_EXPECTED]
+                    print(actual_result)
+                    print(expected_result)
 
-                        actual_result = user_db_check(test[KEY_INPUT], [INITIAL_EMAIL],
-                                                      [INITIAL_USERNAME])
-                        expected_result = test[KEY_EXPECTED]
-                        print(actual_result)
-                        print(expected_result)
-
-                        self.assertEqual(len(actual_result), len(expected_result))
-                        self.assertEqual(actual_result, expected_result)
+                    self.assertEqual(len(actual_result), len(expected_result))
+                    self.assertEqual(actual_result, expected_result)
 
 
 if __name__ == '__main__':
