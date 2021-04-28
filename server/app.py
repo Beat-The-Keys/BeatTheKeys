@@ -75,22 +75,16 @@ def on_login(data):
     in our db, if it isnt, add it! This returns an updated list to the clients"""
     this_user_email = data["email"]
     this_user_name = data["name"]
-    room = data['room']
-    if(room == ''):
-        room = request.sid
-
-    print(this_user_email)
-    print(this_user_name)
     db_usersnames, db_emails, db_icons, db_wpms = fetch_db("email") # fetch all users in DB
+    print(db_usersnames, db_emails, db_wpms)
     # checks to see if the email exists in our DB, if not add the new users
     user_db_check(this_user_email, db_emails, this_user_name)
-    print(db_usersnames, db_emails, db_icons, db_wpms)
-    print("ICON FOR THIS USER IS:", db_icons[db_emails.index(this_user_email)])
+    db_usersnames, db_emails, db_icons, db_wpms = fetch_db("email") # refetch all users in DB
     SOCKETIO.emit(
         'iconFromDB',
         {'icon': db_icons[db_emails.index(this_user_email)], 'email': this_user_email},
         broadcast=True,
-        room=room
+        room=request.sid
     )
 
 # When a client successfully logs in with their Google Account
@@ -196,7 +190,6 @@ def player_finished(data):
     '''
     A client sends a message when they finished the game
     Eventually we should check if the user achieved their best WPM here and store it in our db.
-
     '''
     room = data['room']
     player_name = data['playerName']
@@ -252,7 +245,14 @@ def user_db_check(this_user_email, db_users_emails, this_user_name):
     if this_user_email in db_users_emails:
         print("Welcome back {}!".format(this_user_email))
     else:
-        new_user = models.Users(username=this_user_name, email=this_user_email)
+        new_user = models.Users(username=this_user_name,
+                                email=this_user_email,
+                                icon='smiley',
+                                bestwpm=0,
+                                averagewpm=0,
+                                totalwpm=0,
+                                gamesplayed=0,
+                                gameswon=0)
         DB.session.add(new_user)
         DB.session.commit()
         db_users_emails.append(this_user_email)
