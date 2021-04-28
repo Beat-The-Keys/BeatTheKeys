@@ -6,8 +6,8 @@ import sys
 
 
 sys.path.append(os.path.abspath('../'))
-from app import simple_fetch_db
-from models import Users
+from app import simple_fetch_db, DB
+import models
 
 
 
@@ -34,9 +34,9 @@ class GetUserFromDBTest(unittest.TestCase):
             },
         ]
 
-        initial_person1 = Users(username=INITIAL_USERNAME1, email=INITIAL_EMAIL1,
+        initial_person1 = models.Users(username=INITIAL_USERNAME1, email=INITIAL_EMAIL1,
                                       icon=INITIAL_ICON1, bestwpm=INITIAL_WPM1)
-        initial_person2 = Users(username=INITIAL_USERNAME2, email=INITIAL_EMAIL2,
+        initial_person2 = models.Users(username=INITIAL_USERNAME2, email=INITIAL_EMAIL2,
                                       icon=INITIAL_ICON2, bestwpm=INITIAL_WPM2)
         self.initial_db_mock = [initial_person1, initial_person2]
 
