@@ -59,6 +59,7 @@ class GetUserFromDBTest(unittest.TestCase):
                 with patch('app.DB.session.commit', self.mocked_db_session_commit):
                     with patch('models.Users.query') as mocked_query:
                         mocked_query.all = self.mocked_person_query_all
+                        
                         actual_result = fetch_db(test[KEY_INPUT])
                         print(actual_result)
                         expected_result = test[KEY_EXPECTED]
