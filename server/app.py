@@ -75,6 +75,10 @@ def on_login(data):
     in our db, if it isnt, add it! This returns an updated list to the clients"""
     this_user_email = data["email"]
     this_user_name = data["name"]
+    room = data['room']
+    if(room == ''):
+        room = request.sid
+
     print(this_user_email)
     print(this_user_name)
     db_usersnames, db_emails, db_icons, db_wpms = fetch_db("email") # fetch all users in DB
@@ -86,7 +90,7 @@ def on_login(data):
         'iconFromDB',
         {'icon': db_icons[db_emails.index(this_user_email)], 'email': this_user_email},
         broadcast=True,
-        room=request.sid
+        room=room
     )
 
 # When a client successfully logs in with their Google Account
