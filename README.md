@@ -1,7 +1,7 @@
 # Beat the Keys (CS490 Group 4 Project)
 
 ## Overview
-Beat the Keys is a browser-based multiplayer typeracing game. To play the current version, visit our website [here](https://beat-the-keys.herokuapp.com/). If you would like to run the code locally, follow the steps below.
+Beat the Keys is a browser-based multiplayer typeracing game. To play the current version, view our Heroku app [here](https://beat-the-keys.herokuapp.com/). If you would like to run the app locally, follow the steps below.
 
 ## Setup
 1. `npm install`
@@ -47,5 +47,6 @@ We plan to add several features during sprint 2:
  
 ## Linting
 Disabled lint rules below:
-  * wrong-import-position:
-  * invalid-envvar-default:
+  * wrong-import-position: disabled in app.py for the `import models` statement
+  * invalid-envvar-default: disabled in app.py to avoid errors for `int(os.getenv('PORT', 8081)`. We may remove this in sprint 2.
+  * ignored-classes=scoped_session,SQLAlchemy: added `scoped_session` and `SQLAlchemy` to avoid `no-member` errors

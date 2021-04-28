@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import {GoogleLogin} from 'react-google-login';
-import HomeScreen from './HomeScreen.js';
+import HomeScreen from './home/HomeScreen.js';
 import io from 'socket.io-client';
-import './LoginUI.css';
 import { Emoji } from 'emoji-mart'
+import styled from "styled-components";
 
 export const socket = io(); // Connects to socket connection
 export const client_id = "427706489011-6rshj7squ73369r4n830rl8cch7q86f2.apps.googleusercontent.com";
@@ -30,13 +30,11 @@ export default function LoginScreen (){
     <div>
     {isLoggedIn
       ? <HomeScreen playerName={playerName} playerEmail={playerEmail} responseGoogleLogout={responseGoogleLogout}/>
-      : <div class="login-page">
-        <center>
-        <h1> BEAT THE KEYS!</h1>
-        <Emoji emoji='keyboard' set='twitter' size={40}/>
-        <h5> Multiplayer typeracing game </h5>
-        <div class="form">
-          <form class="login-form">
+      : <Loginpage>
+          <h1> BEAT THE KEYS!</h1>
+          <Emoji emoji='keyboard' set='twitter' size={40}/>
+          <h5> Multiplayer typeracing game </h5>
+          <Form>
             <p>Join game:</p>
             <meta name="google-signin-client_id" content={client_id}/>
                 <GoogleLogin
@@ -46,18 +44,38 @@ export default function LoginScreen (){
                 onFailure={() => alert('Please try logging in again.')}
                 cookiePolicy={'single_host_origin'}
                 />
-          </form>
-        </div>
-        <h5>Features coming soon:</h5>
-        <ul>
-          <li>Private lobbies</li>
-          <li>Achievements</li>
-          <li>Leaderboard</li>
-          <li>More text prompts</li>
-        </ul>
-        </center>
-        </div>
+          </Form>
+          <h5>Features coming soon:</h5>
+          <ul>
+            <li>Private lobbies</li>
+            <li>Achievements</li>
+            <li>Leaderboard</li>
+            <li>More text prompts</li>
+          </ul>
+        </Loginpage>
     }
     </div>
   );
 }
+
+
+const Loginpage = styled.div`
+  width: max-content;
+  padding: 8% 0 0;
+  margin: auto;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+`;
+
+const Form = styled.div`
+  position: relative;
+  z-index: 1;
+  background: #dfdfdf;
+  max-width: 360px;
+  margin: 0 auto 20px;
+  padding: 45px 100px;
+  text-align: center;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+  border-radius: 10px;
+`;
