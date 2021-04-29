@@ -74,13 +74,17 @@ def on_login(data):
     """This is ran when someone presses the login button, it checks to see if that login is already
     in our db, if it isnt, add it! This returns an updated list to the clients"""
     this_user_email = data["email"]
-    this_user_name = data["name"]
-    db_usersnames, db_emails, db_icons, db_wpms = fetch_db("email") # fetch all users in DB
-    print(db_usersnames, db_emails, db_wpms)
+    db_emails, db_icons, db_bestwpm, db_totalwpm, db_gamesplayed, db_gameswon = fetch_db("email")
+    print("emails:", db_emails)
+    print("icons:", db_icons)
+    print("bestwpm:", db_bestwpm)
+    print("totalwpm:", db_totalwpm)
+    print("gamesplayed:", db_gamesplayed)
+    print("gameswon:", db_gameswon)
     # checks to see if the email exists in our DB, if not add the new users
 
-    user_db_check(this_user_email, db_emails, this_user_name)
-    db_usersnames, db_emails, db_icons, db_wpms = fetch_db("email") # refetch all users in DB
+    user_db_check(this_user_email, db_emails)
+    db_emails, db_icons, db_bestwpm, db_totalwpm, db_gamesplayed, db_gameswon = fetch_db("email")
     SOCKETIO.emit(
         'iconFromDB',
         {'icon': db_icons[db_emails.index(this_user_email)], 'email': this_user_email},
@@ -95,8 +99,6 @@ def icon_to_db(data):
     user = DB.session.query(models.Users).get(data['email'])
     user.icon = data['emojiID']
     DB.session.commit()
-    db_usersnames, db_emails, db_icons, db_wpms = fetch_db(" ")
-    print("iconToDB ", db_usersnames, db_emails, db_icons, db_wpms)
 
 @SOCKETIO.on('assignPlayerToLobby')
 def assign_player_to_lobby(data):
@@ -192,6 +194,12 @@ def player_finished(data):
     A client sends a message when they finished the game
     Eventually we should check if the user achieved their best WPM here and store it in our db.
     '''
+    wpm = data['wpm']
+    email = data['email']
+
+    bestwpm_db_check(email, wpm)
+    update_db_gamesplayed(email)
+
     room = data['room']
     player_name = data['playerName']
     ROOMS[room]['playersFinished'].append(player_name)
@@ -207,6 +215,8 @@ def player_finished(data):
     if players_finished_set == active_players_set:
         # We also include the winning player name in the 'gameComplete' message.
         winning_player = max(ROOMS[room]['activePlayers'], key=ROOMS[room]['activePlayers'].get)
+        print("THIS IS THE WINNING PLAYER:", winning_player)
+        print("THIS IS THE KEY:", ROOMS[room]['activePlayers'])
         SOCKETIO.emit('gameComplete', {'winningPlayer': winning_player}, broadcast=True, room=room)
 
     return ROOMS[room]['playersFinished']
@@ -223,7 +233,7 @@ def go_back_to_lobby(data):
 
 def fetch_db(sort_by):
     """This is how we fetch all of the information from Heroku's DB, it also allows us to order
-    the information by best wpm or usernames(alphabetical)"""
+    the information by best wpm/emails(alphabetical)/gameswon"""
     if sort_by == "wpm":
         all_users = DB.session.query(models.Users).order_by(
             models.Users.bestwpm.desc()).all()
@@ -232,31 +242,44 @@ def fetch_db(sort_by):
     if sort_by == "email":
         all_users = DB.session.query(models.Users).order_by(
             models.Users.email.desc()).all()
-        print(all_users)
         return fetch_db_helper(all_users)
 
     all_users = DB.session.query(models.Users).order_by(
-        models.Users.username.asc()).all()
+        models.Users.gameswon.desc()).all()
     return fetch_db_helper(all_users)
 
 
-def simple_fetch_db():
-    """Simple function to see test DB query"""
-    all_users = models.Users.query.all()
-    return fetch_db_helper(all_users)
+def bestwpm_db_check(this_user_email, this_user_wpm):
+    """This is to check if the wpm that was just calculated is bigger than the
+    best wpm stored in DB. If it is, replace, if not do nothing. Also it adds wpm to each
+    totalwpm of each player."""
+    this_user = DB.session.query(models.Users).get(this_user_email)
+    db_user_bestwpm = this_user.bestwpm
 
+    print("DB WPM:", db_user_bestwpm)
+    print("MOST RECENT WPM:", this_user_wpm)
+    this_user.totalwpm = this_user.totalwpm + this_user_wpm
+    DB.session.commit()
 
-def user_db_check(this_user_email, db_users_emails, this_user_name):
+    if this_user_wpm > db_user_bestwpm:
+        this_user.bestwpm = this_user_wpm
+        DB.session.commit()
+
+def update_db_gamesplayed(this_user_email):
+    """This is to update all the players gamesplayed column"""
+    this_user = DB.session.query(models.Users).get(this_user_email)
+    this_user.gamesplayed = this_user.gamesplayed + 1
+    DB.session.commit()
+
+def user_db_check(this_user_email, db_users_emails):
     """This is to check if the email is already in our database, if it is don't add to the
     database, it is isn't add a new user to the database"""
     if this_user_email in db_users_emails:
         print("Welcome back {}!".format(this_user_email))
     else:
-        new_user = models.Users(username=this_user_name,
-                                email=this_user_email,
+        new_user = models.Users(email=this_user_email,
                                 icon='smiley',
                                 bestwpm=0,
-                                averagewpm=0,
                                 totalwpm=0,
                                 gamesplayed=0,
                                 gameswon=0)
@@ -266,19 +289,31 @@ def user_db_check(this_user_email, db_users_emails, this_user_name):
     return db_users_emails
 
 
+def update_db_gameswon(this_user_email):
+    """This is to update the winners gameswon column"""
+    this_user = DB.session.query(models.Users).get(this_user_email)
+    this_user.gameswon = this_user.gameswon + 1
+    DB.session.commit()
+
+
+
 def fetch_db_helper(all_users):
     """This will help fetch the information from the db and return 4 lists, a username list
     an emails list, an icons list, and a bestWPM's list"""
-    db_usersnames = []
     db_emails = []
     db_icons = []
     db_bestwpm = []
+    db_totalwpm = []
+    db_gamesplayed = []
+    db_gameswon = []
     for users in all_users:
-        db_usersnames.append(users.username)
         db_emails.append(users.email)
         db_icons.append(users.icon)
         db_bestwpm.append(users.bestwpm)
-    return db_usersnames, db_emails, db_icons, db_bestwpm
+        db_totalwpm.append(users.totalwpm)
+        db_gamesplayed.append(users.gamesplayed)
+        db_gameswon.append(users.gameswon)
+    return db_emails, db_icons, db_bestwpm, db_totalwpm, db_gamesplayed, db_gameswon
 
 if __name__ == "__main__":
     DB.create_all()

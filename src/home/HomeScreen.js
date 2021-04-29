@@ -63,7 +63,7 @@ export default function Home ({playerName, playerEmail, responseGoogleLogout}) {
             <h3>{winningPlayer} is the winner! Please go back to the lobby.</h3>
           </Winner>
           }
-          <MainGameScreen playerName={playerName} room={room}/>
+          <MainGameScreen playerName={playerName} room={room} playerEmail={playerEmail}/>
         </div>
       : <div>
           <H2>Hi, {playerName}! Welcome to your lobby.</H2>
