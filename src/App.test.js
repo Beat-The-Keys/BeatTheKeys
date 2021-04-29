@@ -13,12 +13,12 @@ test("Lobby UI rendered", () => {
     expect(screen.getByText(`Logged In: ${playerEmail}`)).toBeInTheDocument();
 });
 
-test("Typeracer renders after starting game", () => {
+test("Join Modal Renders", () => {
     render(<HomeScreen playerName={playerName}/>);
-    const startGameButton = screen.getByText("Start Game");
+    const startGameButton = screen.getByText("Join Game");
     userEvent.click(startGameButton);
-    // Verify that the typeracer UI is displayed after clicking "Start Game"
-    expect(screen.getByText("Begin typing:")).toBeInTheDocument();
-    expect(document.querySelector(".p")).toBeInTheDocument();
-    expect(document.querySelector(".bXYnqS")).toBeInTheDocument();
+    // Verify that the join modal is displayed after clicking "Join Game"
+    expect(screen.getByText("Enter an Invite Code")).toBeInTheDocument();
+    expect(document.querySelector(".form-control")).toBeInTheDocument();
+    expect(document.querySelector(".btn-primary")).toBeInTheDocument();
 });
