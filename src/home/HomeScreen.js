@@ -29,7 +29,7 @@ export default function Home ({playerName, playerEmail, responseGoogleLogout}) {
   }
 
   useEffect(() => {
-    socket.emit('assignPlayerToLobby', {playerName, room});
+    socket.emit('assignPlayerToLobby', {playerEmail, room});
     socket.on('assignPlayerToLobby', (data) => {
       setActivePlayers(data.activePlayers);
       if (data.isOriginalRoom) {
@@ -71,7 +71,7 @@ export default function Home ({playerName, playerEmail, responseGoogleLogout}) {
           Current players: <UserList users={activePlayers}/>
           <center> <h1> BEAT THE KEYS! </h1> </center>
           <GridContainer>
-            <HomeButtons playerName={playerName} room={room} originalRoom={originalRoom} startGame={startGame} responseGoogleLogout={responseGoogleLogout}/>
+            <HomeButtons playerName={playerName} playerEmail={playerEmail} room={room} originalRoom={originalRoom} startGame={startGame} responseGoogleLogout={responseGoogleLogout}/>
             <IconPick/>
           </GridContainer>
         </div>

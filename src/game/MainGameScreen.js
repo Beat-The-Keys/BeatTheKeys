@@ -21,7 +21,7 @@ function MainGameScreen({playerName, room, playerEmail}) {
       let currentMin = (60 - timeLeft) / 60;
       let wpm = currentMin === 0 ? 0 : Math.round(entries / currentMin);
       setWpm(wpm);
-      socket.emit('updatePlayerStats', {'playerName': playerName, 'wpm': wpm, 'room': room});
+      socket.emit('updatePlayerStats', {'playerName': playerName, 'wpm': wpm, 'room': room, 'playerEmail': playerEmail});
     }
 
   }, [highlightedStopIndex, playerName, room, timeLeft, playerFinished]);
@@ -31,7 +31,7 @@ function MainGameScreen({playerName, room, playerEmail}) {
     setTypingBegan(true);
     if (prompt === textboxRef.current.value) {
       setPlayerFinished(true);
-      socket.emit('playerFinished', {'playerName': playerName, 'room': room, 'wpm': wpm, 'email': playerEmail});
+      socket.emit('playerFinished', {'playerName': playerName, 'room': room, 'wpm': wpm, 'playerEmail': playerEmail});
     }
     if (prompt.startsWith(textboxRef.current.value)) {
       setHighlightedStopIndex(textboxRef.current.value.length);
@@ -72,7 +72,7 @@ function MainGameScreen({playerName, room, playerEmail}) {
     // Decrement the timer and set the timeLeft state
     setTimeLeft(t);
     if (t === 1) {
-      socket.emit('playerFinished', {'playerName': playerName, 'room': room, 'wpm': wpm, 'email': playerEmail});
+      socket.emit('playerFinished', {'playerName': playerName, 'room': room, 'wpm': wpm, 'playerEmail': playerEmail});
       setPlayerFinished(true);
     }
     return t-1;

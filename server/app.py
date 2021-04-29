@@ -51,7 +51,7 @@ def on_disconnect():
         disconnected_player = SESSIONS[request.sid]
         for room in ROOMS:
             if disconnected_player in ROOMS[room]['activePlayers']:
-                remove_player_from_lobby({'playerName':disconnected_player, 'room':room})
+                remove_player_from_lobby({'playerEmail':disconnected_player, 'room':room})
                 print(disconnected_player + ' disconnected!')
 
 ROOMS = {}
@@ -103,7 +103,7 @@ def icon_to_db(data):
 @SOCKETIO.on('assignPlayerToLobby')
 def assign_player_to_lobby(data):
     '''Put the user in a specified room'''
-    player_name = data['playerName']
+    player_email = data['playerEmail']
     room = data['room']
     is_original_room = False
     # If this function is called with an empty room ID, user is joining for the first time
@@ -122,9 +122,9 @@ def assign_player_to_lobby(data):
         ROOMS[room]['activePlayers'] = OrderedDict()
         ROOMS[room]['playersFinished'] = []
     # If the player is not in the room then add them
-    if player_name not in ROOMS[room]:
-        ROOMS[room]['activePlayers'][player_name] = 0
-        SESSIONS[request.sid] = player_name
+    if player_email not in ROOMS[room]:
+        ROOMS[room]['activePlayers'][player_email] = 0
+        SESSIONS[request.sid] = player_email
     active_players = list(ROOMS[room]['activePlayers'].keys())
     SOCKETIO.emit(
         'assignPlayerToLobby',
@@ -135,23 +135,23 @@ def assign_player_to_lobby(data):
 @SOCKETIO.on('attemptToJoinGame')
 def attempt_to_join_game(data):
     '''Attempts to put the player in a room using the room ID they provided'''
-    player_name = data['playerName']
+    player_email = data['playerEmail']
     old_room = data['oldRoom']
     new_room = data['newRoom']
     # If the user tries to join a lobby that does not exist, just return
     # We can choose to display an error on the client-side later
     if new_room != "" and new_room not in ROOMS:
         return
-    remove_player_from_lobby({'playerName':player_name, 'room':old_room})
-    assign_player_to_lobby({'playerName':player_name, 'room':new_room})
+    remove_player_from_lobby({'playerEmail':player_email, 'room':old_room})
+    assign_player_to_lobby({'playerEmail':player_email, 'room':new_room})
 
 @SOCKETIO.on('updatePlayerStats')
 def update_player_stats(data):
     '''Clients send their WPM and the server sends updated stats to all clients in the room'''
     room = data['room']
-    player_name = data['playerName']
+    player_email = data['playerEmail']
     wpm = data['wpm']
-    ROOMS[room]['activePlayers'][player_name] = wpm
+    ROOMS[room]['activePlayers'][player_email] = wpm
     SOCKETIO.emit(
         'updatePlayerStats', {'playerStats': ROOMS[room]['activePlayers']},
         broadcast=True,
@@ -163,11 +163,11 @@ def update_player_stats(data):
 def remove_player_from_lobby(data):
     '''User leaves the room'''
     room = data['room']
-    player_name = data['playerName']
+    player_email = data['playerEmail']
     # Remove the player from the room
-    ROOMS[room]['activePlayers'].pop(player_name, None)
-    if player_name in ROOMS[room]['playersFinished']:
-        ROOMS[room]['playersFinished'].remove(player_name)
+    ROOMS[room]['activePlayers'].pop(player_email, None)
+    if player_email in ROOMS[room]['playersFinished']:
+        ROOMS[room]['playersFinished'].remove(player_email)
     SOCKETIO.emit(
         'updatePlayerStats', {'playerStats': ROOMS[room]['activePlayers']},
         broadcast=True,
@@ -195,14 +195,14 @@ def player_finished(data):
     Eventually we should check if the user achieved their best WPM here and store it in our db.
     '''
     wpm = data['wpm']
-    email = data['email']
+    email = data['playerEmail']
 
     bestwpm_db_check(email, wpm)
     update_db_gamesplayed(email)
 
     room = data['room']
-    player_name = data['playerName']
-    ROOMS[room]['playersFinished'].append(player_name)
+    player_email = data['playerEmail']
+    ROOMS[room]['playersFinished'].append(player_email)
     SOCKETIO.emit(
         'playersFinished', {'playersFinished': ROOMS[room]['playersFinished']},
         broadcast=True,
@@ -217,6 +217,7 @@ def player_finished(data):
         winning_player = max(ROOMS[room]['activePlayers'], key=ROOMS[room]['activePlayers'].get)
         print("THIS IS THE WINNING PLAYER:", winning_player)
         print("THIS IS THE KEY:", ROOMS[room]['activePlayers'])
+        update_db_gameswon(winning_player)
         SOCKETIO.emit('gameComplete', {'winningPlayer': winning_player}, broadcast=True, room=room)
 
     return ROOMS[room]['playersFinished']
