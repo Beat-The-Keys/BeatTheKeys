@@ -1,4 +1,4 @@
-import { React, useState, useEffect  } from 'react';
+import { React, useState } from 'react';
 import { Modal } from 'react-bootstrap';
 import 'emoji-mart/css/emoji-mart.css';
 import { Picker,  Emoji } from 'emoji-mart';
@@ -10,22 +10,12 @@ function IconPick({prop}){
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-    const [icon, setIcon] = useState("");
 
     function emojiUpdate(emoji) {
-      setIcon(emoji.id);
       let emojiID = emoji.id;
       socket.emit('iconToDB', {emojiID, playerEmail, room, playerName});
       handleClose()
     }
-
-    useEffect(() => {
-      // if(icon === ''){
-      //   setIcon(playerIcon)
-      // }
-
-
-  }, [icon, playerIcon]);
 
     return(
         <div>
@@ -45,9 +35,6 @@ function IconPick({prop}){
             </Header>
             <Body>
             <center>
-              <h3>
-                You Picked: <Emoji emoji={icon} set='apple' size={32} native={true}/>
-              </h3>
               <Picker
                   title="Pick your emoji…"
                   emoji="point_up"
@@ -73,5 +60,4 @@ const Body = styled(Modal.Body)`
 
 const Div = styled.div`
   cursor: ${props=>props.current ? "pointer" : "auto"};
-
 `;
