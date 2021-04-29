@@ -1,12 +1,12 @@
 import { React, useState, useEffect  } from 'react';
 import { Modal } from 'react-bootstrap';
 import 'emoji-mart/css/emoji-mart.css';
-import Button from 'react-bootstrap/Button';
 import { Picker,  Emoji } from 'emoji-mart';
 import {socket} from '../LoginScreen';
 import styled from 'styled-components';
 
-function IconPick(){
+function IconPick({prop}){
+    const {user, playerName} = prop[0];
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
@@ -17,6 +17,7 @@ function IconPick(){
       setIcon(emoji.id);
       let emojiID = emoji.id;
       socket.emit('iconToDB', {emojiID, email});
+      handleClose()
     }
 
     useEffect(() => {
@@ -31,9 +32,9 @@ function IconPick(){
     return(
         <div>
           <center>
-            <Button variant="primary" onClick={handleShow} size="lg">
-              Select Icon
-            </Button>
+            <Div current={user === playerName} onClick={()=>{if(user === playerName){handleShow()}}}>
+              <Emoji emoji={icon} set='apple' size={32} native={true}/> {user}
+            </Div>
             <Modal
               className="coustom_modal"
               show={show}
@@ -57,7 +58,6 @@ function IconPick(){
               </center>
             </Body>
           </Modal>
-          <h3> Your Icon: <Emoji emoji={icon} set='apple' size={32} native={true}/> </h3>
           </center>
         </div>
         );
@@ -71,4 +71,9 @@ const Header = styled(Modal.Header)`
 
 const Body = styled(Modal.Body)`
 	padding: 0.2rem;
+`;
+
+const Div = styled.div`
+  cursor: ${props=>props.current ? "pointer" : "auto"};
+
 `;

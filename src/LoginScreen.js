@@ -6,7 +6,7 @@ import { Emoji } from 'emoji-mart'
 import styled from "styled-components";
 
 export const socket = io(); // Connects to socket connection
-export const client_id = "427706489011-6rshj7squ73369r4n830rl8cch7q86f2.apps.googleusercontent.com";
+export const client_id = "658534926731-idi9s66r9j41tj2o844e16s5q4ua1d06.apps.googleusercontent.com";
 
 export default function LoginScreen (){
   const [isLoggedIn, changeIsLoggedIn] = useState(false);
@@ -19,7 +19,7 @@ export default function LoginScreen (){
     setPlayerEmail(email)
     changeIsLoggedIn(true);
     let name = response.profileObj.name;
-    socket.emit('login', {name, email});
+    socket.emit('login', {name, email, room:''});
   }
   function responseGoogleLogout(room){
     changeIsLoggedIn(false);
