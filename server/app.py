@@ -76,7 +76,7 @@ def on_login(data):
     this_user_email = data["email"]
     this_user_name = data["name"]
     db_usersnames, db_emails, db_icons, db_wpms = fetch_db("email") # fetch all users in DB
-    # print(db_usersnames, db_emails, db_wpms)
+    print(db_usersnames, db_emails, db_wpms, db_icons)
     # checks to see if the email exists in our DB, if not add the new users
 
     user_db_check(this_user_email, db_emails, this_user_name)
@@ -95,7 +95,7 @@ def icon_to_db(data):
     DB.session.commit()
     db_usersnames, db_emails, db_icons, db_wpms = fetch_db(" ")
 
-    # print("iconToDB ", db_usersnames, db_emails, db_icons, db_wpms)
+    print("iconToDB ", db_usersnames, db_emails, db_icons, db_wpms)
     ROOMS[room]['activePlayers'][player_name] = [0, data['emojiID']]
     active_players = ROOMS[room]['activePlayers']
     SOCKETIO.emit(
@@ -104,10 +104,12 @@ def icon_to_db(data):
         room=room
     )
 
-def getIcons(player_email):
+def get_icons(player_email):
+    '''Gets the players icon'''
     db_usersnames, db_emails, db_icons, db_wpms = fetch_db("email") # fetch all users in DB
-    index = db_emails.index(player_email)
-    return db_icons[index]
+    print("iconToDB ", db_usersnames, db_emails, db_icons, db_wpms)
+    i = db_emails.index(player_email)
+    return db_icons[i]
 
 @SOCKETIO.on('assignPlayerToLobby')
 def assign_player_to_lobby(data):
@@ -134,7 +136,7 @@ def assign_player_to_lobby(data):
         ROOMS[room]['playersFinished'] = []
     # If the player is not in the room then add them
     if player_name not in ROOMS[room]:
-        icon = getIcons(player_email)
+        icon = get_icons(player_email)
         ROOMS[room]['activePlayers'][player_name] = [0, icon]
         SESSIONS[request.sid] = player_name
     active_players = ROOMS[room]['activePlayers']
@@ -164,7 +166,6 @@ def update_player_stats(data):
     room = data['room']
     player_name = data['playerName']
     wpm = data['wpm']
-    print(ROOMS[room]['activePlayers'], ROOMS[room]['activePlayers'][player_name])
     ROOMS[room]['activePlayers'][player_name][0] = wpm
     SOCKETIO.emit(
         'updatePlayerStats', {'playerStats': ROOMS[room]['activePlayers']},
@@ -248,7 +249,7 @@ def fetch_db(sort_by):
     if sort_by == "email":
         all_users = DB.session.query(models.Users).order_by(
             models.Users.email.desc()).all()
-        # print(all_users)
+        print(all_users)
         return fetch_db_helper(all_users)
 
     all_users = DB.session.query(models.Users).order_by(
