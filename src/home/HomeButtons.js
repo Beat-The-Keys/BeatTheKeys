@@ -1,5 +1,4 @@
 import React from 'react'
-import {GoogleLogout} from 'react-google-login';
 import Button from 'react-bootstrap/Button';
 import {socket} from '../LoginScreen';
 import JoinGameButton from './JoinGameButton';
