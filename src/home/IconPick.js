@@ -6,34 +6,32 @@ import {socket} from '../LoginScreen';
 import styled from 'styled-components';
 
 function IconPick({prop}){
-    const {user, playerName} = prop[0];
+    const {user, playerName, playerIcon, room, playerEmail} = prop[0];
     const [show, setShow] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const [icon, setIcon] = useState("");
-    const [email, setEmail] = useState("");
 
     function emojiUpdate(emoji) {
       setIcon(emoji.id);
       let emojiID = emoji.id;
-      socket.emit('iconToDB', {emojiID, email});
+      socket.emit('iconToDB', {emojiID, playerEmail, room, playerName});
       handleClose()
     }
 
     useEffect(() => {
-      socket.on('iconFromDB', (data) => {
-        if(data.icon !== null)
-          setIcon(data.icon);
-        setEmail(data.email);
-      });
+      // if(icon === ''){
+      //   setIcon(playerIcon)
+      // }
 
-  }, [icon]);
+
+  }, [icon, playerIcon]);
 
     return(
         <div>
           <center>
             <Div current={user === playerName} onClick={()=>{if(user === playerName){handleShow()}}}>
-              <Emoji emoji={icon} set='apple' size={32} native={true}/> {user}
+              <Emoji emoji={playerIcon} set='apple' size={32} native={true}/> {user}
             </Div>
             <Modal
               className="coustom_modal"

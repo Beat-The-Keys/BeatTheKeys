@@ -8,7 +8,7 @@ import Home from './Home.js';
 
 export default function HomeScreen ({playerName, playerEmail, responseGoogleLogout}) {
   const [playerStartedGame, setPlayerStartedGame] = useState(false); // State for joining multiplayer room or not
-  const [activePlayers, setActivePlayers] = useState([]); // State list of all players in all the rooms
+  const [activePlayers, setActivePlayers] = useState({}); // State list of all players in all the rooms
   const [room, setRoom] = useState(""); // State for keeping track of the room the player is in
   const [originalRoom, setOriginalRoom] = useState(""); // State which contains the original room the player was assigned to
   const [allPlayersFinished, setAllPlayersFinished] = useState(false); // State for checking if all users finished the game
@@ -29,8 +29,9 @@ export default function HomeScreen ({playerName, playerEmail, responseGoogleLogo
   }
 
   useEffect(() => {
-    socket.emit('assignPlayerToLobby', {playerName, room});
+    socket.emit('assignPlayerToLobby', {playerName, room, playerEmail});
     socket.on('assignPlayerToLobby', (data) => {
+      console.log(data)
       setActivePlayers(data.activePlayers);
       if (data.isOriginalRoom) {
         setOriginalRoom(data.room);
@@ -67,7 +68,7 @@ export default function HomeScreen ({playerName, playerEmail, responseGoogleLogo
         </div>
       : <div>
           <center> <h1> BEAT THE KEYS! </h1> </center>
-          <Home prop={[{room, playerName, originalRoom, startGame, activePlayers}]}/>
+          <Home prop={[{room, playerName, originalRoom, startGame, activePlayers, playerEmail}]}/>
         </div>
       }
     </div>
