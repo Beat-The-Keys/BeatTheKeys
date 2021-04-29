@@ -18,35 +18,35 @@ class UserUpdateTest(unittest.TestCase):
         app.ROOMS['Multiplayer']['activePlayers'] = OrderedDict()
 
         self.success_test_params = [{
-            KEY_INPUT: {'playerName': 'Akash', 'room': 'Multiplayer', 'wpm': 13},
+            KEY_INPUT: {'playerEmail': 'Akash', 'room': 'Multiplayer', 'wpm': 13},
             KEY_EXPECTED: app.ROOMS['Multiplayer']['activePlayers']
         }, {
-            KEY_INPUT: {'playerName': 'AJ', 'room': 'Multiplayer', 'wpm': 130},
-            KEY_EXPECTED: app.ROOMS['Multiplayer']['activePlayers']
-
-        }, {
-            KEY_INPUT: {'playerName': 'Yusef', 'room': 'Multiplayer', 'wpm': 200},
+            KEY_INPUT: {'playerEmail': 'AJ', 'room': 'Multiplayer', 'wpm': 130},
             KEY_EXPECTED: app.ROOMS['Multiplayer']['activePlayers']
 
         }, {
-            KEY_INPUT: {'playerName': 'Mann', 'room': 'Multiplayer', 'wpm': 1},
+            KEY_INPUT: {'playerEmail': 'Yusef', 'room': 'Multiplayer', 'wpm': 200},
+            KEY_EXPECTED: app.ROOMS['Multiplayer']['activePlayers']
+
+        }, {
+            KEY_INPUT: {'playerEmail': 'Mann', 'room': 'Multiplayer', 'wpm': 1},
             KEY_EXPECTED: app.ROOMS['Multiplayer']['activePlayers']
 
         }]
 
         self.failure_test_params = [{
-            KEY_INPUT: {'playerName': 'Akash', 'room': 'Multiplayer', 'wpm': 13},
+            KEY_INPUT: {'playerEmail': 'Akash', 'room': 'Multiplayer', 'wpm': 13},
             KEY_EXPECTED: OrderedDict([('Akash', 12)])
         }, {
-            KEY_INPUT: {'playerName': 'AJ', 'room': 'Multiplayer', 'wpm': 130},
+            KEY_INPUT: {'playerEmail': 'AJ', 'room': 'Multiplayer', 'wpm': 130},
             KEY_EXPECTED: OrderedDict([('AJ', 200), ('Akash', 13)])
 
         }, {
-            KEY_INPUT: {'playerName': 'Yusef', 'room': 'Multiplayer', 'wpm': 200},
+            KEY_INPUT: {'playerEmail': 'Yusef', 'room': 'Multiplayer', 'wpm': 200},
             KEY_EXPECTED: OrderedDict([('Akash', 13), ('AJ', 200)])
 
         }, {
-            KEY_INPUT: {'playerName': 'Mann', 'room': 'Multiplayer', 'wpm': 1},
+            KEY_INPUT: {'playerEmail': 'Mann', 'room': 'Multiplayer', 'wpm': 1},
             KEY_EXPECTED: OrderedDict([('Mann', 13)])
 
         }]
@@ -62,8 +62,8 @@ class UserUpdateTest(unittest.TestCase):
 
             self.assertEqual(actual_result, expected_result)
             self.assertEqual(
-                actual_result[test[KEY_INPUT]['playerName']],
-                expected_result[test[KEY_INPUT]['playerName']]
+                actual_result[test[KEY_INPUT]['playerEmail']],
+                expected_result[test[KEY_INPUT]['playerEmail']]
             )
 
     def tests_update_player_stats_failure(self):
@@ -76,7 +76,7 @@ class UserUpdateTest(unittest.TestCase):
 
 
             self.assertNotEqual(actual_result, expected_result)
-            self.assertNotEqual(actual_result[test[KEY_INPUT]['playerName']], expected_result)
+            self.assertNotEqual(actual_result[test[KEY_INPUT]['playerEmail']], expected_result)
 
 if __name__ == '__main__':
     unittest.main()
