@@ -20,7 +20,7 @@ function IconPick({prop}){
     return(
         <div>
           <center>
-            <Div current={user === playerName} onClick={()=>{if(user === playerName){handleShow()}}}>
+            <Div current={user === playerEmail} onClick={()=>{if(user === playerEmail){handleShow()}}}>
               <Emoji emoji={playerIcon} set='apple' size={32} native={true}/> {user}
             </Div>
             <Modal

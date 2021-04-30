@@ -23,7 +23,7 @@ export default function LoginScreen (){
   }
   function responseGoogleLogout(room){
     changeIsLoggedIn(false);
-    socket.emit('removePlayerFromLobby', {playerName, room});
+    socket.emit('removePlayerFromLobby', {playerEmail, room});
   }
 
   return (
