@@ -3,15 +3,16 @@ import styled from 'styled-components';
 import IconPick from './IconPick';
 
 export default function UserList({prop}) {
-  const {activePlayers, playerName} = prop[0]
+  const {activePlayers, playerName, room, playerEmail} = prop[0]
 
   //print all the users from all the room
   return (
     <List>
-        {activePlayers.map((user, index)=>(
+        {Object.keys(activePlayers).map((user, index)=>(
           <ListGroup.Item key={index}>
-            <IconPick prop={[{user, playerName}]}/>
-          </ListGroup.Item>))}
+            <IconPick prop={[{user, playerName, "playerIcon":activePlayers[user][1], room, playerEmail}]}/>
+          </ListGroup.Item>
+        ))}
     </List>
   );
 }

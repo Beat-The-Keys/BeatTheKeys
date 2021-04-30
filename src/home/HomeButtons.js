@@ -1,21 +1,20 @@
 import React from 'react'
-import {GoogleLogout} from 'react-google-login';
 import Button from 'react-bootstrap/Button';
 import {socket} from '../LoginScreen';
 import JoinGameButton from './JoinGameButton';
 import styled from 'styled-components';
 
 export default function HomeButtons({prop}) {
-    const {room, playerName, originalRoom, startGame} = prop[0]
+    const {room, playerName, originalRoom, startGame, playerEmail} = prop[0]
 
     function rejoinOriginalLobby() {
-        socket.emit('attemptToJoinGame', {playerName, oldRoom:room, newRoom: originalRoom})
+        socket.emit('attemptToJoinGame', {playerName, oldRoom:room, newRoom: originalRoom, playerEmail})
     }
 
     return (
         <FlexContainer>
             <FlexItem onClick={startGame} variant="success" size="lg">Start Game</FlexItem>
-            <JoinGameButton playerName={playerName} room={room} socket={socket}/>
+            <JoinGameButton playerName={playerName} room={room} socket={socket} playerEmail={playerEmail}/>
             { room !== originalRoom && <FlexItem onClick={rejoinOriginalLobby} variant="danger" size="lg">Leave Lobby</FlexItem>}
             <FlexItem variant="warning" size="lg">Achievements</FlexItem>
         </FlexContainer>

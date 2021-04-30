@@ -26,11 +26,12 @@ const PlayerStats = React.memo(({room}) => {
     socket.on('updatePlayerStats', (data) => {
       if(barChart.current){
         Object.entries(data.playerStats).map((key, index) => {
+          console.log(key, key[0], key[1][0])
           if(barChart.current.data.labels.indexOf(key[0]) === -1){
             barChart.current.data.labels.push(key[0]);
             barChart.current.data.datasets[0].backgroundColor.push(colorGenerator())
           }
-          barChart.current.data.datasets[0].data[index] = key[1];
+          barChart.current.data.datasets[0].data[index] = key[1][0];
           barChart.current.update();
           return null;
         })

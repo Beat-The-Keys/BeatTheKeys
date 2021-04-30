@@ -36,14 +36,14 @@ class UserUpdateTest(unittest.TestCase):
 
         self.failure_test_params = [{
             KEY_INPUT: {'playerName': 'Akash', 'room': 'Multiplayer', 'wpm': 13},
-            KEY_EXPECTED: OrderedDict([('Akash', 12)])
+            KEY_EXPECTED: OrderedDict([('Akash', [12, 'smiley'])])
         }, {
             KEY_INPUT: {'playerName': 'AJ', 'room': 'Multiplayer', 'wpm': 130},
-            KEY_EXPECTED: OrderedDict([('AJ', 200), ('Akash', 13)])
+            KEY_EXPECTED: OrderedDict([('AJ', [200, ":happy:"]), ('Akash', 13)])
 
         }, {
             KEY_INPUT: {'playerName': 'Yusef', 'room': 'Multiplayer', 'wpm': 200},
-            KEY_EXPECTED: OrderedDict([('Akash', 13), ('AJ', 200)])
+            KEY_EXPECTED: OrderedDict([('Akash', 13), ('AJ', [200, "joy:"])])
 
         }, {
             KEY_INPUT: {'playerName': 'Mann', 'room': 'Multiplayer', 'wpm': 1},
@@ -54,9 +54,10 @@ class UserUpdateTest(unittest.TestCase):
     def tests_update_player_stats_success(self):
         '''Test function to check all the players wpm updates appropriately'''
         for test in self.success_test_params:
+            app.ROOMS['Multiplayer']['activePlayers'][test[KEY_INPUT]['playerName']] = [0,0]
             actual_result = app.update_player_stats(test[KEY_INPUT])
             expected_result = test[KEY_EXPECTED]
-
+            print(actual_result, expected_result)
             print("Success", actual_result, expected_result)
 
 
@@ -69,6 +70,7 @@ class UserUpdateTest(unittest.TestCase):
     def tests_update_player_stats_failure(self):
         '''Test function to check all the players wpm does not update appropriately'''
         for test in self.failure_test_params:
+            app.ROOMS['Multiplayer']['activePlayers'][test[KEY_INPUT]['playerName']] = [0,0]
             actual_result = app.update_player_stats(test[KEY_INPUT])
             expected_result = test[KEY_EXPECTED]
 
