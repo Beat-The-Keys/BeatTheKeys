@@ -27,15 +27,16 @@ export default function LoginScreen (){
   }
 
   return (
+    <Background>
     <div>
     {isLoggedIn
       ? <HomeScreen playerName={playerName} playerEmail={playerEmail} responseGoogleLogout={responseGoogleLogout}/>
       : <Loginpage>
-          <Title>BEAT THE KEYS!</Title>
-          <Emoji emoji='keyboard' set='twitter' size={40}/>
-          <h5> Multiplayer typeracing game </h5>
+          <Title data-text="BEAT_THE_KEYS!">BEAT_THE_KEYS!</Title>
+          <img src = 'https://img.icons8.com/ios/452/keyboard.png' width="50" height="50" />
+          <Para> Multiplayer typeracing game </Para>
           <Form>
-            <h5>Join game:</h5>
+            <Popin>Join game:</Popin>
             <meta name="google-signin-client_id" content={client_id}/>
                 <GoogleLogin
                 buttonText="Login"
@@ -45,19 +46,26 @@ export default function LoginScreen (){
                 cookiePolicy={'single_host_origin'}
                 />
           </Form>
-          <h5>Features coming soon:</h5>
-          <ul>
+          <Popin>Features:</Popin>
+          <Rise>
             <li>Private lobbies</li>
             <li>Achievements</li>
             <li>Leaderboard</li>
             <li>More text prompts</li>
-          </ul>
+          </Rise>
         </Loginpage>
     }
+    <Guide> Guide: </Guide>
+    <AboutUs> Abous Us: </AboutUs>
     </div>
+    </Background>
   );
 }
 
+const Background = styled.div`
+  height: 800px;
+  background-image: linear-gradient(to bottom right, yellow, red );
+`;
 
 const Loginpage = styled.div`
   width: max-content;
@@ -71,10 +79,10 @@ const Loginpage = styled.div`
 const Form = styled.div`
   position: relative;
   z-index: 1;
-  background: #dfdfdf;
+  background: #repeat;
   max-width: 360px;
   margin: 0 auto 20px;
-  padding: 45px 100px;
+  padding: 20px 100px;
   text-align: center;
   box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
   border-radius: 10px;
@@ -90,16 +98,114 @@ const textCursor = keyframes`
   to{border-right-color: transparent;}
 `;
 
-const Title = styled.p`
+const Para = styled.p`
   border-right: solid 5px;
   white-space: nowrap;
   overflow: hidden;    
   font-family: Trebuchet MS, sans-serif;
-  font-weight: 550;
-  font-size: 35px;
+  font-weight: 500;
+  font-size: 1.25rem;
   color: Black;
+  margin-top: 0;
+  margin-bottom: 0.2;
   animation: ${textAnimation} 2s linear 1s 1 normal both,
-             ${textCursor} 800ms linear infinite;
+             ${textCursor} 1200ms linear infinite;
 `;
 
 
+const animate = keyframes`
+    0% ,10%,100%{
+        width: 0;
+    }
+    70%,90%{
+        width: 100%;
+    }
+`;
+
+const Title = styled.p`
+  position: relative;
+  font-size: 5vw;
+  color: #ffffff;
+  margin-top: 0;
+  margin-bottom: 0;
+  -webkit-text-stroke: 0.15vw #000000;
+  text-transform: uppercase;
+  ::before {
+    content: attr(data-text);
+    position: absolute;
+    top:0;
+    left:0;
+    width: 0; 
+    height: 100%;
+    color: #ff0000;
+    -webkit-text-stroke: 0.1vw #000000;
+    border-right: #ff0000;
+    overflow: hidden;
+    animation: ${animate} 6s linear infinite;
+`;
+
+const animatePOP = keyframes`
+    0% {
+        transform: scale(0);
+    }
+    100% {
+        transform: scale(1);
+    }
+`;
+
+const Popin = styled.p`
+  text-align: center;
+  font-family: Trebuchet MS, sans-serif;
+  font-size: 20px;
+  color: #000000;
+  margin-bottom: 0.5rem;
+  animation: ${animatePOP} 2s ease-in-out;
+`
+const fadeIn = keyframes`
+    0% {
+    opacity: 0;
+    top: 100px;
+    }
+    75% {
+      opacity: 0.5;
+      top: 0px;
+    }
+    100% {
+      opacity: 1;
+    }
+`;
+
+const Rise = styled.ul`
+  color: #000000;
+  font-family: Trebuchet MS, sans-serif;
+  position: relative;
+  margin-bottom: 5px;
+  animation: ${fadeIn} 2s linear;
+`
+
+const Guide = styled.div`
+  position:absolute;
+  bottom:0;
+  left:0;
+  z-index: 1;
+  background: #repeat;
+  max-width: 360px;
+  margin: 0 auto 20px;
+  padding: 20px 100px;
+  text-align: center;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+  border-radius: 10px;
+`
+const AboutUs = styled.div`
+  position:absolute;
+  bottom:0;
+  right:0;
+  z-index: 1;
+  background: #repeat;
+  max-width: 360px;
+  margin: 0 auto 20px;
+  padding: 20px 100px;
+  text-align: center;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+  border-radius: 10px;
+`
