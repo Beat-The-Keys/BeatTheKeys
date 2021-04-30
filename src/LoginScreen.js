@@ -19,7 +19,7 @@ export default function LoginScreen (){
     setPlayerEmail(email)
     changeIsLoggedIn(true);
     let name = response.profileObj.name;
-    socket.emit('login', {name, email});
+    socket.emit('login', {email});
   }
   function responseGoogleLogout(room){
     changeIsLoggedIn(false);

@@ -29,7 +29,9 @@ export default function HomeScreen ({playerName, playerEmail, responseGoogleLogo
   }
 
   useEffect(() => {
+
     socket.emit('assignPlayerToLobby', {playerName, room, playerEmail});
+
     socket.on('assignPlayerToLobby', (data) => {
       console.log(data)
       setActivePlayers(data.activePlayers);
@@ -64,10 +66,11 @@ export default function HomeScreen ({playerName, playerEmail, responseGoogleLogo
               <Winner>{winningPlayer} is the winner! Please go back to the lobby.</Winner>
             </div>
           }
-          <MainGameScreen playerName={playerName} room={room}/>
+          <MainGameScreen playerName={playerName} room={room} playerEmail={playerEmail}/>
         </div>
       : <div>
           <center> <h1> BEAT THE KEYS! </h1> </center>
+
           <Home prop={[{room, playerName, originalRoom, startGame, activePlayers, playerEmail}]}/>
         </div>
       }

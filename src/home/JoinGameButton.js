@@ -3,7 +3,9 @@ import { Modal, FormControl} from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import {FlexItem} from './HomeButtons';
 
+
 export default function JoinGameButton({playerName, room, socket, playerEmail}) {
+
 
     const [showJoinGameModal, setShowJoinGameModal] = useState(false);
     const [alreadyInRoomError, setAlreadyInRoomError] = useState(false);
@@ -18,7 +20,9 @@ export default function JoinGameButton({playerName, room, socket, playerEmail}) 
             setAlreadyInRoomError(true);
             return;
         }
+
         socket.emit('attemptToJoinGame', {playerName, oldRoom:room, newRoom: joinGameTextBoxRef.current.value, playerEmail})
+
         setShowJoinGameModal(false);
     }
 

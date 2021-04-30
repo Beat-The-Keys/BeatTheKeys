@@ -15,6 +15,9 @@ INITIAL_USERNAME = 'user1'
 INITIAL_EMAIL = 'email@host.com'
 INITIAL_ICON = 'smiley'
 INITIAL_WPM = 60
+INITIAL_TOTALWPM = 120
+INITIAL_GAMESPLAYED = 2
+INITIAL_GAMESWON = 1
 
 class AddToDBTest(unittest.TestCase):
     """Main class to test DB logic"""
@@ -38,8 +41,10 @@ class AddToDBTest(unittest.TestCase):
             },
         ]
 
-        initial_person = models.Users(username=INITIAL_USERNAME, email=INITIAL_EMAIL,
-                                      icon=INITIAL_ICON, bestwpm=INITIAL_WPM)
+        initial_person = models.Users(email=INITIAL_EMAIL, icon=INITIAL_ICON,
+                                      bestwpm=INITIAL_WPM, totalwpm=INITIAL_TOTALWPM,
+                                      gamesplayed=INITIAL_GAMESPLAYED,
+                                      gameswon=INITIAL_GAMESWON)
         self.initial_db_mock = [initial_person]
 
     def mocked_db_session_add(self, username):
@@ -59,8 +64,7 @@ class AddToDBTest(unittest.TestCase):
         for test in self.success_test_params:
             with patch('app.DB.session.add', self.mocked_db_session_add):
                 with patch('app.DB.session.commit', self.mocked_db_session_commit):
-                    actual_result = user_db_check(test[KEY_INPUT], [INITIAL_EMAIL],
-                                                  [INITIAL_USERNAME])
+                    actual_result = user_db_check(test[KEY_INPUT], [INITIAL_EMAIL])
                     expected_result = test[KEY_EXPECTED]
                     print(actual_result)
                     print(expected_result)
