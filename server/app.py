@@ -92,19 +92,43 @@ def on_login(data):
         room=request.sid
     )
 
+
 # When a client successfully logs in with their Google Account
 @SOCKETIO.on('iconToDB')
 def icon_to_db(data):
     """This is ran everytime someone picks a new Icon"""
-    user = DB.session.query(models.Users).get(data['email'])
+    room = data['room']
+    player_name = data['playerName']
+
+    user = DB.session.query(models.Users).get(data['playerEmail'])
     user.icon = data['emojiID']
     DB.session.commit()
+
+    db_usersnames, db_emails, db_icons, db_wpms = fetch_db(" ")
+
+    print("iconToDB ", db_usersnames, db_emails, db_icons, db_wpms)
+    ROOMS[room]['activePlayers'][player_name] = [0, data['emojiID']]
+    active_players = ROOMS[room]['activePlayers']
+    SOCKETIO.emit(
+        'assignPlayerToLobby',
+        {'activePlayers': active_players, 'room': room},
+        room=room
+    )
+
+def get_icons(player_email):
+    '''Gets the players icon'''
+    db_usersnames, db_emails, db_icons, db_wpms = fetch_db("email") # fetch all users in DB
+    print("iconToDB ", db_usersnames, db_emails, db_icons, db_wpms)
+    i = db_emails.index(player_email)
+    return db_icons[i]
 
 @SOCKETIO.on('assignPlayerToLobby')
 def assign_player_to_lobby(data):
     '''Put the user in a specified room'''
     player_email = data['playerEmail']
     room = data['room']
+    player_email = data['playerEmail']
+    print("assign", player_email)
     is_original_room = False
     # If this function is called with an empty room ID, user is joining for the first time
     # We will generate a 4-digit lobby ID for them
@@ -122,10 +146,12 @@ def assign_player_to_lobby(data):
         ROOMS[room]['activePlayers'] = OrderedDict()
         ROOMS[room]['playersFinished'] = []
     # If the player is not in the room then add them
-    if player_email not in ROOMS[room]:
-        ROOMS[room]['activePlayers'][player_email] = 0
-        SESSIONS[request.sid] = player_email
-    active_players = list(ROOMS[room]['activePlayers'].keys())
+
+    if player_name not in ROOMS[room]:
+        icon = get_icons(player_email)
+        ROOMS[room]['activePlayers'][player_name] = [0, icon]
+        SESSIONS[request.sid] = player_name
+    active_players = ROOMS[room]['activePlayers']
     SOCKETIO.emit(
         'assignPlayerToLobby',
         {'activePlayers': active_players, 'room': room, 'isOriginalRoom':is_original_room},
@@ -138,12 +164,14 @@ def attempt_to_join_game(data):
     player_email = data['playerEmail']
     old_room = data['oldRoom']
     new_room = data['newRoom']
+    player_email = data['playerEmail']
     # If the user tries to join a lobby that does not exist, just return
     # We can choose to display an error on the client-side later
     if new_room != "" and new_room not in ROOMS:
         return
-    remove_player_from_lobby({'playerEmail':player_email, 'room':old_room})
-    assign_player_to_lobby({'playerEmail':player_email, 'room':new_room})
+
+    remove_player_from_lobby({'playerName':player_name, 'room':old_room})
+    assign_player_to_lobby({'playerName':player_name, 'room':new_room, 'playerEmail': player_email})
 
 @SOCKETIO.on('updatePlayerStats')
 def update_player_stats(data):
@@ -151,7 +179,8 @@ def update_player_stats(data):
     room = data['room']
     player_email = data['playerEmail']
     wpm = data['wpm']
-    ROOMS[room]['activePlayers'][player_email] = wpm
+
+    ROOMS[room]['activePlayers'][player_name][0] = wpm
     SOCKETIO.emit(
         'updatePlayerStats', {'playerStats': ROOMS[room]['activePlayers']},
         broadcast=True,
@@ -173,7 +202,7 @@ def remove_player_from_lobby(data):
         broadcast=True,
         room=room
     )
-    active_players = list(ROOMS[room]['activePlayers'].keys())
+    active_players = ROOMS[room]['activePlayers']
     # assignPlayerToLobby is used to refresh the lobby for all players.
     # We can change up the name later to avoid confusion.
     SOCKETIO.emit(

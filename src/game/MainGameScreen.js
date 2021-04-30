@@ -21,7 +21,8 @@ function MainGameScreen({playerName, room, playerEmail}) {
       let currentMin = (60 - timeLeft) / 60;
       let wpm = currentMin === 0 ? 0 : Math.round(entries / currentMin);
       setWpm(wpm);
-      socket.emit('updatePlayerStats', {'playerName': playerName, 'wpm': wpm, 'room': room, 'playerEmail': playerEmail});
+
+      socket.emit('updatePlayerStats', {playerName, wpm, room});
     }
 
   }, [highlightedStopIndex, playerName, room, timeLeft, playerFinished]);
@@ -72,7 +73,8 @@ function MainGameScreen({playerName, room, playerEmail}) {
     // Decrement the timer and set the timeLeft state
     setTimeLeft(t);
     if (t === 1) {
-      socket.emit('playerFinished', {'playerName': playerName, 'room': room, 'wpm': wpm, 'playerEmail': playerEmail});
+
+      socket.emit('playerFinished', {playerName, room, wpm, playerEmail});
       setPlayerFinished(true);
     }
     return t-1;

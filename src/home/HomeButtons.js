@@ -1,29 +1,25 @@
 import React from 'react'
-import {GoogleLogout} from 'react-google-login';
 import Button from 'react-bootstrap/Button';
-import {client_id, socket} from '../LoginScreen';
+import {socket} from '../LoginScreen';
 import JoinGameButton from './JoinGameButton';
 import styled from 'styled-components';
 
-export default function HomeButtons({playerName, playerEmail, responseGoogleLogout, startGame, room, originalRoom}) {
+
+export default function HomeButtons({prop}) {
+    const {room, playerName, originalRoom, startGame, playerEmail} = prop[0]
 
     function rejoinOriginalLobby() {
-        socket.emit('attemptToJoinGame', {playerName, oldRoom:room, newRoom: originalRoom})
-    }    
+        socket.emit('attemptToJoinGame', {playerName, oldRoom:room, newRoom: originalRoom, playerEmail})
+    }
 
     return (
         <FlexContainer>
             <FlexItem onClick={startGame} variant="success" size="lg">Start Game</FlexItem>
-            <JoinGameButton playerName={playerName} playerEmail={playerEmail} room={room} socket={socket}/>
+
+            <JoinGameButton playerName={playerName} room={room} socket={socket} playerEmail={playerEmail}/>
+
             { room !== originalRoom && <FlexItem onClick={rejoinOriginalLobby} variant="danger" size="lg">Leave Lobby</FlexItem>}
             <FlexItem variant="warning" size="lg">Achievements</FlexItem>
-            <GoogleLogout
-            clientId={client_id}
-            buttonText="Logout"
-            onFailure={()=>responseGoogleLogout(room)}
-            onLogoutSuccess={()=>responseGoogleLogout(room)
-            }
-            />
         </FlexContainer>
     )
 }
@@ -42,7 +38,7 @@ export const FlexItem = styled(Button)`
   width: 400px;
   height: 100px;
   @media (max-width:420px){
-    width: auto;
+    width: 200px;
     height: auto;
   }
 `;
