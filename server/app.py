@@ -98,16 +98,12 @@ def on_login(data):
 def icon_to_db(data):
     """This is ran everytime someone picks a new Icon"""
     room = data['room']
-    player_name = data['playerName']
-
-    user = DB.session.query(models.Users).get(data['playerEmail'])
+    player_email = data['playerEmail']
+    user = DB.session.query(models.Users).get(player_email)
     user.icon = data['emojiID']
     DB.session.commit()
-
-    db_usersnames, db_emails, db_icons, db_wpms = fetch_db(" ")
-
-    print("iconToDB ", db_usersnames, db_emails, db_icons, db_wpms)
-    ROOMS[room]['activePlayers'][player_name] = [0, data['emojiID']]
+    # print("iconToDB ", db_usersnames, db_emails, db_icons, db_wpms)
+    ROOMS[room]['activePlayers'][player_email] = [0, data['emojiID']]
     active_players = ROOMS[room]['activePlayers']
     SOCKETIO.emit(
         'assignPlayerToLobby',
@@ -117,8 +113,8 @@ def icon_to_db(data):
 
 def get_icons(player_email):
     '''Gets the players icon'''
-    db_usersnames, db_emails, db_icons, db_wpms = fetch_db("email") # fetch all users in DB
-    print("iconToDB ", db_usersnames, db_emails, db_icons, db_wpms)
+    db_emails, db_icons = fetch_db("email")[0:2] # fetch all users in DB
+    # print("iconToDB ", db_usersnames, db_emails, db_icons, db_wpms)
     i = db_emails.index(player_email)
     return db_icons[i]
 
@@ -127,7 +123,6 @@ def assign_player_to_lobby(data):
     '''Put the user in a specified room'''
     player_email = data['playerEmail']
     room = data['room']
-    player_email = data['playerEmail']
     print("assign", player_email)
     is_original_room = False
     # If this function is called with an empty room ID, user is joining for the first time
@@ -147,10 +142,10 @@ def assign_player_to_lobby(data):
         ROOMS[room]['playersFinished'] = []
     # If the player is not in the room then add them
 
-    if player_name not in ROOMS[room]:
+    if player_email not in ROOMS[room]:
         icon = get_icons(player_email)
-        ROOMS[room]['activePlayers'][player_name] = [0, icon]
-        SESSIONS[request.sid] = player_name
+        ROOMS[room]['activePlayers'][player_email] = [0, icon, False]
+        SESSIONS[request.sid] = player_email
     active_players = ROOMS[room]['activePlayers']
     SOCKETIO.emit(
         'assignPlayerToLobby',
@@ -164,14 +159,13 @@ def attempt_to_join_game(data):
     player_email = data['playerEmail']
     old_room = data['oldRoom']
     new_room = data['newRoom']
-    player_email = data['playerEmail']
     # If the user tries to join a lobby that does not exist, just return
     # We can choose to display an error on the client-side later
     if new_room != "" and new_room not in ROOMS:
         return
 
-    remove_player_from_lobby({'playerName':player_name, 'room':old_room})
-    assign_player_to_lobby({'playerName':player_name, 'room':new_room, 'playerEmail': player_email})
+    remove_player_from_lobby({'playerEmail':player_email, 'room':old_room})
+    assign_player_to_lobby({'playerEmail': player_email, 'room':new_room})
 
 @SOCKETIO.on('updatePlayerStats')
 def update_player_stats(data):
@@ -180,7 +174,7 @@ def update_player_stats(data):
     player_email = data['playerEmail']
     wpm = data['wpm']
 
-    ROOMS[room]['activePlayers'][player_name][0] = wpm
+    ROOMS[room]['activePlayers'][player_email][0] = wpm
     SOCKETIO.emit(
         'updatePlayerStats', {'playerStats': ROOMS[room]['activePlayers']},
         broadcast=True,
@@ -211,6 +205,27 @@ def remove_player_from_lobby(data):
         room=room
     )
     leave_room(room)
+
+@SOCKETIO.on('playerChangedReady')
+def player_changed_ready(data):
+    '''Player changed their ready state'''
+    player_email = data['playerEmail']
+    is_ready = data['isReady']
+    room = data['room']
+    print('player: ', data['playerEmail'], 'is ready: ', data['isReady'])
+    ROOMS[room]['activePlayers'][player_email][2] = is_ready
+    ready_players = []
+    for key, value in ROOMS[room]['activePlayers'].items():
+        if value[2]:
+            ready_players.append(player_email)
+    all_players_ready = len(ready_players) == len(ROOMS[room]['activePlayers'].items())
+    SOCKETIO.emit(
+        'playerChangedReady',
+        {'readyPlayers': ready_players, 'allPlayersReady':all_players_ready},
+        broadcast=True,
+        include_self=True,
+        room=room
+    )
 
 @SOCKETIO.on('startGame')
 def start_game(data):

@@ -13,6 +13,8 @@ export default function HomeScreen ({playerName, playerEmail, responseGoogleLogo
   const [originalRoom, setOriginalRoom] = useState(""); // State which contains the original room the player was assigned to
   const [allPlayersFinished, setAllPlayersFinished] = useState(false); // State for checking if all users finished the game
   const [winningPlayer, setWinningPlayer] = useState(); // State which holds the winning player name
+  const [readyPlayers, setReadyPlayers] = useState([]); // State which holds the players that are ready to play
+  const [startDisabled, setStartDisabled] = useState(true); // State which controls if the game can be started
 
   function startGame() {
     setPlayerStartedGame(true);
@@ -52,6 +54,10 @@ export default function HomeScreen ({playerName, playerEmail, responseGoogleLogo
     socket.on('goBackToLobby', (data) => {
       setPlayerStartedGame(false);
     });
+    socket.on('playerChangedReady', (data) => {
+      setReadyPlayers(data.readyPlayers);
+      setStartDisabled(!data.allPlayersReady);
+    });
 
   }, [playerName, room, playerEmail]);
 
@@ -71,7 +77,7 @@ export default function HomeScreen ({playerName, playerEmail, responseGoogleLogo
       : <div>
           <center> <h1> BEAT THE KEYS! </h1> </center>
 
-          <Home prop={[{room, playerName, originalRoom, startGame, activePlayers, playerEmail}]}/>
+          <Home prop={[{room, playerName, originalRoom, startGame, activePlayers, playerEmail, readyPlayers, startDisabled}]}/>
         </div>
       }
     </div>
