@@ -118,6 +118,29 @@ def get_icons(player_email):
     i = db_emails.index(player_email)
     return db_icons[i]
 
+@SOCKETIO.on('playerAchievements')
+def player_achievements(data):
+    '''
+    This function will be called when the player views their achievements
+    This is currently just skeleton code and will be implemented later
+    '''
+    print(data)
+    # Uncomment the code below when we're ready to pull achievement progress from the user
+
+    # player_email = data['playerEmail']
+    # user = DB.session.query(models.Users).get(player_email)
+
+    # Dummy data below:
+    achievements = {}
+    achievements['Played 25 Games'] = {'progress': 10, 'total': 25}
+    achievements['Won 10 Games'] = {'progress': 8, 'total': 10}
+
+    SOCKETIO.emit(
+        'playerAchievements',
+        {'achievements': achievements},
+        room=request.sid
+    )
+
 @SOCKETIO.on('assignPlayerToLobby')
 def assign_player_to_lobby(data):
     '''Put the user in a specified room'''
