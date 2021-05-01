@@ -3,32 +3,36 @@ import {GoogleLogin} from 'react-google-login';
 import HomeScreen from '../home/HomeScreen.js';
 import io from 'socket.io-client';
 import styled, { keyframes }from "styled-components";
-import AboutUs from './AboutUs'
+import AboutUs from './AboutUs';
+import Guide from './Guide';
 
 export const socket = io(); // Connects to socket connection
 export const client_id = "658534926731-idi9s66r9j41tj2o844e16s5q4ua1d06.apps.googleusercontent.com";
 
 export default function LoginScreen (){
-  const [isLoggedIn, changeIsLoggedIn] = useState(false);
+  const [isLoggedIn, changeIsLoggedIn] = useState('Login');
   const [playerName, setPlayerName] = useState("");
   const [playerEmail, setPlayerEmail] = useState("");
-
   function responseGoogle(response){
     setPlayerName(response.profileObj.givenName); // changed it to first name only
     let email = response.profileObj.email;
     setPlayerEmail(email)
-    changeIsLoggedIn(true);
+    changeIsLoggedIn('Logout');
     socket.emit('login', {email});
   }
   function responseGoogleLogout(room){
-    changeIsLoggedIn(false);
+    changeIsLoggedIn('Login');
     socket.emit('removePlayerFromLobby', {playerEmail, room});
   }
 
   return (
     <Background>
-    {isLoggedIn
+    {isLoggedIn === 'Logout'
       ? <HomeScreen playerName={playerName} playerEmail={playerEmail} responseGoogleLogout={responseGoogleLogout}/>
+      : isLoggedIn === "AboutUs" ?
+        <AboutUs changeIsLoggedIn={changeIsLoggedIn}/>
+      : isLoggedIn === 'Guide' ?
+        <Guide/>
       : <div>
           <Loginpage>
             <Title data-text="BEAT_THE_KEYS!">BEAT_THE_KEYS!</Title>
@@ -55,7 +59,7 @@ export default function LoginScreen (){
           </Loginpage>
           <BottomNav>
             <div> Guide: </div>
-            <div onClick={<AboutUs/>}> Abous Us: </div>
+            <div onClick={()=>changeIsLoggedIn('AboutUs')}> Abous Us: </div>
           </BottomNav>
         </div>
     }
@@ -65,6 +69,7 @@ export default function LoginScreen (){
 
 const Background = styled.div`
   height:100vh;
+  overflow-y:auto;
   background-image: linear-gradient(to bottom right, yellow, red );
 `;
 
@@ -196,8 +201,9 @@ const BottomNav = styled.nav`
     padding: 20px 100px;
     box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
     border-radius: 10px;
+    cursor: pointer;
     @media (max-width:550px){
       padding: 20px 50px;
-  }
+    }
   }
 `
