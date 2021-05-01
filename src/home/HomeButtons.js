@@ -6,7 +6,7 @@ import styled from 'styled-components';
 
 
 export default function HomeButtons({prop}) {
-    const {room, playerName, originalRoom, startGame, playerEmail, startDisabled} = prop[0]
+    const {room, playerName, originalRoom, startGame, playerEmail, startDisabled, viewAchievements} = prop[0]
 
     function rejoinOriginalLobby() {
         socket.emit('attemptToJoinGame', {playerName, oldRoom:room, newRoom: originalRoom, playerEmail})
@@ -19,7 +19,7 @@ export default function HomeButtons({prop}) {
             <JoinGameButton playerName={playerName} room={room} socket={socket} playerEmail={playerEmail}/>
 
             { room !== originalRoom && <FlexItem onClick={rejoinOriginalLobby} variant="danger" size="lg">Leave Lobby</FlexItem>}
-            <FlexItem variant="warning" size="lg">Achievements</FlexItem>
+            <FlexItem onClick={viewAchievements} variant="warning" size="lg">Achievements</FlexItem>
         </FlexContainer>
     )
 }
