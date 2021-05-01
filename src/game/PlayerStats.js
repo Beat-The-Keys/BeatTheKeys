@@ -1,5 +1,5 @@
 import React,{useEffect, useRef } from 'react';
-import {socket} from '../LoginScreen'
+import {socket} from '../login/LoginScreen'
 import { Bar } from "react-chartjs-2";
 import styled from 'styled-components';
 

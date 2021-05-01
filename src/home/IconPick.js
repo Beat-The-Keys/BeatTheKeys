@@ -2,7 +2,7 @@ import { React, useState } from 'react';
 import { Modal } from 'react-bootstrap';
 import 'emoji-mart/css/emoji-mart.css';
 import { Picker,  Emoji } from 'emoji-mart';
-import {socket} from '../LoginScreen';
+import {socket} from '../login/LoginScreen';
 import styled from 'styled-components';
 
 function IconPick({prop}){

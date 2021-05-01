@@ -1,7 +1,7 @@
 import React from 'react'
 import { GoogleLogout } from 'react-google-login';
 import styled from 'styled-components';
-import {client_id} from '../LoginScreen'
+import {client_id} from '../login/LoginScreen'
 
 export default function Header({prop}) {
     const {room, playerName, playerEmail, responseGoogleLogout} = prop[0]

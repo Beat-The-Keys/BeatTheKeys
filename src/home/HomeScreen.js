@@ -1,6 +1,6 @@
 import { React, useState, useEffect } from 'react';
 import MainGameScreen from '../game/MainGameScreen.js';
-import {socket} from '../LoginScreen';
+import {socket} from '../login/LoginScreen';
 import styled from 'styled-components';
 import Header from './Header.js';
 import Home from './Home.js';

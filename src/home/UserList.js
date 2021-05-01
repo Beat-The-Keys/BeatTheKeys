@@ -1,8 +1,8 @@
 import {ListGroup, Form} from 'react-bootstrap';
-import { React, useState, useRef} from 'react';
+import { React, useRef} from 'react';
 import styled from 'styled-components';
 import IconPick from './IconPick';
-import {socket} from '../LoginScreen';
+import {socket} from '../login/LoginScreen';
 
 export default function UserList({prop}) {
   const {activePlayers, playerName, room, playerEmail, readyPlayers} = prop[0];
@@ -19,7 +19,7 @@ export default function UserList({prop}) {
           <ListGroup.Item key={index}>
             <IconPick prop={[{user, playerName, "playerIcon":activePlayers[user][1], room, playerEmail}]}/>
             { playerEmail == user
-             ? <center><Form.Check label={"Ready"} onClick={userChangedReady} ref={playerCheckboxRef}/></center> 
+             ? <center><Form.Check label={"Ready"} onClick={userChangedReady} ref={playerCheckboxRef}/></center>
              : <center><Form.Check label={"Ready"} disabled checked={readyPlayers.includes(user)}/></center>
             }
           </ListGroup.Item>

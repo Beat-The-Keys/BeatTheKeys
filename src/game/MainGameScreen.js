@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect} from 'react';
 import ReactTimer from "@xendora/react-timer";
-import {socket} from '../LoginScreen';
+import {socket} from '../login/LoginScreen';
 import PlayerStats from '../game/PlayerStats.js';
 import styled from 'styled-components';
 
