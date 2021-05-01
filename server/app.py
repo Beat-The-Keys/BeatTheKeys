@@ -1,12 +1,13 @@
 """This is the main app that serves as a server for all the clients"""
 import os
 from collections import OrderedDict
-from random import randrange
+from random import randrange, choice
 from flask import Flask, send_from_directory, json, request
 from flask_socketio import SocketIO, join_room, leave_room
 from flask_cors import CORS
 from dotenv import load_dotenv, find_dotenv
 from flask_sqlalchemy import SQLAlchemy
+from pathlib import Path
 
 load_dotenv(find_dotenv())
 
@@ -25,6 +26,8 @@ SOCKETIO = SocketIO(APP,
                     cors_allowed_origins="*",
                     json=json,
                     manage_session=False)
+
+PROMPT_FILES = ['server/prompts/' + path for path in os.listdir('server/prompts/')]
 SESSIONS = {}
 '''
 SESSIONS contains a dictionary of session ids which map to corresponding player names.
@@ -180,17 +183,19 @@ def assign_player_to_lobby(data):
         ROOMS[room] = {}
         ROOMS[room]['activePlayers'] = OrderedDict()
         ROOMS[room]['playersFinished'] = []
+        ROOMS[room]['gameInProgress'] = False
     # If the player is not in the room then add them
 
     if player_email not in ROOMS[room]:
+        player_joined_late = ROOMS[room]['gameInProgress']
         icon = get_icons(player_email)
-        ROOMS[room]['activePlayers'][player_email] = [0, icon, False]
+        ROOMS[room]['activePlayers'][player_email] = [0, icon, False, player_joined_late]
         SESSIONS[request.sid] = player_email
     active_players = ROOMS[room]['activePlayers']
     send_ready_up_status(room)
     SOCKETIO.emit(
         'assignPlayerToLobby',
-        {'activePlayers': active_players, 'room': room, 'isOriginalRoom':is_original_room},
+        {'activePlayers': active_players, 'room': room, 'isOriginalRoom':is_original_room, 'gameInProgress': ROOMS[room]['gameInProgress']},
         room=room
     )
 
@@ -260,7 +265,10 @@ def player_changed_ready(data):
 @SOCKETIO.on('startGame')
 def start_game(data):
     '''Starts the game for all players in a lobby'''
-    SOCKETIO.emit('startGame', broadcast=True, include_self=False, room=data['room'])
+    room = data['room']
+    ROOMS[room]['gameInProgress'] = True
+    prompt = Path(choice(PROMPT_FILES)).read_text().replace('\n', '')
+    SOCKETIO.emit('startGame', {'prompt': prompt}, broadcast=True, include_self=True, room=room)
 
 @SOCKETIO.on('playerFinished')
 def player_finished(data):
@@ -284,7 +292,11 @@ def player_finished(data):
     )
     # If all the players in the room are finished, send a 'gameComplete' message to every client
     # Comparing lists will also check item order by default, so instead we can use sets.
-    active_players_set = set(ROOMS[room]['activePlayers'].keys())
+    active_players = []
+    for player in ROOMS[room]['activePlayers'].keys():
+        if not ROOMS[room]['activePlayers'][player][3]:
+            active_players.append(player)
+    active_players_set = set(active_players)
     players_finished_set = set(ROOMS[room]['playersFinished'])
     if players_finished_set == active_players_set:
         # We also include the winning player name in the 'gameComplete' message.
@@ -292,6 +304,10 @@ def player_finished(data):
         print("THIS IS THE WINNING PLAYER:", winning_player)
         print("THIS IS THE KEY:", ROOMS[room]['activePlayers'])
         update_db_gameswon(winning_player)
+        ROOMS[room]['gameInProgress'] = False
+        for player in ROOMS[room]['activePlayers'].keys():
+            ROOMS[room]['activePlayers'][player][3] = False
+        ROOMS[room]['playersFinished'].clear()
         SOCKETIO.emit('gameComplete', {'winningPlayer': winning_player}, broadcast=True, room=room)
 
     return ROOMS[room]['playersFinished']
@@ -303,7 +319,6 @@ def go_back_to_lobby(data):
     All of the players will follow and 'playersFinished' will be cleared.
     '''
     room = data['room']
-    ROOMS[room]['playersFinished'].clear()
     SOCKETIO.emit('goBackToLobby', include_self=False, broadcast=True, room=room)
 
 def fetch_db(sort_by):
