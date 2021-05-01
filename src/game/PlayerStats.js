@@ -6,7 +6,7 @@ import styled from 'styled-components';
 const colorGenerator = ()=>{
   const red = Math.floor(Math.random() * 256);
   const blue = Math.floor(Math.random() * 256);
-  return `rgb(${red}, 0, ${blue}, 0.2)`;
+  return `rgb(${red}, 0, ${blue}, 0.5)`;
 }
 var config = {
   data: {

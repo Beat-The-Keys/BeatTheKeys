@@ -4,7 +4,7 @@ import {socket} from '../login/LoginScreen';
 import styled from 'styled-components';
 import Header from './Header.js';
 import Home from './Home.js';
-
+import Button from 'react-bootstrap/Button';
 
 export default function HomeScreen ({playerName, playerEmail, responseGoogleLogout}) {
   const [playerStartedGame, setPlayerStartedGame] = useState(false); // State for joining multiplayer room or not
@@ -67,10 +67,10 @@ export default function HomeScreen ({playerName, playerEmail, responseGoogleLogo
       { playerStartedGame
       ? <div>
           {allPlayersFinished &&
-            <div>
-              <button onClick={goBackToLobby}>Back to Lobby</button>
-              <Winner>{winningPlayer} is the winner! Please go back to the lobby.</Winner>
-            </div>
+            <Container>
+              <Button variant="info" onClick={goBackToLobby}>Back to Lobby</Button>
+              <h5>{winningPlayer} is the winner! Please go back to the lobby.</h5>
+            </Container>
           }
           <MainGameScreen playerName={playerName} room={room} playerEmail={playerEmail}/>
         </div>
@@ -84,8 +84,8 @@ export default function HomeScreen ({playerName, playerEmail, responseGoogleLogo
   );
 }
 
-const Winner = styled.h3`
- display:flex;
- flex-direction:column;
- width: 20%;
+const Container = styled.div`
+  display:flex;
+  justify-content: space-around;
+  margin-block: 10px;
 `;

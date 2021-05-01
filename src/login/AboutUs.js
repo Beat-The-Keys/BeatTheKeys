@@ -1,13 +1,13 @@
 import React from 'react'
-import { CardDeck, Button, Card } from 'react-bootstrap'
+import { CardDeck, Card } from 'react-bootstrap'
 import styled from 'styled-components'
 
-export default function AboutUs({changeIsLoggedIn}) {
+export default function AboutUs() {
     const cards = [
         {
-            img: 'img',
+            img: 'aj.png',
             title: 'AJ Ong',
-            text: 'bio',
+            text: 'I am a senior at NJIT studying Computing and Business and will be graduating in December 2021. I have really enjoy working on projects using ReactJS, Python, and HTML/CSS. I fell in love with web development and am searching for opportunities where I can use my skills and grow as a developer.',
             link: 'https://github.com/Aj-Ong'
         },
         {
@@ -30,12 +30,10 @@ export default function AboutUs({changeIsLoggedIn}) {
         }
     ]
     return (
-        <div>
-            <Back onClick={()=>changeIsLoggedIn('Login')}>Back</Back>
-            <Deck>
+        <Deck>
             {cards.map(card=>(
-                <Card style={{ width: '18rem' }}>
-                <Card.Img variant="top" src={card.img} />
+                <Card text="dark" order="info" style={{ width: '18rem' }}>
+                <Img variant="top" src={card.img} />
                 <Title>{card.title}</Title>
                 <Body>
                 <Card.Text>
@@ -45,8 +43,7 @@ export default function AboutUs({changeIsLoggedIn}) {
                 </Body>
                 </Card>
             ))}
-            </Deck>
-        </div>
+        </Deck>
     )
 }
 
@@ -54,6 +51,7 @@ export default function AboutUs({changeIsLoggedIn}) {
 const Deck = styled(CardDeck)`
     margin-right: 0px;
     margin-left: 0px;
+    margin-bottom: 100px;
 `;
 const Title = styled(Card.Title)`
     margin-bottom: 10px;
@@ -62,6 +60,8 @@ const Title = styled(Card.Title)`
 const Body = styled(Card.Body)`
     padding: 0px 5px 10px;
 `;
-const Back = styled(Button)`
-    margin: 20px 50px 40px;
+const Img = styled(Card.Img)`
+    width: 100%;
+    height: 20vw;
+    object-fit: cover;
 `;

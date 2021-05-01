@@ -115,6 +115,8 @@ const Input = styled.textarea`
  overflow: hidden;
  padding: 12px 20px;
  resize: none;
+ margin-left: 30px;
+ border: 1px solid;
  &:focus{
   background-color: lightblue;
  }

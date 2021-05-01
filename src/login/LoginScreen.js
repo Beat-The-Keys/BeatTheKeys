@@ -10,34 +10,32 @@ export const socket = io(); // Connects to socket connection
 export const client_id = "658534926731-idi9s66r9j41tj2o844e16s5q4ua1d06.apps.googleusercontent.com";
 
 export default function LoginScreen (){
-  const [isLoggedIn, changeIsLoggedIn] = useState('Login');
+  const [isLoggedIn, changeIsLoggedIn] = useState(false);
   const [playerName, setPlayerName] = useState("");
   const [playerEmail, setPlayerEmail] = useState("");
+  const [guideUs, setGuideUs] = useState(false);
   function responseGoogle(response){
     setPlayerName(response.profileObj.givenName); // changed it to first name only
     let email = response.profileObj.email;
     setPlayerEmail(email)
-    changeIsLoggedIn('Logout');
+    changeIsLoggedIn(true);
     socket.emit('login', {email});
   }
   function responseGoogleLogout(room){
-    changeIsLoggedIn('Login');
+    changeIsLoggedIn(false);
     socket.emit('removePlayerFromLobby', {playerEmail, room});
   }
 
   return (
     <Background>
-    {isLoggedIn === 'Logout'
+    {isLoggedIn
       ? <HomeScreen playerName={playerName} playerEmail={playerEmail} responseGoogleLogout={responseGoogleLogout}/>
-      : isLoggedIn === "AboutUs" ?
-        <AboutUs changeIsLoggedIn={changeIsLoggedIn}/>
-      : isLoggedIn === 'Guide' ?
-        <Guide/>
       : <div>
           <Loginpage>
             <Title data-text="BEAT_THE_KEYS!">BEAT_THE_KEYS!</Title>
             <img src = 'https://img.icons8.com/ios/452/keyboard.png' alt="Loading Keyboard" width="50" height="50" />
             <Para> Multiplayer typeracing game </Para>
+            <h6>Find out how fast can u type, can you beat all the achievements? Join today and become the top of everyone.</h6>
             <Form>
               <Popin>Join game:</Popin>
               <meta name="google-signin-client_id" content={client_id}/>
@@ -58,9 +56,10 @@ export default function LoginScreen (){
             </Rise>
           </Loginpage>
           <BottomNav>
-            <div> Guide: </div>
-            <div onClick={()=>changeIsLoggedIn('AboutUs')}> Abous Us: </div>
-          </BottomNav>
+            <div onClick={()=>setGuideUs(true)}> Guide: </div>
+            <div onClick={()=>setGuideUs(false)}> Abous Us: </div>
+            </BottomNav>
+            {guideUs ? <Guide/>: <AboutUs/>}
         </div>
     }
     </Background>
@@ -195,9 +194,10 @@ const BottomNav = styled.nav`
   justify-content: space-around;
   position: fixed;
   width: 100%;
+  z-index: 2;
   div{
-    z-index: 1;
     margin: 0 auto 20px;
+    background-image: linear-gradient(to bottom right, yellow, red );
     padding: 20px 100px;
     box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
     border-radius: 10px;
