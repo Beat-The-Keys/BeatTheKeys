@@ -2,12 +2,12 @@
 import os
 from collections import OrderedDict
 from random import randrange, choice
+from pathlib import Path
 from flask import Flask, send_from_directory, json, request
 from flask_socketio import SocketIO, join_room, leave_room
 from flask_cors import CORS
 from dotenv import load_dotenv, find_dotenv
 from flask_sqlalchemy import SQLAlchemy
-from pathlib import Path
 
 load_dotenv(find_dotenv())
 
@@ -195,7 +195,10 @@ def assign_player_to_lobby(data):
     send_ready_up_status(room)
     SOCKETIO.emit(
         'assignPlayerToLobby',
-        {'activePlayers': active_players, 'room': room, 'isOriginalRoom':is_original_room, 'gameInProgress': ROOMS[room]['gameInProgress']},
+        {'activePlayers': active_players,
+         'room': room,
+         'isOriginalRoom':is_original_room,
+         'gameInProgress': ROOMS[room]['gameInProgress']},
         room=room
     )
 
