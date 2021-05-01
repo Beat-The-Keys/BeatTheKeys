@@ -69,7 +69,7 @@ Ex: ROOMS[1234] = {
 }
 '''
 
-def send_ready_up_status(room) {
+def send_ready_up_status(room):
     'Sends a list of ready players and whether all players are ready to the client'
     ready_players = []
     for key in ROOMS[room]['activePlayers'].keys():
@@ -84,7 +84,6 @@ def send_ready_up_status(room) {
         include_self=True,
         room=room
     )
-}
 
 # When a client successfully logs in with their Google Account
 @SOCKETIO.on('login')
