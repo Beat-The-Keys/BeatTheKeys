@@ -68,6 +68,23 @@ Ex: ROOMS[1234] = {
     }
 }
 '''
+
+def send_ready_up_status(room):
+    'Sends a list of ready players and whether all players are ready to the client'
+    ready_players = []
+    for key in ROOMS[room]['activePlayers'].keys():
+        if ROOMS[room]['activePlayers'][key][2]:
+            ready_players.append(key)
+    all_players_ready = len(ready_players) == len(ROOMS[room]['activePlayers'].keys())
+    print(ROOMS[room]['activePlayers'].keys())
+    SOCKETIO.emit(
+        'playerChangedReady',
+        {'readyPlayers': ready_players, 'allPlayersReady':all_players_ready},
+        broadcast=True,
+        include_self=True,
+        room=room
+    )
+
 # When a client successfully logs in with their Google Account
 @SOCKETIO.on('login')
 def on_login(data):
@@ -147,6 +164,7 @@ def assign_player_to_lobby(data):
         ROOMS[room]['activePlayers'][player_email] = [0, icon, False]
         SESSIONS[request.sid] = player_email
     active_players = ROOMS[room]['activePlayers']
+    send_ready_up_status(room)
     SOCKETIO.emit(
         'assignPlayerToLobby',
         {'activePlayers': active_players, 'room': room, 'isOriginalRoom':is_original_room},
@@ -196,6 +214,7 @@ def remove_player_from_lobby(data):
         broadcast=True,
         room=room
     )
+    send_ready_up_status(room)
     active_players = ROOMS[room]['activePlayers']
     # assignPlayerToLobby is used to refresh the lobby for all players.
     # We can change up the name later to avoid confusion.
@@ -212,20 +231,8 @@ def player_changed_ready(data):
     player_email = data['playerEmail']
     is_ready = data['isReady']
     room = data['room']
-    print('player: ', data['playerEmail'], 'is ready: ', data['isReady'])
     ROOMS[room]['activePlayers'][player_email][2] = is_ready
-    ready_players = []
-    for key, value in ROOMS[room]['activePlayers'].items():
-        if value[2]:
-            ready_players.append(player_email)
-    all_players_ready = len(ready_players) == len(ROOMS[room]['activePlayers'].items())
-    SOCKETIO.emit(
-        'playerChangedReady',
-        {'readyPlayers': ready_players, 'allPlayersReady':all_players_ready},
-        broadcast=True,
-        include_self=True,
-        room=room
-    )
+    send_ready_up_status(room)
 
 @SOCKETIO.on('startGame')
 def start_game(data):
