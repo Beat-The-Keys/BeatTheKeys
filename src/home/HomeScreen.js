@@ -18,7 +18,7 @@ export default function HomeScreen ({playerName, playerEmail, responseGoogleLogo
   const [showAchievements, setShowAchievements] = useState(false); // State which controls if the player is viewing their achievements
   const [achievements, setAchievements] = useState({}); // State which contains a dictionary of achievements
   const [prompt, setPrompt] = useState(""); // State which contains the text prompt for all users in a lobby
-  const [gameInProgress, setGameInProgress] = useState(false);
+  const [gameInProgress, setGameInProgress] = useState(false); // State for tracking if a game is in-progress
 
   function startGame() {
     setPlayerStartedGame(true);
