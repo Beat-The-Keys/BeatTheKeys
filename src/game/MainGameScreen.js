@@ -10,6 +10,7 @@ function MainGameScreen({prompt, playerName, room, playerEmail}) {
   const [incorrectHighlight, setIncorrectHighlight] = useState(0); // State for keeping track of the last incorrect character index to highlight in the prompt(red)
   const [wpm, setWpm] = useState(0); // State for calculating wpm
   const [timeLeft, setTimeLeft] = useState(60); // State for keeping track of the time so that the wpm can be calculated
+  const [typingBegan, setTypingBegan] = useState(false); // State for checking if the user started typing
   const [playerFinished, setPlayerFinished] = useState(false); // State for checking if the user finished the game
 
   useEffect(() => {
@@ -25,6 +26,7 @@ function MainGameScreen({prompt, playerName, room, playerEmail}) {
 
   function onTextChanged() {
     // Called when user starts typing
+    setTypingBegan(true);
     if (prompt === textboxRef.current.value) {
       setPlayerFinished(true);
       socket.emit('playerFinished', {'playerName': playerName, 'room': room, 'wpm': wpm, 'playerEmail': playerEmail});
@@ -48,7 +50,7 @@ function MainGameScreen({prompt, playerName, room, playerEmail}) {
 
   function gameStateJSX() {
     // If the user began typing and the game isn't over yet, display the timer only.
-    if (!playerFinished) {
+    if (typingBegan && !playerFinished) {
       return (
       <ReactTimer
         start={60}
@@ -57,6 +59,10 @@ function MainGameScreen({prompt, playerName, room, playerEmail}) {
       >
         {time => <span>TIMER: {time}<br/></span>}
       </ReactTimer>);
+    }
+    // Otherwise, if the player is not finished then we are at the start of the game.
+    if (!playerFinished) {
+      return <p>Begin typing: </p>;
     }
   }
 
