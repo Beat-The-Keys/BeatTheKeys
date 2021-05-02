@@ -8,7 +8,7 @@ import {socket} from '../LoginScreen';
 
 export default function Home({prop}) {
     
-    socket.emit('leaderboard', {'sortBy': 'bestwpm'}); // when the leaderboard is first rendered
+    socket.emit('leaderboard', {'sort_query': 'bestwpm'}); // when the leaderboard is first rendered
     return (
         <Container>
             <Row className="justify-content-md-center">

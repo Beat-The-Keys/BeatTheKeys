@@ -24,8 +24,8 @@ export default function Leaderboard(playerEmail) {
         
     }, []);
     function changeSortOrder(sort_query) {
+        socket.emit('leaderboard', {sort_query});
         changeSortBy(sort_query);
-        socket.emit('leaderboard', {sortBy});
         if(sort_query==="bestwpm"){
             changeTitle("Best WPM");
         }
@@ -65,7 +65,7 @@ export default function Leaderboard(playerEmail) {
                     </tr>
                   </thead>
                   <tbody>
-                    {dbEmails.map((item, index) => (
+                    {dbEmails.slice(0,10).map((item, index) => (
                         <LeaderboardItems
                         key={index}
                         thisEmail={playerEmail}

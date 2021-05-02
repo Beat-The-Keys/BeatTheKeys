@@ -286,13 +286,13 @@ def go_back_to_lobby(data):
     
 @SOCKETIO.on('leaderboard')
 def on_leaderboard_query(data):
-    if data["sortBy"] != "avgwpm":
-        db_emails, db_icons, db_bestwpm, db_totalwpm, db_gamesplayed, db_gameswon = fetch_db(data["sortBy"])
+    if data["sort_query"] != "avgwpm":
+        db_emails, db_icons, db_bestwpm, db_totalwpm, db_gamesplayed, db_gameswon = fetch_db(data["sort_query"])
         calculate_avg = find_average(db_totalwpm, db_gamesplayed)
         db_avgwpm = calculate_avg
         print(db_icons)
     else:
-        db_emails, db_icons, db_bestwpm, db_totalwpm, db_gamesplayed, db_gameswon = fetch_db(data["sortBy"])
+        db_emails, db_icons, db_bestwpm, db_totalwpm, db_gamesplayed, db_gameswon = fetch_db(data["sort_query"])
         calculated_avg = find_average(db_totalwpm, db_gamesplayed)
         db_emails, db_bestwpm, db_avgwpm, db_gamesplayed, db_gameswon = sort_avg(db_emails,
                                                                                  db_bestwpm,

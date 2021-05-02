@@ -11,6 +11,7 @@
     "prettier": "^2.2.1",
     "react": "^17.0.1",
     "react-bootstrap": "^1.5.2",
+    "react-bootstrap-dropdown-menu": "^1.1.23",
     "react-chartjs-2": "^3.0.3",
     "react-dom": "^17.0.1",
     "react-google-login": "^5.2.2",
