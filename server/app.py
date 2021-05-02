@@ -186,6 +186,8 @@ def assign_player_to_lobby(data):
     '''Put the user in a specified room'''
     player_email = data['playerEmail']
     room = data['room']
+    player_name = data['playerName']
+
     print("assign", player_email)
     is_original_room = False
     # If this function is called with an empty room ID, user is joining for the first time
@@ -209,7 +211,7 @@ def assign_player_to_lobby(data):
     if player_email not in ROOMS[room]:
         player_joined_late = ROOMS[room]['gameInProgress']
         icon = get_icons(player_email)
-        ROOMS[room]['activePlayers'][player_email] = [0, icon, False, player_joined_late]
+        ROOMS[room]['activePlayers'][player_email] = [0, icon, False, player_joined_late, player_name]
         SESSIONS[request.sid] = player_email
     active_players = ROOMS[room]['activePlayers']
     send_ready_up_status(room)
@@ -228,13 +230,14 @@ def attempt_to_join_game(data):
     player_email = data['playerEmail']
     old_room = data['oldRoom']
     new_room = data['newRoom']
+    player_name = data['playerName']
     # If the user tries to join a lobby that does not exist, just return
     # We can choose to display an error on the client-side later
     if new_room != "" and new_room not in ROOMS:
         return
 
     remove_player_from_lobby({'playerEmail':player_email, 'room':old_room})
-    assign_player_to_lobby({'playerEmail': player_email, 'room':new_room})
+    assign_player_to_lobby({'playerEmail': player_email, 'room':new_room, 'player_name':player_name})
 
 @SOCKETIO.on('updatePlayerStats')
 def update_player_stats(data):

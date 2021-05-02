@@ -29,7 +29,7 @@ function MainGameScreen({prompt, playerName, room, playerEmail}) {
     setTypingBegan(true);
     if (prompt === textboxRef.current.value) {
       setPlayerFinished(true);
-      socket.emit('playerFinished', {'playerName': playerName, 'room': room, 'wpm': wpm, 'playerEmail': playerEmail});
+      socket.emit('playerFinished', {playerName, room, wpm, playerEmail});
     }
     if (prompt.startsWith(textboxRef.current.value)) {
       setHighlightedStopIndex(textboxRef.current.value.length);
