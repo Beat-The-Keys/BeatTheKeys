@@ -37,30 +37,23 @@ export default function LoginScreen (){
             <Title data-text="BEAT_THE_KEYS!">BEAT_THE_KEYS!</Title>
             <img src = 'https://img.icons8.com/ios/452/keyboard.png' alt="Loading Keyboard" width="50" height="50" />
             <Para> Multiplayer typeracing game </Para>
-            <h6>Find out how fast can u type, can you beat all the achievements? Join today and become the top of everyone.</h6>
             <Form>
-              <Popin>Join game:</Popin>
-              <meta name="google-signin-client_id" content={client_id}/>
-                  <GoogleLogin
-                  buttonText="Login"
-                  clientID={client_id}
-                  onSuccess={responseGoogle}
-                  onFailure={() => alert('Please try logging in again.')}
-                  cookiePolicy={'single_host_origin'}
-                  />
+            <Popin>Join game:</Popin>
+            <meta name="google-signin-client_id" content={client_id}/>
+            <GoogleLogin
+            buttonText="Login"
+            clientID={client_id}
+            onSuccess={responseGoogle}
+            onFailure={() => alert('Please try logging in again.')}
+            cookiePolicy={'single_host_origin'}
+            />
             </Form>
-            <Popin>Features:</Popin>
-            <Rise>
-              <li>Private lobbies</li>
-              <li>Achievements</li>
-              <li>Leaderboard</li>
-              <li>More text prompts</li>
-            </Rise>
+            <h6>Find out how fast can u type, can you beat all the achievements? Join today and become the top of everyone.</h6>
           </Loginpage>
           <BottomNav>
             <div onClick={()=>setGuideUs('guide')}> Guide </div>
             <div onClick={()=>setGuideUs('why')}> Why </div>
-            <div onClick={()=>setGuideUs('about')}> Abous Us </div>
+            <div onClick={()=>setGuideUs('about')}> About Us </div>
             </BottomNav>
             {guideUs === 'guide' ? <Guide/> :
               guideUs === 'why' ? <Why/> :

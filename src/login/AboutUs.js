@@ -19,13 +19,13 @@ export default function AboutUs() {
         {
             img: 'yusef.png',
             title: 'Yusef Mustafa',
-            text: 'Senior at NJIT studying CS and Pokémon nerd',
+            text: 'I am a senior at NJIT studying CS and Pokémon nerd',
             link: 'https://github.com/yusefmustafa'
         },
         {
             img: 'mann.jpg',
             title: 'Mann Patel',
-            text: 'I am a Senior majoring in Computer Science at NJIT and pursuing a career in front-end development. I enjoy listening to hip-hop and gaming in my spare time.',
+            text: 'I am a senior majoring in Computer Science at NJIT and pursuing a career in front-end development. I enjoy listening to hip-hop and gaming in my spare time.',
             link: 'https://github.com/mmmann12'
         }
     ]
