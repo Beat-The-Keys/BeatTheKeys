@@ -1,5 +1,5 @@
 import {useState, React, useEffect} from 'react';
-import {socket} from '../LoginScreen';
+import {socket} from '../login/LoginScreen.js';
 import {Dropdown, DropdownButton} from 'react-bootstrap';
 import LeaderboardItems from './LeaderboardItems.js';
 

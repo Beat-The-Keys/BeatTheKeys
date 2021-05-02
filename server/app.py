@@ -99,8 +99,7 @@ def check_game_complete(room):
     if players_finished_set == active_players_set:
         # We also include the winning player name in the 'gameComplete' message.
         winning_player = max(ROOMS[room]['activePlayers'], key=ROOMS[room]['activePlayers'].get)
-        print("THIS IS THE WINNING PLAYER:", winning_player)
-        print("THIS IS THE KEY:", ROOMS[room]['activePlayers'])
+        print(ROOMS[room]['activePlayers'])
         update_db_gameswon(winning_player)
         ROOMS[room]['gameInProgress'] = False
         for player in ROOMS[room]['activePlayers'].keys():
@@ -368,6 +367,7 @@ def fetch_db(sort_by):
     if sort_by == "gameswon":
         all_users = DB.session.query(models.Users).order_by(
             models.Users.gameswon.desc()).all()
+        return fetch_db_helper(all_users)
 
     if sort_by == "avgwpm":
         all_users = DB.session.query(models.Users).order_by(
@@ -377,6 +377,7 @@ def fetch_db(sort_by):
     if sort_by == "email":
         all_users = DB.session.query(models.Users).order_by(
             models.Users.email.desc()).all()
+        return fetch_db_helper(all_users)
 
     return fetch_db_helper(all_users)
 

@@ -4,7 +4,7 @@ import UserList from './UserList.js';
 import HomeButtons from './HomeButtons.js';
 import {Container, Row, Col} from 'react-bootstrap'
 import Leaderboard from './Leaderboard.js';
-import {socket} from '../LoginScreen';
+import {socket} from '../login/LoginScreen.js';
 
 export default function Home({prop}) {
     
