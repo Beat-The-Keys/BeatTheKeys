@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect} from 'react';
 import ReactTimer from "@xendora/react-timer";
-import {socket} from '../LoginScreen';
+import {socket} from '../login/LoginScreen';
 import PlayerStats from '../game/PlayerStats.js';
 import styled from 'styled-components';
 
@@ -19,7 +19,6 @@ function MainGameScreen({prompt, playerName, room, playerEmail}) {
       let currentMin = (60 - timeLeft) / 60;
       let wpm = currentMin === 0 ? 0 : Math.round(entries / currentMin);
       setWpm(wpm);
-
       socket.emit('updatePlayerStats', {playerEmail, wpm, room});
     }
 
@@ -113,6 +112,8 @@ const Input = styled.textarea`
  overflow: hidden;
  padding: 12px 20px;
  resize: none;
+ margin-left: 30px;
+ border: 1px solid;
  &:focus{
   background-color: lightblue;
  }
