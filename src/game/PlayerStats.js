@@ -24,11 +24,13 @@ const PlayerStats = React.memo(({room}) => {
 
   useEffect(() => {
     socket.on('updatePlayerStats', (data) => {
+      console.log(data)
       if(barChart.current){
         Object.entries(data.playerStats).map((key, index) => {
+          console.log(key)
           console.log(key, key[0], key[1][0])
-          if(barChart.current.data.labels.indexOf(key[0]) === -1){
-            barChart.current.data.labels.push(key[0]);
+          if(barChart.current.data.labels.indexOf(key[1][4]) === -1){
+            barChart.current.data.labels.push(key[1][4]);
             barChart.current.data.datasets[0].backgroundColor.push(colorGenerator())
           }
           barChart.current.data.datasets[0].data[index] = key[1][0];

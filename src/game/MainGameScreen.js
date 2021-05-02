@@ -71,7 +71,6 @@ function MainGameScreen({prompt, playerName, room, playerEmail}) {
     // Decrement the timer and set the timeLeft state
     setTimeLeft(t);
     if (t === 1) {
-
       socket.emit('playerFinished', {playerName, room, wpm, playerEmail});
       setPlayerFinished(true);
     }
