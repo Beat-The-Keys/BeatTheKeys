@@ -3,14 +3,21 @@ import styled from 'styled-components';
 import UserList from './UserList.js';
 import HomeButtons from './HomeButtons.js';
 import {Container, Row, Col} from 'react-bootstrap'
+import Leaderboard from './Leaderboard.js';
+import {socket} from '../login/LoginScreen.js';
+
 export default function Home({prop}) {
+    
+    socket.emit('leaderboard', {'sort_query': 'bestwpm'}); // when the leaderboard is first rendered
     return (
         <Container>
             <Row className="justify-content-md-center">
                 <Col>
                     <HomeButtons prop={prop}/>
                 </Col>
-                <Col><Middle>Best WPM/Total Wins<br/>Leaderboard</Middle></Col>
+                <Col>
+                    <Leaderboard prop={prop}/>
+                </Col>
                 <Col md="auto"><Middle>Current players: <UserList prop={prop}/></Middle></Col>
             </Row>
         </Container>

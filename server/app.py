@@ -26,8 +26,7 @@ SOCKETIO = SocketIO(APP,
                     cors_allowed_origins="*",
                     json=json,
                     manage_session=False)
-
-PROMPT_FILES = ['server/prompts/' + path for path in os.listdir('server/prompts/')]
+PROMPT_FILES = ['./prompts/' + path for path in os.listdir('./prompts/')]
 SESSIONS = {}
 '''
 SESSIONS contains a dictionary of session ids which map to corresponding player names.
@@ -36,7 +35,7 @@ SESSIONS contains a dictionary of session ids which map to corresponding player 
 @APP.route('/', defaults={"filename": "index.html"})
 @APP.route('/<path:filename>')
 def index(filename):
-    """Tells python where our index file is that renders our React Components"""
+    '''Tells python where our index file is that renders our React Components'''
     return send_from_directory('../build', filename)
 
 # When a client connects from this Socket connection, this function is run
@@ -73,7 +72,7 @@ Ex: ROOMS[1234] = {
 '''
 
 def send_ready_up_status(room):
-    'Sends a list of ready players and whether all players are ready to the client'
+    '''Sends a list of ready players and whether all players are ready to the client'''
     ready_players = []
     for key in ROOMS[room]['activePlayers'].keys():
         if ROOMS[room]['activePlayers'][key][2]:
@@ -100,9 +99,10 @@ def check_game_complete(room):
     if players_finished_set == active_players_set:
         # We also include the winning player name in the 'gameComplete' message.
         winning_player = max(ROOMS[room]['activePlayers'], key=ROOMS[room]['activePlayers'].get)
-        print("THIS IS THE WINNING PLAYER:", winning_player)
-        print("THIS IS THE KEY:", ROOMS[room]['activePlayers'])
-        update_db_gameswon(winning_player)
+        
+        if len(ROOMS[room]['activePlayers'])!= 1:
+            update_db_gameswon(winning_player)
+            
         ROOMS[room]['gameInProgress'] = False
         for player in ROOMS[room]['activePlayers'].keys():
             ROOMS[room]['activePlayers'][player][3] = False
@@ -112,20 +112,15 @@ def check_game_complete(room):
 # When a client successfully logs in with their Google Account
 @SOCKETIO.on('login')
 def on_login(data):
-    """This is ran when someone presses the login button, it checks to see if that login is already
-    in our db, if it isnt, add it! This returns an updated list to the clients"""
+    '''This is ran when someone presses the login button, it checks to see if that login is already
+    in our db, if it isnt, add it! This returns an updated list to the clients'''
     this_user_email = data["email"]
-    db_emails, db_icons, db_bestwpm, db_totalwpm, db_gamesplayed, db_gameswon = fetch_db("email")
-    print("emails:", db_emails)
-    print("icons:", db_icons)
-    print("bestwpm:", db_bestwpm)
-    print("totalwpm:", db_totalwpm)
-    print("gamesplayed:", db_gamesplayed)
-    print("gameswon:", db_gameswon)
+    this_username = data["name"]
+    db_emails, db_icons = fetch_db("email")[1:3]
     # checks to see if the email exists in our DB, if not add the new users
 
-    user_db_check(this_user_email, db_emails)
-    db_emails, db_icons, db_bestwpm, db_totalwpm, db_gamesplayed, db_gameswon = fetch_db("email")
+    user_db_check(this_user_email, db_emails, this_username)
+    db_emails, db_icons = fetch_db("email")[1:3]
     SOCKETIO.emit(
         'iconFromDB',
         {'icon': db_icons[db_emails.index(this_user_email)], 'email': this_user_email},
@@ -153,9 +148,12 @@ def icon_to_db(data):
 
 def get_icons(player_email):
     '''Gets the players icon'''
-    db_emails, db_icons = fetch_db("email")[0:2] # fetch all users in DB
+    db_emails, db_icons = fetch_db("email")[1:3] # fetch all users in DB
     # print("iconToDB ", db_usersnames, db_emails, db_icons, db_wpms)
-    i = db_emails.index(player_email)
+    if player_email in db_emails:
+        i = db_emails.index(player_email)
+    else:
+        return 'smiley'
     return db_icons[i]
 
 @SOCKETIO.on('playerAchievements')
@@ -183,7 +181,7 @@ def player_achievements(data):
 
 @SOCKETIO.on('assignPlayerToLobby')
 def assign_player_to_lobby(data):
-    '''Put the user in a specified room'''
+    """Put the user in a specified room"""
     player_email = data['playerEmail']
     room = data['room']
     print("assign", player_email)
@@ -299,15 +297,10 @@ def start_game(data):
 
 @SOCKETIO.on('playerFinished')
 def player_finished(data):
-    '''
-    A client sends a message when they finished the game
-    Eventually we should check if the user achieved their best WPM here and store it in our db.
-    '''
+    '''A client sends a message when they finished the game. Eventually we should check if
+    the user achieved their best WPM here and store it in our db'''
     wpm = data['wpm']
     email = data['playerEmail']
-
-    bestwpm_db_check(email, wpm)
-    update_db_gamesplayed(email)
 
     room = data['room']
     player_email = data['playerEmail']
@@ -319,25 +312,69 @@ def player_finished(data):
     )
     # If all the players in the room are finished, send a 'gameComplete' message to every client
     # Comparing lists will also check item order by default, so instead we can use sets.
+    
     check_game_complete(room)
+    
+    if len(ROOMS[room]['activePlayers']) != 1:
+        update_db_gamesplayed(email)
 
+    bestwpm_db_check(email, wpm, len(ROOMS[room]['activePlayers'])) # we will allow the user to improve their best wpm in a solo game
     return ROOMS[room]['playersFinished']
 
 @SOCKETIO.on('goBackToLobby')
 def go_back_to_lobby(data):
-    '''
-    This function is called when a player goes back to their lobby.
-    All of the players will follow and 'playersFinished' will be cleared.
-    '''
+    '''This function is called when a player goes back to their lobby.
+    All of the players will follow and 'playersFinished' will be cleared'''
     room = data['room']
     SOCKETIO.emit('goBackToLobby', include_self=False, broadcast=True, room=room)
 
+
+@SOCKETIO.on('leaderboard')
+def on_leaderboard_query(data):
+    '''This function is called when the leaderboard is being rendered. It fetches data from
+    the database and then calculates everyones avg wpm and send all the info back to the client'''
+    if data["sort_query"] != "avgwpm":
+        db_usersnames, db_emails = fetch_db(data["sort_query"])[0:2]
+        db_bestwpm, db_totalwpm, db_gamesplayed, db_gameswon = fetch_db(data["sort_query"])[3:]
+        calculate_avg = find_average(db_totalwpm, db_gamesplayed)
+        db_avgwpm = calculate_avg
+    else:
+        db_usersnames, db_emails = fetch_db(data["sort_query"])[0:2]
+        db_bestwpm, db_totalwpm, db_gamesplayed, db_gameswon = fetch_db(data["sort_query"])[3:]
+        calculated_avg = find_average(db_totalwpm, db_gamesplayed)
+        data = sort_avg_wpm(db_usersnames, db_emails, db_bestwpm,
+                            calculated_avg, db_gamesplayed, db_gameswon)
+        db_usersnames, db_emails, db_bestwpm, db_avgwpm, db_gamesplayed, db_gameswon = data
+    SOCKETIO.emit('updateLeaderboard', {'db_usersnames': db_usersnames,
+                                        'db_bestwpm': db_bestwpm,
+                                        'db_avgwpm': db_avgwpm,
+                                        'db_gamesplayed': db_gamesplayed,
+                                        'db_gameswon': db_gameswon},
+                  broadcast=True,
+                  include_self=True)
+
+
 def fetch_db(sort_by):
-    """This is how we fetch all of the information from Heroku's DB, it also allows us to order
-    the information by best wpm/emails(alphabetical)/gameswon"""
-    if sort_by == "wpm":
+    '''This is how we fetch all of the information from Heroku's DB, it also allows us to order
+    the information by best wpm/emails(alphabetical)/gameswon'''
+    if sort_by == "bestwpm":
         all_users = DB.session.query(models.Users).order_by(
             models.Users.bestwpm.desc()).all()
+        return fetch_db_helper(all_users)
+
+    if sort_by == "gamesplayed":
+        all_users = DB.session.query(models.Users).order_by(
+            models.Users.gamesplayed.desc()).all()
+        return fetch_db_helper(all_users)
+
+    if sort_by == "gameswon":
+        all_users = DB.session.query(models.Users).order_by(
+            models.Users.gameswon.desc()).all()
+        return fetch_db_helper(all_users)
+
+    if sort_by == "avgwpm":
+        all_users = DB.session.query(models.Users).order_by(
+            models.Users.totalwpm.desc()).all()
         return fetch_db_helper(all_users)
 
     if sort_by == "email":
@@ -345,41 +382,37 @@ def fetch_db(sort_by):
             models.Users.email.desc()).all()
         return fetch_db_helper(all_users)
 
-    all_users = DB.session.query(models.Users).order_by(
-        models.Users.gameswon.desc()).all()
     return fetch_db_helper(all_users)
 
-def bestwpm_db_check(this_user_email, this_user_wpm):
-    """This is to check if the wpm that was just calculated is bigger than the
+
+def bestwpm_db_check(this_user_email, this_user_wpm, active_players_len):
+    '''This is to check if the wpm that was just calculated is bigger than the
     best wpm stored in DB. If it is, replace, if not do nothing. Also it adds wpm to each
-    totalwpm of each player."""
+    totalwpm of each player.'''
     this_user = DB.session.query(models.Users).get(this_user_email)
     db_user_bestwpm = this_user.bestwpm
-
-
-    print("DB WPM:", db_user_bestwpm)
-    print("MOST RECENT WPM:", this_user_wpm)
-
-    this_user.totalwpm = this_user.totalwpm + this_user_wpm
-    DB.session.commit()
+    if active_players_len != 1:
+        this_user.totalwpm = this_user.totalwpm + this_user_wpm
+        DB.session.commit()
 
     if this_user_wpm > db_user_bestwpm:
         this_user.bestwpm = this_user_wpm
         DB.session.commit()
 
 def update_db_gamesplayed(this_user_email):
-    """This is to update all the players gamesplayed column"""
+    '''This is to update all the players gamesplayed column'''
     this_user = DB.session.query(models.Users).get(this_user_email)
     this_user.gamesplayed = this_user.gamesplayed + 1
     DB.session.commit()
 
-def user_db_check(this_user_email, db_users_emails):
-    """This is to check if the email is already in our database, if it is don't add to the
-    database, it is isn't add a new user to the database"""
+def user_db_check(this_user_email, db_users_emails, this_user_name):
+    '''This is to check if the email is already in our database, if it is don't add to the
+    database, it is isn't add a new user to the database'''
     if this_user_email in db_users_emails:
         print("Welcome back {}!".format(this_user_email))
     else:
-        new_user = models.Users(email=this_user_email,
+        new_user = models.Users(username=this_user_name,
+                                email=this_user_email,
                                 icon='smiley',
                                 bestwpm=0,
                                 totalwpm=0,
@@ -391,14 +424,53 @@ def user_db_check(this_user_email, db_users_emails):
     return db_users_emails
 
 def update_db_gameswon(this_user_email):
-    """This is to update the winners gameswon column"""
+    '''This is to update the winners gameswon column'''
     this_user = DB.session.query(models.Users).get(this_user_email)
     this_user.gameswon = this_user.gameswon + 1
     DB.session.commit()
 
+
+def find_average(totalwpm, totalgames):
+    '''This function is a helper function that calculates all of the users avg
+    wpm and sends back a list of user avg wpms'''
+    avg_wpm = []
+    # ignore this pylint error as we need to iterate using indexes as im walking 2 lists
+    for i in range(len(totalwpm)): # pylint: disable=consider-using-enumerate
+        if totalgames[i] != 0:
+            tmp = totalwpm[i]/totalgames[i]
+            avg_wpm.append(round(tmp, 2))
+        else:
+            avg_wpm.append(0)
+    return avg_wpm
+
+# pylint: disable=too-many-arguments
+def sort_avg_wpm(db_usersnames, db_emails, db_bestwpm, calculated_avg, db_gamesplayed, db_gameswon):
+    '''This function is a helper function that sorts the list of sorted avg wpm and maintains that
+    all the data matches the database. I ignored this pylint error as I need to pass all these
+    lists to the function'''
+    sort_names = []
+    sort_emails = []
+    sort_best_wpm = []
+    sort_avg = []
+    sort_games_played = []
+    sort_games_won = []
+
+    while len(calculated_avg) != 0:
+        max_index = calculated_avg.index(max(calculated_avg))
+        sort_names.append(db_usersnames.pop(max_index))
+        sort_emails.append(db_emails.pop(max_index))
+        sort_best_wpm.append(db_bestwpm.pop(max_index))
+        sort_avg.append(calculated_avg.pop(max_index))
+        sort_games_played.append(db_gamesplayed.pop(max_index))
+        sort_games_won.append(db_gameswon.pop(max_index))
+
+    return sort_names, sort_emails, sort_best_wpm, sort_avg, sort_games_played, sort_games_won
+
+
 def fetch_db_helper(all_users):
-    """This will help fetch the information from the db and return 4 lists, a username list
-    an emails list, an icons list, and a bestWPM's list"""
+    '''This will help fetch the information from the db and return 4 lists, a username list
+    an emails list, an icons list, and a bestWPM's list'''
+    db_usersnames = []
     db_emails = []
     db_icons = []
     db_bestwpm = []
@@ -406,13 +478,14 @@ def fetch_db_helper(all_users):
     db_gamesplayed = []
     db_gameswon = []
     for users in all_users:
+        db_usersnames.append(users.username)
         db_emails.append(users.email)
         db_icons.append(users.icon)
         db_bestwpm.append(users.bestwpm)
         db_totalwpm.append(users.totalwpm)
         db_gamesplayed.append(users.gamesplayed)
         db_gameswon.append(users.gameswon)
-    return db_emails, db_icons, db_bestwpm, db_totalwpm, db_gamesplayed, db_gameswon
+    return db_usersnames, db_emails, db_icons, db_bestwpm, db_totalwpm, db_gamesplayed, db_gameswon
 
 if __name__ == "__main__":
     DB.create_all()
