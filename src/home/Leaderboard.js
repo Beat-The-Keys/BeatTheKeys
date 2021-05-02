@@ -11,8 +11,6 @@ export default function Leaderboard(playerEmail) {
     const [dbAVGWPM, orderDBAVGWPM] = useState([]);
     const [dbGamesPlayed, orderDBGamesPlayed] = useState([]);
     const [dbGamesWon, orderDBGamesWon] = useState([]);
-    
-    socket.emit('leaderboard', {sortBy}); // when the leaderboard is first rendered
         
     useEffect(() => {
         socket.on('updateLeaderboard', (data) => {
@@ -27,6 +25,7 @@ export default function Leaderboard(playerEmail) {
     }, []);
     function changeSortOrder(sort_query) {
         changeSortBy(sort_query);
+        socket.emit('leaderboard', {sortBy});
         if(sort_query==="bestwpm"){
             changeTitle("Best WPM");
         }
@@ -36,10 +35,9 @@ export default function Leaderboard(playerEmail) {
         if(sort_query==="gamesplayed"){
             changeTitle("Total Games");
         }
-        if(sort_query==="gamesplayed"){
+        if(sort_query==="gameswon"){
             changeTitle("Total Wins");
         }
-        socket.emit('leaderboard', {sortBy});
     }
 
     return (
@@ -48,7 +46,7 @@ export default function Leaderboard(playerEmail) {
                 <DropdownButton
                 alignRight
                 title={title}
-                id="dropdown-menu-align-right"
+                id="Leaderboard"
                 onSelect={changeSortOrder}
                 >
                     <Dropdown.Item eventKey="bestwpm">Best WPM</Dropdown.Item>

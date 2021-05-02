@@ -4,8 +4,11 @@ import UserList from './UserList.js';
 import HomeButtons from './HomeButtons.js';
 import {Container, Row, Col} from 'react-bootstrap'
 import Leaderboard from './Leaderboard.js';
+import {socket} from '../LoginScreen';
 
 export default function Home({prop}) {
+    
+    socket.emit('leaderboard', {'sortBy': 'bestwpm'}); // when the leaderboard is first rendered
     return (
         <Container>
             <Row className="justify-content-md-center">

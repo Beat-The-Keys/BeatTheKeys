@@ -286,12 +286,22 @@ def go_back_to_lobby(data):
     
 @SOCKETIO.on('leaderboard')
 def on_leaderboard_query(data):
-    db_emails, db_icons, db_bestwpm, db_totalwpm, db_gamesplayed, db_gameswon = fetch_db(data["sortBy"])
-    avgwpm = db_totalwpm
-    print(db_icons)
+    if data["sortBy"] != "avgwpm":
+        db_emails, db_icons, db_bestwpm, db_totalwpm, db_gamesplayed, db_gameswon = fetch_db(data["sortBy"])
+        calculate_avg = find_average(db_totalwpm, db_gamesplayed)
+        db_avgwpm = calculate_avg
+        print(db_icons)
+    else:
+        db_emails, db_icons, db_bestwpm, db_totalwpm, db_gamesplayed, db_gameswon = fetch_db(data["sortBy"])
+        calculated_avg = find_average(db_totalwpm, db_gamesplayed)
+        db_emails, db_bestwpm, db_avgwpm, db_gamesplayed, db_gameswon = sort_avg(db_emails,
+                                                                                 db_bestwpm,
+                                                                                 calculated_avg,
+                                                                                 db_gamesplayed,
+                                                                                 db_gameswon)
     SOCKETIO.emit('updateLeaderboard', {'db_emails': db_emails,
-                                  'db_bestwpm:': db_bestwpm,
-                                  'db_avgwpm': avgwpm,
+                                  'db_bestwpm': db_bestwpm,
+                                  'db_avgwpm': db_avgwpm,
                                   'db_gamesplayed': db_gamesplayed,
                                   'db_gameswon': db_gameswon},
                                   broadcast=True, include_self=True)
@@ -323,6 +333,7 @@ def fetch_db(sort_by):
     if sort_by == "email":
         all_users = DB.session.query(models.Users).order_by(
             models.Users.email.desc()).all()
+
     return fetch_db_helper(all_users)
 
 
@@ -373,6 +384,34 @@ def update_db_gameswon(this_user_email):
     DB.session.commit()
 
 
+def find_average(totalwpm, totalgames):
+    avgWPM = []
+    for index in range(len(totalwpm)):
+        if totalgames[index] != 0:
+            tmp = totalwpm[index]/totalgames[index]
+            avgWPM.append(round(tmp, 2))
+        else:
+            avgWPM.append(0)
+    print(avgWPM)
+    return avgWPM
+
+
+def sort_avg(db_emails, db_bestwpm, calculated_avg, db_gamesplayed, db_gameswon):
+    sortedEmails=[]
+    sortedBestWPM=[]
+    sortedAVG=[]
+    sortedGamesPlayed=[]
+    sortedGamesWon=[]
+    
+    while len(calculated_avg) !=0:
+        maxIndex = calculated_avg.index(max(calculated_avg))
+        sortedEmails.append(db_emails.pop(maxIndex))
+        sortedBestWPM.append(db_bestwpm.pop(maxIndex))
+        sortedAVG.append(calculated_avg.pop(maxIndex))
+        sortedGamesPlayed.append(db_gamesplayed.pop(maxIndex))
+        sortedGamesWon.append(db_gameswon.pop(maxIndex))
+    
+    return sortedEmails, sortedBestWPM, sortedAVG, sortedGamesPlayed, sortedGamesWon
 
 def fetch_db_helper(all_users):
     """This will help fetch the information from the db and return 4 lists, a username list
