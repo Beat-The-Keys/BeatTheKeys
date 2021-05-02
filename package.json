@@ -17,6 +17,7 @@
     "react-google-login": "^5.2.2",
     "react-native-leaderboard": "^1.0.6",
     "react-scripts": "^4.0.2",
+    "react-sweet-progress": "^1.1.2",
     "socket.io-client": "^3.1.1",
     "styled-components": "^5.2.3",
     "web-vitals": "^1.1.0"

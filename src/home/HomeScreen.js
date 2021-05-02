@@ -1,10 +1,11 @@
 import { React, useState, useEffect } from 'react';
 import MainGameScreen from '../game/MainGameScreen.js';
-import {socket} from '../LoginScreen';
+import {socket} from '../login/LoginScreen';
 import styled from 'styled-components';
 import Header from './Header.js';
 import Home from './Home.js';
-
+import Button from 'react-bootstrap/Button';
+import Achievements from './Achievements.js'
 
 export default function HomeScreen ({playerName, playerEmail, responseGoogleLogout}) {
   const [playerStartedGame, setPlayerStartedGame] = useState(false); // State for joining multiplayer room or not
@@ -15,6 +16,10 @@ export default function HomeScreen ({playerName, playerEmail, responseGoogleLogo
   const [winningPlayer, setWinningPlayer] = useState(); // State which holds the winning player name
   const [readyPlayers, setReadyPlayers] = useState([]); // State which holds the players that are ready to play
   const [startDisabled, setStartDisabled] = useState(true); // State which controls if the game can be started
+  const [showAchievements, setShowAchievements] = useState(false); // State which controls if the player is viewing their achievements
+  const [achievements, setAchievements] = useState({}); // State which contains a dictionary of achievements
+  const [prompt, setPrompt] = useState(""); // State which contains the text prompt for all users in a lobby
+  const [gameInProgress, setGameInProgress] = useState(false); // State for tracking if a game is in-progress
 
   function startGame() {
     setPlayerStartedGame(true);
@@ -23,11 +28,44 @@ export default function HomeScreen ({playerName, playerEmail, responseGoogleLogo
     socket.emit('startGame', {room});
   }
 
+  function viewAchievements() {
+    setShowAchievements(true);
+    socket.emit('playerAchievements', {'playerEmail': playerEmail});
+  }
+
   function goBackToLobby() {
     setPlayerStartedGame(false);
     socket.emit('goBackToLobby', {room});
     console.log('here')
     socket.emit('login', {name:playerName, email:playerEmail});
+  }
+
+  function homeScreenJSX() {
+    var jsx = []
+    if (playerStartedGame) {
+      if (allPlayersFinished) {
+        jsx.push(<Container>
+          <Button variant="info" onClick={goBackToLobby}>Back to Lobby</Button>
+          {Object.keys(activePlayers).length === 1 ? null : <h5> {winningPlayer} is the winner! Please go back to the lobby. </h5>}
+        </Container>
+        );
+      }
+      jsx.push(<MainGameScreen playerName={playerName} room={room} playerEmail={playerEmail} prompt={prompt}/>);
+      return jsx;
+    }
+    if (showAchievements) {
+      return (
+        <div>
+          <button onClick={()=>setShowAchievements(false)}>Back</button>
+          <Achievements achievements={achievements}/>
+        </div>
+      );
+    }
+    return (
+      <div><center><h1> BEAT THE KEYS!</h1></center>
+        <Home prop={[{room, playerName, originalRoom, startGame, activePlayers, playerEmail, readyPlayers, startDisabled, viewAchievements, gameInProgress}]}/>
+      </div>
+    );
   }
 
   useEffect(() => {
@@ -41,22 +79,29 @@ export default function HomeScreen ({playerName, playerEmail, responseGoogleLogo
         setOriginalRoom(data.room);
       }
       setRoom(data.room);
+      setGameInProgress(data.gameInProgress);
     });
-    socket.on('startGame', () => {
+    socket.on('startGame', (data) => {
       setPlayerStartedGame(true);
       setAllPlayersFinished(false);
       setWinningPlayer(null);
+      setPrompt(data.prompt);
+      setGameInProgress(true);
     });
     socket.on('gameComplete', (data) => {
       setAllPlayersFinished(true);
       setWinningPlayer(data.winningPlayer);
+      setGameInProgress(false);
     });
-    socket.on('goBackToLobby', (data) => {
+    socket.on('goBackToLobby', () => {
       setPlayerStartedGame(false);
     });
     socket.on('playerChangedReady', (data) => {
       setReadyPlayers(data.readyPlayers);
       setStartDisabled(!data.allPlayersReady);
+    });
+    socket.on('playerAchievements', (data) => {
+      setAchievements(data.achievements);
     });
 
   }, [playerName, room, playerEmail]);
@@ -64,28 +109,13 @@ export default function HomeScreen ({playerName, playerEmail, responseGoogleLogo
   return (
     <div>
       <Header prop={[{room, playerName, playerEmail, responseGoogleLogout}]}></Header>
-      { playerStartedGame
-      ? <div>
-          {allPlayersFinished &&
-            <div>
-              <button onClick={goBackToLobby}>Back to Lobby</button>
-              <Winner>{winningPlayer} is the winner! Please go back to the lobby.</Winner>
-            </div>
-          }
-          <MainGameScreen playerName={playerName} room={room} playerEmail={playerEmail}/>
-        </div>
-      : <div>
-          <center> <h1> BEAT THE KEYS! </h1> </center>
-
-          <Home prop={[{room, playerName, originalRoom, startGame, activePlayers, playerEmail, readyPlayers, startDisabled}]}/>
-        </div>
-      }
+      {homeScreenJSX()}
     </div>
   );
 }
 
-const Winner = styled.h3`
- display:flex;
- flex-direction:column;
- width: 20%;
+const Container = styled.div`
+  display:flex;
+  justify-content: space-around;
+  margin-block: 10px;
 `;
