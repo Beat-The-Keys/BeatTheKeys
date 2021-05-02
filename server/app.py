@@ -282,22 +282,47 @@ def go_back_to_lobby(data):
     room = data['room']
     ROOMS[room]['playersFinished'].clear()
     SOCKETIO.emit('goBackToLobby', include_self=False, broadcast=True, room=room)
-
+    
+    
+@SOCKETIO.on('leaderboard')
+def on_leaderboard_query(data):
+    db_emails, db_icons, db_bestwpm, db_totalwpm, db_gamesplayed, db_gameswon = fetch_db(data["sortBy"])
+    avgwpm = db_totalwpm
+    print(db_icons)
+    SOCKETIO.emit('updateLeaderboard', {'db_emails': db_emails,
+                                  'db_bestwpm:': db_bestwpm,
+                                  'db_avgwpm': avgwpm,
+                                  'db_gamesplayed': db_gamesplayed,
+                                  'db_gameswon': db_gameswon},
+                                  broadcast=True, include_self=True)
+    
+    
+    
 def fetch_db(sort_by):
     """This is how we fetch all of the information from Heroku's DB, it also allows us to order
     the information by best wpm/emails(alphabetical)/gameswon"""
-    if sort_by == "wpm":
+    if sort_by == "bestwpm":
         all_users = DB.session.query(models.Users).order_by(
             models.Users.bestwpm.desc()).all()
+        return fetch_db_helper(all_users)
+        
+    if sort_by == "gamesplayed":
+        all_users = DB.session.query(models.Users).order_by(
+            models.Users.gamesplayed.desc()).all()
+        return fetch_db_helper(all_users)
+        
+    if sort_by == "gameswon":
+        all_users = DB.session.query(models.Users).order_by(
+            models.Users.gameswon.desc()).all()
+            
+    if sort_by == "avgwpm":
+        all_users = DB.session.query(models.Users).order_by(
+            models.Users.totalwpm.desc()).all()
         return fetch_db_helper(all_users)
 
     if sort_by == "email":
         all_users = DB.session.query(models.Users).order_by(
             models.Users.email.desc()).all()
-        return fetch_db_helper(all_users)
-
-    all_users = DB.session.query(models.Users).order_by(
-        models.Users.gameswon.desc()).all()
     return fetch_db_helper(all_users)
 
 

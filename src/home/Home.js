@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import UserList from './UserList.js';
 import HomeButtons from './HomeButtons.js';
 import {Container, Row, Col} from 'react-bootstrap'
+import Leaderboard from './Leaderboard.js';
+
 export default function Home({prop}) {
     return (
         <Container>
@@ -10,7 +12,9 @@ export default function Home({prop}) {
                 <Col>
                     <HomeButtons prop={prop}/>
                 </Col>
-                <Col><Middle>Best WPM/Total Wins<br/>Leaderboard</Middle></Col>
+                <Col>
+                    <Leaderboard prop={prop}/>
+                </Col>
                 <Col md="auto"><Middle>Current players: <UserList prop={prop}/></Middle></Col>
             </Row>
         </Container>

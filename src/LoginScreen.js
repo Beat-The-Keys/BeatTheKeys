@@ -16,7 +16,7 @@ export default function LoginScreen (){
   function responseGoogle(response){
     setPlayerName(response.profileObj.givenName); // changed it to first name only
     let email = response.profileObj.email;
-    setPlayerEmail(email)
+    setPlayerEmail(email);
     changeIsLoggedIn(true);
     let name = response.profileObj.name;
     socket.emit('login', {email});
@@ -56,7 +56,7 @@ export default function LoginScreen (){
         </Loginpage>
     }
     <Guide> Guide: </Guide>
-    <AboutUs> Abous Us: </AboutUs>
+    <AboutUs> About Us: </AboutUs>
     </div>
     </Background>
   );
