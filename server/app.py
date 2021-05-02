@@ -274,7 +274,7 @@ def remove_player_from_lobby(data):
         broadcast=True,
         room=room
     )
-    # It is possible for someone to leave mid-game when the rest of the players are finished. 
+    # It is possible for someone to leave mid-game when the rest of the players are finished.
     # We should show a game over in this case.
     if ROOMS[room]['gameInProgress']:
         check_game_complete(room)
