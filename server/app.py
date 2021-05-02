@@ -26,8 +26,7 @@ SOCKETIO = SocketIO(APP,
                     cors_allowed_origins="*",
                     json=json,
                     manage_session=False)
-
-PROMPT_FILES = ['server/prompts/' + path for path in os.listdir('server/prompts/')]
+PROMPT_FILES = ['./prompts/' + path for path in os.listdir('./prompts/')]
 SESSIONS = {}
 '''
 SESSIONS contains a dictionary of session ids which map to corresponding player names.
@@ -99,8 +98,10 @@ def check_game_complete(room):
     if players_finished_set == active_players_set:
         # We also include the winning player name in the 'gameComplete' message.
         winning_player = max(ROOMS[room]['activePlayers'], key=ROOMS[room]['activePlayers'].get)
-        print(ROOMS[room]['activePlayers'])
-        update_db_gameswon(winning_player)
+        
+        if len(ROOMS[room]['activePlayers'])!= 1:
+            update_db_gameswon(winning_player)
+            
         ROOMS[room]['gameInProgress'] = False
         for player in ROOMS[room]['activePlayers'].keys():
             ROOMS[room]['activePlayers'][player][3] = False
@@ -301,9 +302,6 @@ def player_finished(data):
     wpm = data['wpm']
     email = data['playerEmail']
 
-    bestwpm_db_check(email, wpm)
-    update_db_gamesplayed(email)
-
     room = data['room']
     player_email = data['playerEmail']
     ROOMS[room]['playersFinished'].append(player_email)
@@ -314,8 +312,13 @@ def player_finished(data):
     )
     # If all the players in the room are finished, send a 'gameComplete' message to every client
     # Comparing lists will also check item order by default, so instead we can use sets.
+    
     check_game_complete(room)
+    
+    if len(ROOMS[room]['activePlayers']) != 1:
+        update_db_gamesplayed(email)
 
+    bestwpm_db_check(email, wpm, len(ROOMS[room]['activePlayers'])) # we will allow the user to improve their best wpm in a solo game
     return ROOMS[room]['playersFinished']
 
 @SOCKETIO.on('goBackToLobby')
@@ -382,15 +385,15 @@ def fetch_db(sort_by):
     return fetch_db_helper(all_users)
 
 
-def bestwpm_db_check(this_user_email, this_user_wpm):
+def bestwpm_db_check(this_user_email, this_user_wpm, active_players_len):
     '''This is to check if the wpm that was just calculated is bigger than the
     best wpm stored in DB. If it is, replace, if not do nothing. Also it adds wpm to each
     totalwpm of each player.'''
     this_user = DB.session.query(models.Users).get(this_user_email)
     db_user_bestwpm = this_user.bestwpm
-
-    this_user.totalwpm = this_user.totalwpm + this_user_wpm
-    DB.session.commit()
+    if active_players_len != 1:
+        this_user.totalwpm = this_user.totalwpm + this_user_wpm
+        DB.session.commit()
 
     if this_user_wpm > db_user_bestwpm:
         this_user.bestwpm = this_user_wpm
