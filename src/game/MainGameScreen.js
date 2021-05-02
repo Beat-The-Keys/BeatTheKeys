@@ -22,7 +22,7 @@ function MainGameScreen({playerName, room, playerEmail}) {
       let wpm = currentMin === 0 ? 0 : Math.round(entries / currentMin);
       setWpm(wpm);
 
-      socket.emit('updatePlayerStats', {playerEmail, wpm, room});
+      socket.emit('updatePlayerStats', {playerEmail, wpm, room, playerName});
     }
 
   }, [highlightedStopIndex, playerName, room, timeLeft, playerFinished]);

@@ -91,17 +91,12 @@ def on_login(data):
     """This is ran when someone presses the login button, it checks to see if that login is already
     in our db, if it isnt, add it! This returns an updated list to the clients"""
     this_user_email = data["email"]
-    db_emails, db_icons, db_bestwpm, db_totalwpm, db_gamesplayed, db_gameswon = fetch_db("email")
-    print("emails:", db_emails)
-    print("icons:", db_icons)
-    print("bestwpm:", db_bestwpm)
-    print("totalwpm:", db_totalwpm)
-    print("gamesplayed:", db_gamesplayed)
-    print("gameswon:", db_gameswon)
+    this_username = data["name"]
+    db_emails, db_icons = fetch_db("email")[1:3]
     # checks to see if the email exists in our DB, if not add the new users
 
-    user_db_check(this_user_email, db_emails)
-    db_emails, db_icons, db_bestwpm, db_totalwpm, db_gamesplayed, db_gameswon = fetch_db("email")
+    user_db_check(this_user_email, db_emails, this_username)
+    db_emails, db_icons = fetch_db("email")[1:3]
     SOCKETIO.emit(
         'iconFromDB',
         {'icon': db_icons[db_emails.index(this_user_email)], 'email': this_user_email},
@@ -130,10 +125,13 @@ def icon_to_db(data):
 
 def get_icons(player_email):
     '''Gets the players icon'''
-    db_emails, db_icons = fetch_db("email")[0:2] # fetch all users in DB
+    db_emails, db_icons = fetch_db("email")[1:3] # fetch all users in DB
     # print("iconToDB ", db_usersnames, db_emails, db_icons, db_wpms)
-    i = db_emails.index(player_email)
-    return db_icons[i]
+    if player_email in db_emails:
+        i = db_emails.index(player_email)
+        return db_icons[i]
+    else:
+        return 'smiley'
 
 @SOCKETIO.on('assignPlayerToLobby')
 def assign_player_to_lobby(data):
@@ -266,8 +264,6 @@ def player_finished(data):
     if players_finished_set == active_players_set:
         # We also include the winning player name in the 'gameComplete' message.
         winning_player = max(ROOMS[room]['activePlayers'], key=ROOMS[room]['activePlayers'].get)
-        print("THIS IS THE WINNING PLAYER:", winning_player)
-        print("THIS IS THE KEY:", ROOMS[room]['activePlayers'])
         update_db_gameswon(winning_player)
         SOCKETIO.emit('gameComplete', {'winningPlayer': winning_player}, broadcast=True, room=room)
 
@@ -287,19 +283,21 @@ def go_back_to_lobby(data):
 @SOCKETIO.on('leaderboard')
 def on_leaderboard_query(data):
     if data["sort_query"] != "avgwpm":
-        db_emails, db_icons, db_bestwpm, db_totalwpm, db_gamesplayed, db_gameswon = fetch_db(data["sort_query"])
+        db_usersnames, db_emails = fetch_db(data["sort_query"])[0:2]
+        db_bestwpm, db_totalwpm, db_gamesplayed, db_gameswon = fetch_db(data["sort_query"])[3:]
         calculate_avg = find_average(db_totalwpm, db_gamesplayed)
         db_avgwpm = calculate_avg
-        print(db_icons)
     else:
-        db_emails, db_icons, db_bestwpm, db_totalwpm, db_gamesplayed, db_gameswon = fetch_db(data["sort_query"])
+        db_usersnames, db_emails = fetch_db(data["sort_query"])[0:2]
+        db_bestwpm, db_totalwpm, db_gamesplayed, db_gameswon = fetch_db(data["sort_query"])[3:]
         calculated_avg = find_average(db_totalwpm, db_gamesplayed)
-        db_emails, db_bestwpm, db_avgwpm, db_gamesplayed, db_gameswon = sort_avg(db_emails,
+        db_usersnames, db_emails, db_bestwpm, db_avgwpm, db_gamesplayed, db_gameswon = sort_avg(db_usersnames,
+                                                                                 db_emails,
                                                                                  db_bestwpm,
                                                                                  calculated_avg,
                                                                                  db_gamesplayed,
                                                                                  db_gameswon)
-    SOCKETIO.emit('updateLeaderboard', {'db_emails': db_emails,
+    SOCKETIO.emit('updateLeaderboard', {'db_usersnames': db_usersnames,
                                   'db_bestwpm': db_bestwpm,
                                   'db_avgwpm': db_avgwpm,
                                   'db_gamesplayed': db_gamesplayed,
@@ -343,9 +341,6 @@ def bestwpm_db_check(this_user_email, this_user_wpm):
     totalwpm of each player."""
     this_user = DB.session.query(models.Users).get(this_user_email)
     db_user_bestwpm = this_user.bestwpm
-
-    print("DB WPM:", db_user_bestwpm)
-    print("MOST RECENT WPM:", this_user_wpm)
     this_user.totalwpm = this_user.totalwpm + this_user_wpm
     DB.session.commit()
 
@@ -359,13 +354,14 @@ def update_db_gamesplayed(this_user_email):
     this_user.gamesplayed = this_user.gamesplayed + 1
     DB.session.commit()
 
-def user_db_check(this_user_email, db_users_emails):
+def user_db_check(this_user_email, db_users_emails, this_user_name):
     """This is to check if the email is already in our database, if it is don't add to the
     database, it is isn't add a new user to the database"""
     if this_user_email in db_users_emails:
         print("Welcome back {}!".format(this_user_email))
     else:
-        new_user = models.Users(email=this_user_email,
+        new_user = models.Users(username=this_user_name,
+                                email=this_user_email,
                                 icon='smiley',
                                 bestwpm=0,
                                 totalwpm=0,
@@ -392,11 +388,11 @@ def find_average(totalwpm, totalgames):
             avgWPM.append(round(tmp, 2))
         else:
             avgWPM.append(0)
-    print(avgWPM)
     return avgWPM
 
 
-def sort_avg(db_emails, db_bestwpm, calculated_avg, db_gamesplayed, db_gameswon):
+def sort_avg(db_usersnames, db_emails, db_bestwpm, calculated_avg, db_gamesplayed, db_gameswon):
+    sortedUsernames=[]
     sortedEmails=[]
     sortedBestWPM=[]
     sortedAVG=[]
@@ -405,17 +401,19 @@ def sort_avg(db_emails, db_bestwpm, calculated_avg, db_gamesplayed, db_gameswon)
     
     while len(calculated_avg) !=0:
         maxIndex = calculated_avg.index(max(calculated_avg))
+        sortedUsernames.append(db_usersnames.pop(maxIndex))
         sortedEmails.append(db_emails.pop(maxIndex))
         sortedBestWPM.append(db_bestwpm.pop(maxIndex))
         sortedAVG.append(calculated_avg.pop(maxIndex))
         sortedGamesPlayed.append(db_gamesplayed.pop(maxIndex))
         sortedGamesWon.append(db_gameswon.pop(maxIndex))
     
-    return sortedEmails, sortedBestWPM, sortedAVG, sortedGamesPlayed, sortedGamesWon
+    return sortedUsernames, sortedEmails, sortedBestWPM, sortedAVG, sortedGamesPlayed, sortedGamesWon
 
 def fetch_db_helper(all_users):
     """This will help fetch the information from the db and return 4 lists, a username list
     an emails list, an icons list, and a bestWPM's list"""
+    db_usersnames=[]
     db_emails = []
     db_icons = []
     db_bestwpm = []
@@ -423,13 +421,14 @@ def fetch_db_helper(all_users):
     db_gamesplayed = []
     db_gameswon = []
     for users in all_users:
+        db_usersnames.append(users.username)
         db_emails.append(users.email)
         db_icons.append(users.icon)
         db_bestwpm.append(users.bestwpm)
         db_totalwpm.append(users.totalwpm)
         db_gamesplayed.append(users.gamesplayed)
         db_gameswon.append(users.gameswon)
-    return db_emails, db_icons, db_bestwpm, db_totalwpm, db_gamesplayed, db_gameswon
+    return db_usersnames, db_emails, db_icons, db_bestwpm, db_totalwpm, db_gamesplayed, db_gameswon
 
 if __name__ == "__main__":
     DB.create_all()

@@ -6,7 +6,7 @@ import LeaderboardItems from './LeaderboardItems.js';
 export default function Leaderboard(playerEmail) {
     const [sortBy, changeSortBy] = useState("bestwpm");
     const [title, changeTitle] = useState("Best WPM");
-    const [dbEmails, orderDBEmails] = useState([]);
+    const [dbUsersnames, orderDBUsersnames] = useState([]);
     const [dbBestWPM, orderDBBestWPM] = useState([]);
     const [dbAVGWPM, orderDBAVGWPM] = useState([]);
     const [dbGamesPlayed, orderDBGamesPlayed] = useState([]);
@@ -15,7 +15,7 @@ export default function Leaderboard(playerEmail) {
     useEffect(() => {
         socket.on('updateLeaderboard', (data) => {
           console.log(data);
-          orderDBEmails(data.db_emails);
+          orderDBUsersnames(data.db_usersnames);
           orderDBBestWPM(data.db_bestwpm);
           orderDBAVGWPM(data.db_avgwpm);
           orderDBGamesPlayed(data.db_gamesplayed);
@@ -65,11 +65,10 @@ export default function Leaderboard(playerEmail) {
                     </tr>
                   </thead>
                   <tbody>
-                    {dbEmails.slice(0,10).map((item, index) => (
+                    {dbUsersnames.slice(0,10).map((item, index) => (
                         <LeaderboardItems
                         key={index}
-                        thisEmail={playerEmail}
-                        email={item}
+                        username={item}
                         bestwpm={dbBestWPM[index]}
                         avgwpm={dbAVGWPM[index]}
                         gamesplayed={dbGamesPlayed[index]}
