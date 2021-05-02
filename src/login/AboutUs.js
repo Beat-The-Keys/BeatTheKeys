@@ -17,15 +17,15 @@ export default function AboutUs() {
             link: 'https://github.com/AP7557'
         },
         {
-            img: 'img',
+            img: 'yusef.png',
             title: 'Yusef Mustafa',
-            text: 'bio',
+            text: 'Senior at NJIT studying CS and Pokémon nerd',
             link: 'https://github.com/yusefmustafa'
         },
         {
-            img: 'img',
+            img: 'mann.jpg',
             title: 'Mann Patel',
-            text: 'bio',
+            text: 'I am a Senior majoring in Computer Science at NJIT and pursuing a career in front-end development. I enjoy listening to hip-hop and gaming in my spare time.',
             link: 'https://github.com/mmmann12'
         }
     ]

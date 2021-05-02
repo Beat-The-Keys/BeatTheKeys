@@ -308,8 +308,10 @@ def bestwpm_db_check(this_user_email, this_user_wpm):
     this_user = DB.session.query(models.Users).get(this_user_email)
     db_user_bestwpm = this_user.bestwpm
 
+
     print("DB WPM:", db_user_bestwpm)
     print("MOST RECENT WPM:", this_user_wpm)
+
     this_user.totalwpm = this_user.totalwpm + this_user_wpm
     DB.session.commit()
 

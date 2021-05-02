@@ -51,7 +51,7 @@ export default function HomeScreen ({playerName, playerEmail, responseGoogleLogo
       setAllPlayersFinished(true);
       setWinningPlayer(data.winningPlayer);
     });
-    socket.on('goBackToLobby', (data) => {
+    socket.on('goBackToLobby', () => {
       setPlayerStartedGame(false);
     });
     socket.on('playerChangedReady', (data) => {
@@ -69,7 +69,7 @@ export default function HomeScreen ({playerName, playerEmail, responseGoogleLogo
           {allPlayersFinished &&
             <Container>
               <Button variant="info" onClick={goBackToLobby}>Back to Lobby</Button>
-              <h5>{winningPlayer} is the winner! Please go back to the lobby.</h5>
+              {Object.keys(activePlayers).length === 1 ? null : <h5> {winningPlayer} is the winner! Please go back to the lobby. </h5>}
             </Container>
           }
           <MainGameScreen playerName={playerName} room={room} playerEmail={playerEmail}/>

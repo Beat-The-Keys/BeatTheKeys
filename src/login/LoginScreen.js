@@ -5,6 +5,7 @@ import io from 'socket.io-client';
 import styled, { keyframes }from "styled-components";
 import AboutUs from './AboutUs';
 import Guide from './Guide';
+import Why from './Why'
 
 export const socket = io(); // Connects to socket connection
 export const client_id = "658534926731-idi9s66r9j41tj2o844e16s5q4ua1d06.apps.googleusercontent.com";
@@ -13,7 +14,8 @@ export default function LoginScreen (){
   const [isLoggedIn, changeIsLoggedIn] = useState(false);
   const [playerName, setPlayerName] = useState("");
   const [playerEmail, setPlayerEmail] = useState("");
-  const [guideUs, setGuideUs] = useState(false);
+  const [guideUs, setGuideUs] = useState('about');
+
   function responseGoogle(response){
     setPlayerName(response.profileObj.givenName); // changed it to first name only
     let email = response.profileObj.email;
@@ -56,10 +58,13 @@ export default function LoginScreen (){
             </Rise>
           </Loginpage>
           <BottomNav>
-            <div onClick={()=>setGuideUs(true)}> Guide: </div>
-            <div onClick={()=>setGuideUs(false)}> Abous Us: </div>
+            <div onClick={()=>setGuideUs('guide')}> Guide </div>
+            <div onClick={()=>setGuideUs('why')}> Why </div>
+            <div onClick={()=>setGuideUs('about')}> Abous Us </div>
             </BottomNav>
-            {guideUs ? <Guide/>: <AboutUs/>}
+            {guideUs === 'guide' ? <Guide/> :
+              guideUs === 'why' ? <Why/> :
+              <AboutUs/>}
         </div>
     }
     </Background>
@@ -184,7 +189,7 @@ const Rise = styled.ul`
   color: #000000;
   font-family: Trebuchet MS, sans-serif;
   position: relative;
-  margin-bottom: 5px;
+  margin-bottom: 15px;
   animation: ${fadeIn} 2s linear;
 `
 
