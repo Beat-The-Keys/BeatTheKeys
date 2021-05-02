@@ -1,9 +1,10 @@
 import { React, useState, useEffect } from 'react';
 import MainGameScreen from '../game/MainGameScreen.js';
-import {socket} from '../LoginScreen';
+import {socket} from '../login/LoginScreen';
 import styled from 'styled-components';
 import Header from './Header.js';
 import Home from './Home.js';
+import Button from 'react-bootstrap/Button';
 import Achievements from './Achievements.js'
 
 export default function HomeScreen ({playerName, playerEmail, responseGoogleLogout}) {
@@ -43,10 +44,10 @@ export default function HomeScreen ({playerName, playerEmail, responseGoogleLogo
     var jsx = []
     if (playerStartedGame) {
       if (allPlayersFinished) {
-        jsx.push(<div>
-          <button onClick={goBackToLobby}>Back to Lobby</button>
-          <Winner>{winningPlayer} is the winner! Please go back to the lobby.</Winner>
-          </div>
+        jsx.push(<Container>
+          <Button variant="info" onClick={goBackToLobby}>Back to Lobby</Button>
+          {Object.keys(activePlayers).length === 1 ? null : <h5> {winningPlayer} is the winner! Please go back to the lobby. </h5>}
+        </Container>
         );
       }
       jsx.push(<MainGameScreen playerName={playerName} room={room} playerEmail={playerEmail} prompt={prompt}/>);
@@ -56,7 +57,7 @@ export default function HomeScreen ({playerName, playerEmail, responseGoogleLogo
       return (
         <div>
           <button onClick={()=>setShowAchievements(false)}>Back</button>
-          <Achievements achievements={achievements}/>          
+          <Achievements achievements={achievements}/>
         </div>
       );
     }
@@ -92,7 +93,7 @@ export default function HomeScreen ({playerName, playerEmail, responseGoogleLogo
       setWinningPlayer(data.winningPlayer);
       setGameInProgress(false);
     });
-    socket.on('goBackToLobby', (data) => {
+    socket.on('goBackToLobby', () => {
       setPlayerStartedGame(false);
     });
     socket.on('playerChangedReady', (data) => {
@@ -113,8 +114,8 @@ export default function HomeScreen ({playerName, playerEmail, responseGoogleLogo
   );
 }
 
-const Winner = styled.h3`
- display:flex;
- flex-direction:column;
- width: 20%;
+const Container = styled.div`
+  display:flex;
+  justify-content: space-around;
+  margin-block: 10px;
 `;

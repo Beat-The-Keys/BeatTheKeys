@@ -1,6 +1,6 @@
 import React from 'react'
 import Button from 'react-bootstrap/Button';
-import {socket} from '../LoginScreen';
+import {socket} from '../login/LoginScreen';
 import JoinGameButton from './JoinGameButton';
 import styled from 'styled-components';
 
