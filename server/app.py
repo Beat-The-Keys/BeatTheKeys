@@ -87,6 +87,7 @@ def send_ready_up_status(room):
         include_self=True,
         room=room
     )
+    return (ready_players, all_players_ready)
 
 # When a client successfully logs in with their Google Account
 @SOCKETIO.on('login')
@@ -111,7 +112,6 @@ def on_login(data):
         broadcast=True,
         room=request.sid
     )
-
 
 # When a client successfully logs in with their Google Account
 @SOCKETIO.on('iconToDB')
@@ -341,7 +341,6 @@ def fetch_db(sort_by):
         models.Users.gameswon.desc()).all()
     return fetch_db_helper(all_users)
 
-
 def bestwpm_db_check(this_user_email, this_user_wpm):
     """This is to check if the wpm that was just calculated is bigger than the
     best wpm stored in DB. If it is, replace, if not do nothing. Also it adds wpm to each
@@ -381,14 +380,11 @@ def user_db_check(this_user_email, db_users_emails):
         db_users_emails.append(this_user_email)
     return db_users_emails
 
-
 def update_db_gameswon(this_user_email):
     """This is to update the winners gameswon column"""
     this_user = DB.session.query(models.Users).get(this_user_email)
     this_user.gameswon = this_user.gameswon + 1
     DB.session.commit()
-
-
 
 def fetch_db_helper(all_users):
     """This will help fetch the information from the db and return 4 lists, a username list
