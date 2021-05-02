@@ -88,6 +88,26 @@ def send_ready_up_status(room):
         room=room
     )
 
+def check_game_complete(room):
+    ''' Checks if the game is over and sends a message that contains the winner to each client'''
+    active_players = []
+    for player in ROOMS[room]['activePlayers'].keys():
+        if not ROOMS[room]['activePlayers'][player][3]:
+            active_players.append(player)
+    active_players_set = set(active_players)
+    players_finished_set = set(ROOMS[room]['playersFinished'])
+    if players_finished_set == active_players_set:
+        # We also include the winning player name in the 'gameComplete' message.
+        winning_player = max(ROOMS[room]['activePlayers'], key=ROOMS[room]['activePlayers'].get)
+        print("THIS IS THE WINNING PLAYER:", winning_player)
+        print("THIS IS THE KEY:", ROOMS[room]['activePlayers'])
+        update_db_gameswon(winning_player)
+        ROOMS[room]['gameInProgress'] = False
+        for player in ROOMS[room]['activePlayers'].keys():
+            ROOMS[room]['activePlayers'][player][3] = False
+        ROOMS[room]['playersFinished'].clear()
+        SOCKETIO.emit('gameComplete', {'winningPlayer': winning_player}, broadcast=True, room=room)
+
 # When a client successfully logs in with their Google Account
 @SOCKETIO.on('login')
 def on_login(data):
@@ -254,6 +274,10 @@ def remove_player_from_lobby(data):
         broadcast=True,
         room=room
     )
+    # It is possible for someone to leave mid-game when the rest of the players are finished. 
+    # We should show a game over in this case.
+    if ROOMS[room]['gameInProgress']:
+        check_game_complete(room)
     leave_room(room)
 
 @SOCKETIO.on('playerChangedReady')
@@ -295,23 +319,7 @@ def player_finished(data):
     )
     # If all the players in the room are finished, send a 'gameComplete' message to every client
     # Comparing lists will also check item order by default, so instead we can use sets.
-    active_players = []
-    for player in ROOMS[room]['activePlayers'].keys():
-        if not ROOMS[room]['activePlayers'][player][3]:
-            active_players.append(player)
-    active_players_set = set(active_players)
-    players_finished_set = set(ROOMS[room]['playersFinished'])
-    if players_finished_set == active_players_set:
-        # We also include the winning player name in the 'gameComplete' message.
-        winning_player = max(ROOMS[room]['activePlayers'], key=ROOMS[room]['activePlayers'].get)
-        print("THIS IS THE WINNING PLAYER:", winning_player)
-        print("THIS IS THE KEY:", ROOMS[room]['activePlayers'])
-        update_db_gameswon(winning_player)
-        ROOMS[room]['gameInProgress'] = False
-        for player in ROOMS[room]['activePlayers'].keys():
-            ROOMS[room]['activePlayers'][player][3] = False
-        ROOMS[room]['playersFinished'].clear()
-        SOCKETIO.emit('gameComplete', {'winningPlayer': winning_player}, broadcast=True, room=room)
+    check_game_complete(room)
 
     return ROOMS[room]['playersFinished']
 
