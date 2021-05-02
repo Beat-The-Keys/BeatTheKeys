@@ -86,6 +86,7 @@ def send_ready_up_status(room):
         include_self=True,
         room=room
     )
+    return (ready_players, all_players_ready)
 
 def check_game_complete(room):
     ''' Checks if the game is over and sends a message that contains the winner to each client'''
@@ -126,7 +127,6 @@ def on_login(data):
         broadcast=True,
         room=request.sid
     )
-
 
 # When a client successfully logs in with their Google Account
 @SOCKETIO.on('iconToDB')
@@ -423,7 +423,6 @@ def user_db_check(this_user_email, db_users_emails, this_user_name):
         db_users_emails.append(this_user_email)
     return db_users_emails
 
-
 def update_db_gameswon(this_user_email):
     '''This is to update the winners gameswon column'''
     this_user = DB.session.query(models.Users).get(this_user_email)
@@ -466,6 +465,7 @@ def sort_avg_wpm(db_usersnames, db_emails, db_bestwpm, calculated_avg, db_gamesp
         sort_games_won.append(db_gameswon.pop(max_index))
 
     return sort_names, sort_emails, sort_best_wpm, sort_avg, sort_games_played, sort_games_won
+
 
 def fetch_db_helper(all_users):
     '''This will help fetch the information from the db and return 4 lists, a username list
