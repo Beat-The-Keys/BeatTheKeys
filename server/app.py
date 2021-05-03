@@ -166,22 +166,53 @@ def player_achievements(data):
     This function will be called when the player views their achievements
     This is currently just skeleton code and will be implemented later
     '''
-    print(data)
-    # Uncomment the code below when we're ready to pull achievement progress from the user
-
-    # player_email = data['playerEmail']
-    # user = DB.session.query(models.Users).get(player_email)
-
-    # Dummy data below:
     achievements = {}
-    achievements['Played 25 Games'] = {'progress': 10, 'total': 25}
-    achievements['Won 10 Games'] = {'progress': 8, 'total': 10}
+    
+    this_user_email = data['playerEmail']
+    this_user = DB.session.query(models.Users).get(this_user_email)
+    best_wpm = this_user.bestwpm
+    games_played = this_user.gamesplayed
+    games_won = this_user.gameswon
+    
+    if games_played != 0:
+        avg_wpm = this_user.totalwpm/games_played
+    
+    else:
+        avg_wpm = 0
+    
+    games_ctr = 5
+    games_won_ctr = 5
+    avg_wpm_ctr = 50
+    best_wpm_ctr = 60
+    
+    while games_ctr <= games_played:
+        achievements['Play {} Games'.format(games_ctr)] = {'progress': games_ctr, 'total': games_ctr}
+        games_ctr += 15
+    
+    while games_won_ctr <= games_won:
+        achievements['Won {} Games'.format(games_won_ctr)] = {'progress': games_won_ctr, 'total': games_won_ctr}
+        games_won_ctr += 5
+    
+    while avg_wpm_ctr <= avg_wpm:
+        achievements['Average WPM of {}'.format(avg_wpm_ctr)] = {'progress': avg_wpm_ctr, 'total': avg_wpm_ctr}
+        avg_wpm_ctr += 15
+    
+    while best_wpm_ctr <= best_wpm:
+        achievements[' Best WPM of {}'.format(best_wpm_ctr)] = {'progress': best_wpm_ctr, 'total': best_wpm_ctr}
+        best_wpm_ctr += 15
 
+    
+    achievements['Play {} Games'.format(games_ctr)] = {'progress': games_played, 'total': games_ctr}
+    achievements['Won {} Games'.format(games_won_ctr)] = {'progress': games_won, 'total': games_won_ctr}
+    achievements['Average WPM of {}'.format(avg_wpm_ctr)] = {'progress': avg_wpm, 'total': avg_wpm_ctr}
+    achievements['Best WPM of {}'.format(best_wpm_ctr)] = {'progress': best_wpm, 'total': best_wpm_ctr}
+    
     SOCKETIO.emit(
         'playerAchievements',
         {'achievements': achievements},
         room=request.sid
     )
+
 
 @SOCKETIO.on('assignPlayerToLobby')
 def assign_player_to_lobby(data):
