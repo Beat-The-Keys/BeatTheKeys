@@ -39,7 +39,7 @@ export default function LoginScreen (){
             <img src = 'https://img.icons8.com/ios/452/keyboard.png' alt="Loading Keyboard" width="50" height="50" />
             <Para> Multiplayer typeracing game </Para>
             <Form>
-            <Popin>Join game:</Popin>
+            <Popin>Start game:</Popin>
             <meta name="google-signin-client_id" content={client_id}/>
             <GoogleLogin
             buttonText="Login"
@@ -49,7 +49,7 @@ export default function LoginScreen (){
             cookiePolicy={'single_host_origin'}
             />
             </Form>
-            <h6>Find out how fast can u type, can you beat all the achievements? Join today and become the top of everyone.</h6>
+            <h5>Measure your typing speed and invite your friends to race! Type your way to the top of the leaderboard.</h5>
           </Loginpage>
           <BottomNav>
             <div onClick={()=>setGuideUs('guide')}> Guide </div>
