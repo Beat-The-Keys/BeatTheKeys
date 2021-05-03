@@ -54,7 +54,9 @@ def on_disconnect():
         for room in ROOMS:
             if disconnected_player in ROOMS[room]['activePlayers']:
                 name = ROOMS[room]['activePlayers'][disconnected_player][4]
-                remove_player_from_lobby({'playerEmail':disconnected_player, 'room':room, 'playerName': name})
+                remove_player_from_lobby({'playerEmail':disconnected_player,
+                        'room':room,
+                        'playerName': name})
                 print(disconnected_player + ' disconnected!')
 
 ROOMS = {}
@@ -108,7 +110,8 @@ def check_game_complete(room):
         for player in ROOMS[room]['activePlayers'].keys():
             ROOMS[room]['activePlayers'][player][3] = False
         ROOMS[room]['playersFinished'].clear()
-        SOCKETIO.emit('gameComplete', {'winningPlayer': winning_player}, broadcast=True, room=room)
+        SOCKETIO.emit('gameComplete',
+            {'winningPlayer': winning_player}, broadcast=True, room=room)
 
 # When a client successfully logs in with their Google Account
 @SOCKETIO.on('login')
@@ -210,7 +213,8 @@ def assign_player_to_lobby(data):
     if player_email not in ROOMS[room]:
         player_joined_late = ROOMS[room]['gameInProgress']
         icon = get_icons(player_email)
-        ROOMS[room]['activePlayers'][player_email] = [0, icon, False, player_joined_late, player_name]
+        ROOMS[room]['activePlayers'][player_email] = [0, icon, False,
+                                                        player_joined_late, player_name]
         SESSIONS[request.sid] = player_email
     active_players = ROOMS[room]['activePlayers']
     send_ready_up_status(room)
@@ -235,8 +239,12 @@ def attempt_to_join_game(data):
     if new_room != "" and new_room not in ROOMS:
         return
 
-    remove_player_from_lobby({'playerEmail':player_email, 'room':old_room, 'player_name': player_name})
-    assign_player_to_lobby({'playerEmail': player_email, 'room':new_room, 'player_name':player_name})
+    remove_player_from_lobby({'playerEmail':player_email,
+                                'room':old_room,
+                                'player_name': player_name})
+    assign_player_to_lobby({'playerEmail': player_email,
+                                'room':new_room,
+                                'player_name':player_name})
 
 @SOCKETIO.on('updatePlayerStats')
 def update_player_stats(data):
@@ -309,7 +317,6 @@ def player_finished(data):
     name = data['playerName']
 
     room = data['room']
-    player_email = data['playerEmail']
     ROOMS[room]['playersFinished'].append(name)
     SOCKETIO.emit(
         'playersFinished', {'playersFinished': ROOMS[room]['playersFinished']},
@@ -324,7 +331,8 @@ def player_finished(data):
     if len(ROOMS[room]['activePlayers']) != 1:
         update_db_gamesplayed(email)
 
-    bestwpm_db_check(email, wpm, len(ROOMS[room]['activePlayers'])) # we will allow the user to improve their best wpm in a solo game
+    # we will allow the user to improve their best wpm in a solo game
+    bestwpm_db_check(email, wpm, len(ROOMS[room]['activePlayers']))
 
 @SOCKETIO.on('goBackToLobby')
 def go_back_to_lobby(data):
