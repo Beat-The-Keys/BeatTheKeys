@@ -284,6 +284,7 @@ def attempt_to_join_game(data):
                             'room':new_room,
                             'playerName':player_name})
 
+
 @SOCKETIO.on('updatePlayerStats')
 def update_player_stats(data):
     '''Clients send their WPM and the server sends updated stats to all clients in the room'''
