@@ -40,32 +40,31 @@ export default function HomeScreen ({playerName, playerEmail, responseGoogleLogo
     socket.emit('login', {name:playerName, email:playerEmail});
   }
 
-  function homeScreenJSX() {
-    var jsx = []
-    if (playerStartedGame) {
-      if (allPlayersFinished) {
-        jsx.push(<Container>
-          <Button variant="info" onClick={goBackToLobby}>Back to Lobby</Button>
-          {Object.keys(activePlayers).length === 1 ? null : <h5> {winningPlayer} is the winner! Please go back to the lobby. </h5>}
-        </Container>
-        );
-      }
-      jsx.push(<MainGameScreen playerName={playerName} room={room} playerEmail={playerEmail} prompt={prompt}/>);
-      return jsx;
-    }
-    if (showAchievements) {
+  function handleJSX() {
+    if(playerStartedGame){
       return (
+        <div>
+          {allPlayersFinished &&
+            <Container>
+              <Button variant="info" onClick={goBackToLobby}>Back to Lobby</Button>
+              {Object.keys(activePlayers).length === 1 ? null : <h5> {winningPlayer} is the winner! Please go back to the lobby. </h5>}
+            </Container>
+          }
+          <MainGameScreen playerName={playerName} room={room} playerEmail={playerEmail} prompt={prompt}/>
+        </div>
+    )}else if(showAchievements){
+      return(
         <div>
           <button onClick={()=>setShowAchievements(false)}>Back</button>
           <Achievements achievements={achievements}/>
         </div>
-      );
-    }
-    return (
-      <div><center><h1> BEAT THE KEYS!</h1></center>
+    )}else{
+      return(
+        <div>
+        <center><h1> BEAT THE KEYS!</h1></center>
         <Home prop={[{room, playerName, originalRoom, startGame, activePlayers, playerEmail, readyPlayers, startDisabled, viewAchievements, gameInProgress}]}/>
       </div>
-    );
+      )}
   }
 
   useEffect(() => {
@@ -109,7 +108,7 @@ export default function HomeScreen ({playerName, playerEmail, responseGoogleLogo
   return (
     <div>
       <Header prop={[{room, playerName, playerEmail, responseGoogleLogout}]}></Header>
-      {homeScreenJSX()}
+      {handleJSX()}
     </div>
   );
 }

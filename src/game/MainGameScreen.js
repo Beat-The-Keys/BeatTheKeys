@@ -30,7 +30,7 @@ function MainGameScreen({prompt, playerName, room, playerEmail}) {
     setTypingBegan(true);
     if (prompt === textboxRef.current.value) {
       setPlayerFinished(true);
-      socket.emit('playerFinished', {'playerName': playerName, 'room': room, 'wpm': wpm, 'playerEmail': playerEmail});
+      socket.emit('playerFinished', {playerName, room, wpm, playerEmail});
     }
     if (prompt.startsWith(textboxRef.current.value)) {
       setHighlightedStopIndex(textboxRef.current.value.length);
@@ -71,7 +71,6 @@ function MainGameScreen({prompt, playerName, room, playerEmail}) {
     // Decrement the timer and set the timeLeft state
     setTimeLeft(t);
     if (t === 1) {
-
       socket.emit('playerFinished', {playerName, room, wpm, playerEmail});
       setPlayerFinished(true);
     }

@@ -64,7 +64,7 @@ class AddToDBTest(unittest.TestCase):
         for test in self.success_test_params:
             with patch('app.DB.session.add', self.mocked_db_session_add):
                 with patch('app.DB.session.commit', self.mocked_db_session_commit):
-                    actual_result = user_db_check(test[KEY_INPUT], [INITIAL_EMAIL])
+                    actual_result = user_db_check(test[KEY_INPUT], [INITIAL_EMAIL], INITIAL_USERNAME)
                     expected_result = test[KEY_EXPECTED]
                     print(actual_result)
                     print(expected_result)
