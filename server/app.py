@@ -26,7 +26,7 @@ SOCKETIO = SocketIO(APP,
                     cors_allowed_origins="*",
                     json=json,
                     manage_session=False)
-PROMPT_FILES = ['./prompts/' + path for path in os.listdir('./prompts/')]
+PROMPT_FILES = ['server/prompts/' + path for path in os.listdir('server/prompts/')]
 SESSIONS = {}
 '''
 SESSIONS contains a dictionary of session ids which map to corresponding player names.
