@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect} from 'react';
-import ReactTimer from "@xendora/react-timer";
+import { CountdownCircleTimer } from 'react-countdown-circle-timer'
 import {socket} from '../login/LoginScreen';
 import PlayerStats from '../game/PlayerStats.js';
 import styled from 'styled-components';
@@ -42,52 +42,54 @@ function MainGameScreen({prompt, playerName, room, playerEmail}) {
 
   function promptJSX() {
     // Highlight the text
-    return (<p className="prompt-text">
-              <b style={{color:'green'}}>{prompt.substring(0, highlightedStopIndex)}</b>
-              <b style={{color:'red'}}>{prompt.substring(highlightedStopIndex, incorrectHighlight)}</b>
-              {prompt.substring(incorrectHighlight)}
-            </p>);
+    return (<div className="prompt-text">
+              <p style={{backgroundColor:'#5cb85c', display:'inline'}}>{prompt.substring(0, highlightedStopIndex)}</p>
+              <p style={{backgroundColor:'#d9534f', display:'inline'}}>{prompt.substring(highlightedStopIndex, incorrectHighlight)}</p>
+              <p style={{ display:'inline'}}>{prompt.substring(incorrectHighlight)}</p>
+            </div>);
   }
 
-  function gameStateJSX() {
-    // If the user began typing and the game isn't over yet, display the timer only.
-    if (typingBegan && !playerFinished) {
+  function timerJSX() {
       return (
-      <ReactTimer
-        start={60}
-        end={t => t === 0}
-        onTick={t => handleTime(t)}
-      >
-        {time => <span>TIMER: {time}<br/></span>}
-      </ReactTimer>);
-    }
-    // Otherwise, if the player is not finished then we are at the start of the game.
-    if (!playerFinished) {
-      return <p>Begin typing: </p>;
-    }
+        <div>
+          <center>
+          <CountdownCircleTimer
+          size={250}
+            isPlaying={typingBegan && !playerFinished}
+            duration={60}
+            colors={'#0275d8'}
+            onComplete={timerFinished}
+            >
+            {({ remainingTime }) => "Time left: " + handleTime(remainingTime) + "s"}
+          </CountdownCircleTimer>
+          </center>
+        </div>
+      );
   }
 
   function handleTime(t) {
-    // Decrement the timer and set the timeLeft state
     setTimeLeft(t);
-    if (t === 1) {
-      socket.emit('playerFinished', {playerName, room, wpm, playerEmail});
-      setPlayerFinished(true);
-    }
-    return t-1;
+    return t;
+  }
+
+  function timerFinished() {
+    socket.emit('playerFinished', {playerName, room, wpm, playerEmail});
+    setPlayerFinished(true);
   }
 
   return (
       <GridContainer>
-        <GirdItem>
+        <GridItem>
           {promptJSX()}
-          {gameStateJSX()}
-          <Input type="text" disabled={playerFinished} name="name" ref={textboxRef} onChange={onTextChanged} />
-        </GirdItem>
-        <GirdItem>
-          <p>WPM: {wpm}</p>
+          <Input type="text" placeholder="Start typing..." disabled={playerFinished} name="name" ref={textboxRef} onChange={onTextChanged} />
+        </GridItem>
+        <GridItem>
+          <h4>WPM: {wpm}</h4>
           <PlayerStats room={room}/>
-        </GirdItem>
+        </GridItem>
+        <GridItem>
+          {timerJSX()}
+        </GridItem>
       </GridContainer>
   );
 }
@@ -104,7 +106,7 @@ const GridContainer = styled.div`
   }
 `;
 
-const GirdItem = styled.div`
+const GridItem = styled.div`
   padding: 40px;
 `;
 
@@ -112,7 +114,8 @@ const Input = styled.textarea`
  overflow: hidden;
  padding: 12px 20px;
  resize: none;
- margin-left: 30px;
+ margin-top: 50px;
+ width: 100%;
  border: 1px solid;
  &:focus{
   background-color: lightblue;

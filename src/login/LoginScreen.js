@@ -69,7 +69,7 @@ export default function LoginScreen (){
 const Background = styled.div`
   height:100vh;
   overflow:auto;
-  background-image: linear-gradient(to bottom right, yellow, red );
+  background-color: white;
 `;
 
 const Loginpage = styled.div`
