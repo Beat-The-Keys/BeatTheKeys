@@ -55,8 +55,8 @@ def on_disconnect():
             if disconnected_player in ROOMS[room]['activePlayers']:
                 name = ROOMS[room]['activePlayers'][disconnected_player][4]
                 remove_player_from_lobby({'playerEmail':disconnected_player,
-                        'room':room,
-                        'playerName': name})
+                                          'room':room,
+                                          'playerName': name})
                 print(disconnected_player + ' disconnected!')
 
 ROOMS = {}
@@ -103,7 +103,7 @@ def check_game_complete(room):
         # We also include the winning player name in the 'gameComplete' message.
         winning_player = max(ROOMS[room]['activePlayers'], key=ROOMS[room]['activePlayers'].get)
 
-        if len(ROOMS[room]['activePlayers'])!= 1:
+        if len(ROOMS[room]['activePlayers']) != 1:
             update_db_gameswon(winning_player)
 
         ROOMS[room]['gameInProgress'] = False
@@ -111,7 +111,7 @@ def check_game_complete(room):
             ROOMS[room]['activePlayers'][player][3] = False
         ROOMS[room]['playersFinished'].clear()
         SOCKETIO.emit('gameComplete',
-            {'winningPlayer': winning_player}, broadcast=True, room=room)
+                      {'winningPlayer': winning_player}, broadcast=True, room=room)
 
 # When a client successfully logs in with their Google Account
 @SOCKETIO.on('login')
@@ -167,46 +167,54 @@ def player_achievements(data):
     This is currently just skeleton code and will be implemented later
     '''
     achievements = {}
-    
+
     this_user_email = data['playerEmail']
     this_user = DB.session.query(models.Users).get(this_user_email)
     best_wpm = this_user.bestwpm
     games_played = this_user.gamesplayed
     games_won = this_user.gameswon
-    
+
     if games_played != 0:
         avg_wpm = this_user.totalwpm/games_played
-    
+
     else:
         avg_wpm = 0
-    
+
     games_ctr = 5
     games_won_ctr = 5
     avg_wpm_ctr = 50
     best_wpm_ctr = 60
-    
+
     while games_ctr <= games_played:
-        achievements['Play {} Games'.format(games_ctr)] = {'progress': games_ctr, 'total': games_ctr}
+        achievements['Play {} Games'.format(games_ctr)] = {'progress': games_ctr,
+                                                           'total': games_ctr}
         games_ctr += 15
-    
+
     while games_won_ctr <= games_won:
-        achievements['Won {} Games'.format(games_won_ctr)] = {'progress': games_won_ctr, 'total': games_won_ctr}
+        achievements['Won {} Games'.format(games_won_ctr)] = {'progress': games_won_ctr,
+                                                              'total': games_won_ctr}
         games_won_ctr += 5
-    
+
     while avg_wpm_ctr <= avg_wpm:
-        achievements['Average WPM of {}'.format(avg_wpm_ctr)] = {'progress': avg_wpm_ctr, 'total': avg_wpm_ctr}
+        achievements['Average WPM of {}'.format(avg_wpm_ctr)] = {'progress': avg_wpm_ctr,
+                                                                 'total': avg_wpm_ctr}
         avg_wpm_ctr += 15
-    
+
     while best_wpm_ctr <= best_wpm:
-        achievements[' Best WPM of {}'.format(best_wpm_ctr)] = {'progress': best_wpm_ctr, 'total': best_wpm_ctr}
+        achievements[' Best WPM of {}'.format(best_wpm_ctr)] = {'progress': best_wpm_ctr,
+                                                                'total': best_wpm_ctr}
         best_wpm_ctr += 15
 
-    
-    achievements['Play {} Games'.format(games_ctr)] = {'progress': games_played, 'total': games_ctr}
-    achievements['Won {} Games'.format(games_won_ctr)] = {'progress': games_won, 'total': games_won_ctr}
-    achievements['Average WPM of {}'.format(avg_wpm_ctr)] = {'progress': avg_wpm, 'total': avg_wpm_ctr}
-    achievements['Best WPM of {}'.format(best_wpm_ctr)] = {'progress': best_wpm, 'total': best_wpm_ctr}
-    
+
+    achievements['Play {} Games'.format(games_ctr)] = {'progress': games_played,
+                                                       'total': games_ctr}
+    achievements['Won {} Games'.format(games_won_ctr)] = {'progress': games_won,
+                                                          'total': games_won_ctr}
+    achievements['Average WPM of {}'.format(avg_wpm_ctr)] = {'progress': avg_wpm,
+                                                             'total': avg_wpm_ctr}
+    achievements['Best WPM of {}'.format(best_wpm_ctr)] = {'progress': best_wpm,
+                                                           'total': best_wpm_ctr}
+
     SOCKETIO.emit(
         'playerAchievements',
         {'achievements': achievements},
@@ -245,7 +253,7 @@ def assign_player_to_lobby(data):
         player_joined_late = ROOMS[room]['gameInProgress']
         icon = get_icons(player_email)
         ROOMS[room]['activePlayers'][player_email] = [0, icon, False,
-                                                        player_joined_late, player_name]
+                                                      player_joined_late, player_name]
         SESSIONS[request.sid] = player_email
     active_players = ROOMS[room]['activePlayers']
     send_ready_up_status(room)
@@ -271,11 +279,11 @@ def attempt_to_join_game(data):
         return
 
     remove_player_from_lobby({'playerEmail':player_email,
-                                'room':old_room,
-                                'player_name': player_name})
+                              'room':old_room,
+                              'player_name': player_name})
     assign_player_to_lobby({'playerEmail': player_email,
-                                'room':new_room,
-                                'player_name':player_name})
+                            'room':new_room,
+                            'player_name':player_name})
 
 @SOCKETIO.on('updatePlayerStats')
 def update_player_stats(data):
