@@ -6,6 +6,7 @@ import styled, { keyframes }from "styled-components";
 import AboutUs from './AboutUs';
 import Guide from './Guide';
 import Why from './Why'
+import { Nav, Navbar } from 'react-bootstrap';
 
 export const socket = io(); // Connects to socket connection
 export const client_id = "658534926731-idi9s66r9j41tj2o844e16s5q4ua1d06.apps.googleusercontent.com";
@@ -33,7 +34,16 @@ export default function LoginScreen (){
     <Background>
     {isLoggedIn
       ? <HomeScreen playerName={playerName} playerEmail={playerEmail} responseGoogleLogout={responseGoogleLogout}/>
-      : <div>
+      : <div id="BTK">
+            <StyledNav variant="dark" sticky="top">
+            <Navbar.Brand href="#BTK">Beat The Keys!</Navbar.Brand>
+            <Nav className="mr-auto">
+              <Nav.Link href="#Guide">Guide</Nav.Link>
+              <Nav.Link href="#Why">Why</Nav.Link>
+              <Nav.Link href="#AboutUs">About Us</Nav.Link>
+            </Nav>
+            </StyledNav>
+            
           <Loginpage>
             <Title data-text="BEAT_THE_KEYS!">BEAT_THE_KEYS!</Title>
             <img src = 'https://img.icons8.com/ios/452/keyboard.png' alt="Loading Keyboard" width="50" height="50" />
@@ -49,19 +59,13 @@ export default function LoginScreen (){
             cookiePolicy={'single_host_origin'}
             />
             </Form>
-            <h5>Measure your typing speed and invite your friends to race! Type your way to the top of the leaderboard.</h5>
+            <Para2>Measure your typing speed and invite your friends to race! Type your way to the top of the leaderboard.</Para2>
           </Loginpage>
-          <BottomNav>
-            <div onClick={()=>setGuideUs('guide')}> Guide </div>
-            <div onClick={()=>setGuideUs('why')}> Why </div>
-            <div onClick={()=>setGuideUs('about')}> About Us </div>
-            </BottomNav>
-            {guideUs === 'guide' ? <Guide/> :
-              guideUs === 'why' ? <Why/> :
-              <AboutUs/>}
+          <Guide/>
+          <Why/>
+          <AboutUs/>
         </div>
     }
-
     </Background>
   );
 }
@@ -75,6 +79,8 @@ const Background = styled.div`
 const Loginpage = styled.div`
   width: max-content;
   margin: auto;
+  margin-top: 100px;
+  margin-bottom: 100px;
   align-items: center;
   display: flex;
   flex-direction: column;
@@ -113,6 +119,26 @@ const Para = styled.p`
   margin-top: 0;
   margin-bottom: 0.2;
   animation: ${textAnimation} 2s linear 1s 1 normal both,
+             ${textCursor} 1200ms linear infinite;
+`;
+
+const textAnimation2 = keyframes`
+  from{width: 0;}
+  to{width: 100%;}
+`;
+
+const Para2 = styled.p`
+  
+  border-right: solid 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  font-family: Trebuchet MS, sans-serif;
+  font-weight: 500;
+  font-size: 1.4vw;
+  color: Black;
+  margin-top: 0;
+  margin-bottom: 0.2;
+  animation: ${textAnimation2} 5s linear 1s 1 normal both,
              ${textCursor} 1200ms linear infinite;
 `;
 
@@ -166,44 +192,7 @@ const Popin = styled.p`
   margin-bottom: 0.5rem;
   animation: ${animatePOP} 2s ease-in-out;
 `
-const fadeIn = keyframes`
-    0% {
-    opacity: 0;
-    top: 100px;
-    }
-    75% {
-      opacity: 0.5;
-      top: 0px;
-    }
-    100% {
-      opacity: 1;
-    }
-`;
-
-const Rise = styled.ul`
-  color: #000000;
-  font-family: Trebuchet MS, sans-serif;
-  position: relative;
-  margin-bottom: 15px;
-  animation: ${fadeIn} 2s linear;
-`
-
-const BottomNav = styled.nav`
-  display: flex;
-  bottom: 0;
-  justify-content: space-around;
-  position: fixed;
-  width: 100%;
-  z-index: 2;
-  div{
-    margin: 0 auto 20px;
-    background-image: linear-gradient(to bottom right, yellow, red );
-    padding: 20px 100px;
-    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
-    border-radius: 10px;
-    cursor: pointer;
-    @media (max-width:550px){
-      padding: 20px 50px;
-    }
-  }
+const StyledNav = styled(Navbar)`
+  color: white;
+  background-color: rgb(0, 0, 0);
 `
