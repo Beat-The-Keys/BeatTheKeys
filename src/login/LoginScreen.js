@@ -26,7 +26,7 @@ export default function LoginScreen (){
   }
   function responseGoogleLogout(room){
     changeIsLoggedIn(false);
-    socket.emit('removePlayerFromLobby', {playerEmail, room});
+    socket.emit('removePlayerFromLobby', {playerEmail, room, playerName});
   }
 
   return (
