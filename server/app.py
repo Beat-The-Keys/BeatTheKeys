@@ -205,7 +205,6 @@ def player_achievements(data):
                                                                 'total': best_wpm_ctr}
         best_wpm_ctr += 15
 
-
     achievements['Play {} Games'.format(games_ctr)] = {'progress': games_played,
                                                        'total': games_ctr}
     achievements['Won {} Games'.format(games_won_ctr)] = {'progress': games_won,
@@ -280,10 +279,10 @@ def attempt_to_join_game(data):
 
     remove_player_from_lobby({'playerEmail':player_email,
                               'room':old_room,
-                              'player_name': player_name})
+                              'playerName': player_name})
     assign_player_to_lobby({'playerEmail': player_email,
                             'room':new_room,
-                            'player_name':player_name})
+                            'playerName':player_name})
 
 @SOCKETIO.on('updatePlayerStats')
 def update_player_stats(data):
