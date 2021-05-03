@@ -61,7 +61,6 @@ export default function HomeScreen ({playerName, playerEmail, responseGoogleLogo
     )}else{
       return(
         <div>
-        <center><h1> BEAT THE KEYS!</h1></center>
         <Home prop={[{room, playerName, originalRoom, startGame, activePlayers, playerEmail, readyPlayers, startDisabled, viewAchievements, gameInProgress}]}/>
       </div>
       )}
