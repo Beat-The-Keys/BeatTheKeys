@@ -241,10 +241,10 @@ def attempt_to_join_game(data):
 
     remove_player_from_lobby({'playerEmail':player_email,
                                 'room':old_room,
-                                'player_name': player_name})
+                                'playerName': player_name})
     assign_player_to_lobby({'playerEmail': player_email,
                                 'room':new_room,
-                                'player_name':player_name})
+                                'playerName':player_name})
 
 @SOCKETIO.on('updatePlayerStats')
 def update_player_stats(data):
