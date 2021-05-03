@@ -8,7 +8,7 @@ export default function Achievements ({achievements}) {
         var jsx = [];
         for (let key in achievements) {
             let achievementInfo = achievements[key];
-            let achievementProgress = achievementInfo['progress'] / achievementInfo['total'] * 100;
+            let achievementProgress = (achievementInfo['progress'] / achievementInfo['total'] * 100).toFixed(2);
             jsx.push(<div>{key}<Progress percent={achievementProgress}></Progress></div>)
         }
         return jsx;
