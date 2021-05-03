@@ -2,14 +2,24 @@ import React from 'react'
 import { GoogleLogout } from 'react-google-login';
 import styled from 'styled-components';
 import {client_id} from '../login/LoginScreen'
+import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 export default function Header({prop}) {
     const {room, playerName, playerEmail, responseGoogleLogout} = prop[0]
 
     return (
-        <Hav>
-            <Code>Invite Code: {room}</Code>
-            <Welcome>Hi, {playerName}! Welcome to the lobby.</Welcome>
+        <Nav>
+            <OverlayTrigger
+              placement={'right'}
+              overlay={
+                <Tooltip id={`tooltip-invite-code}`}>
+                  Click to copy your invite code!
+                </Tooltip>
+              }
+            >
+              <Code onClick={() => navigator.clipboard.writeText(room)}>Invite Code: {room}</Code>
+            </OverlayTrigger>
+            <Welcome>Welcome, {playerName}!</Welcome>
             <Logout>
                 <User>Logged In: {playerEmail} </User>
                 <DropDown>
@@ -22,12 +32,12 @@ export default function Header({prop}) {
                 />
                 </DropDown>
             </Logout>
-        </Hav>
+        </Nav>
     )
 }
 
 
-const Hav = styled.nav`
+const Nav = styled.nav`
 top: 0;
 right: 0;
 left: 0;

@@ -45,7 +45,7 @@ const PlayerStats = React.memo(({room}) => {
         const index = barChart.current.data.labels.indexOf(data.playersFinished[len-1])
         console.log(len, index, data.playersFinished[len-1])
         console.log(barChart.current.data.datasets[0].backgroundColor)
-        barChart.current.data.datasets[0].backgroundColor[index] = "rgb(0,255,0)"
+        barChart.current.data.datasets[0].backgroundColor[index] = '#5cb85c'
         barChart.current.update();
       }
     });
