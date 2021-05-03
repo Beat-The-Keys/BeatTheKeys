@@ -19,7 +19,7 @@ export default function Header({prop}) {
             >
               <Code onClick={() => navigator.clipboard.writeText(room)}>Invite Code: {room}</Code>
             </OverlayTrigger>
-            <Welcome>Welcome, {playerName}!</Welcome>
+            <Welcome>Welcome to Beat the Keys, {playerName}!</Welcome>
             <Logout>
                 <User>Logged In: {playerEmail} </User>
                 <DropDown>
