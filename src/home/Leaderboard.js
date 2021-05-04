@@ -2,6 +2,8 @@ import {useState, React, useEffect} from 'react';
 import {socket} from '../login/LoginScreen.js';
 import {Dropdown, DropdownButton} from 'react-bootstrap';
 import LeaderboardItems from './LeaderboardItems.js';
+import Table from 'react-bootstrap/Table'
+import styled from 'styled-components';
 
 export default function Leaderboard({prop}) {
     const {playerEmail} = prop[0];
@@ -45,6 +47,7 @@ export default function Leaderboard({prop}) {
 
     return (
             <div>
+            <center> <h3>Leaderboard:</h3>
                 <DropdownButton
                 alignRight
                 title={title}
@@ -56,7 +59,8 @@ export default function Leaderboard({prop}) {
                     <Dropdown.Item eventKey="gamesplayed">Total Games</Dropdown.Item>
                     <Dropdown.Item eventKey="gameswon">Total Wins</Dropdown.Item>
                 </DropdownButton>
-                <table>
+                </center>
+                <TableNew striped bordered hover size="sm">
                   <thead>
                     <tr>
                       <th scope="col">Users</th>
@@ -80,7 +84,14 @@ export default function Leaderboard({prop}) {
                         />
                     ))}
                   </tbody>
-                </table>
+                </TableNew>
             </div>
       );
 }
+
+const TableNew = styled(Table)`
+    border: 3px solid #007bff !important;
+    border-radius: 20px;
+    color: #000000 !important;
+    background-color: white;
+`

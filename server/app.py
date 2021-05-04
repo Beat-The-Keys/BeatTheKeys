@@ -142,7 +142,7 @@ def icon_to_db(data):
     user.icon = data['emojiID']
     DB.session.commit()
     # print("iconToDB ", db_usersnames, db_emails, db_icons, db_wpms)
-    ROOMS[room]['activePlayers'][player_email] = [0, data['emojiID']]
+    ROOMS[room]['activePlayers'][player_email][1] = data['emojiID']
     active_players = ROOMS[room]['activePlayers']
     SOCKETIO.emit(
         'assignPlayerToLobby',

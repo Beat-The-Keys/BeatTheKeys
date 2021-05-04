@@ -15,7 +15,7 @@ export default function Achievements ({achievements}) {
     }
 
     return (
-        <div>
+        <div style={{margin:'30px'}}>
             {achievementInfoJSX()}
         </div>
     );
