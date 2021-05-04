@@ -1,4 +1,4 @@
-import React from 'react'
+import {React, useEffect} from 'react'
 import styled from 'styled-components';
 import UserList from './UserList.js';
 import HomeButtons from './HomeButtons.js';
@@ -8,7 +8,10 @@ import {socket} from '../login/LoginScreen.js';
 
 export default function Home({prop}) {
     
-    socket.emit('leaderboard', {'sort_query': 'bestwpm'}); // when the leaderboard is first rendered
+    useEffect(() => {
+        socket.emit('leaderboard', {'sort_query': 'bestwpm'}); // when the leaderboard is first rendered
+    }, []);
+    
     return (
         <HomeContainer>
             <Row md={3}>
