@@ -5,7 +5,7 @@ import LeaderboardItems from './LeaderboardItems.js';
 
 export default function Leaderboard(playerEmail) {
     const [sortBy, changeSortBy] = useState("bestwpm");
-    const [title, changeTitle] = useState("Best WPM");
+    const [title, changeTitle] = useState("Sort By");
     const [dbUsersnames, orderDBUsersnames] = useState([]);
     const [dbBestWPM, orderDBBestWPM] = useState([]);
     const [dbAVGWPM, orderDBAVGWPM] = useState([]);
@@ -42,7 +42,6 @@ export default function Leaderboard(playerEmail) {
 
     return (
             <div>
-            <h3>Sort By:</h3>
                 <DropdownButton
                 alignRight
                 title={title}

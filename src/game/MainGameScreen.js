@@ -18,9 +18,12 @@ function MainGameScreen({prompt, playerName, room, playerEmail}) {
       let entries = highlightedStopIndex / 5;
       let currentMin = (60 - timeLeft) / 60;
       let curwpm = currentMin === 0 ? wpm : Math.round(entries / currentMin);
-      console.log('THIS IS CURWPM ' + curwpm)
       setWpm(curwpm);
-      console.log('THIS IS THE WPM ' + wpm)
+      
+      if (timeLeft === 0){ // emit wpm when there is no time left, 
+      socket.emit('playerFinished', {playerName, room, wpm, playerEmail});
+      }
+      
       socket.emit('updatePlayerStats', {playerEmail, wpm, room, playerName});
     }
 
@@ -59,7 +62,7 @@ function MainGameScreen({prompt, playerName, room, playerEmail}) {
             isPlaying={typingBegan && !playerFinished}
             duration={60}
             colors={'#0275d8'}
-            onComplete={() => timerFinished(wpm)}
+            onComplete={timerFinished}
             >
             {({ remainingTime }) => "Time left: " + handleTime(remainingTime) + "s"}
           </CountdownCircleTimer>
@@ -73,9 +76,9 @@ function MainGameScreen({prompt, playerName, room, playerEmail}) {
     return t;
   }
 
-  function timerFinished(thiswpm) {
-    console.log("TIMER FINISHED: " + playerEmail + ' ' +  thiswpm);
-    socket.emit('playerFinished', {playerName, room, thiswpm, playerEmail});
+  function timerFinished() {
+    // emit wasnt working here for some reason
+    // socket.emit('playerFinished', {playerName, room, 'wpm' : thiswpm, playerEmail});
     setPlayerFinished(true);
   }
 
