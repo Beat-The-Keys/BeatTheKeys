@@ -32,7 +32,7 @@ export default function AboutUs() {
     return (
         <div id="AboutUs">
         <br></br><br></br>
-        <h1>About Us</h1>
+        <h1 style={{'marginLeft':'15px', 'paddingLeft': '15px'}}>About Us</h1>
         <Deck>
             {cards.map(card=>(
                 <Card text="dark" order="info" style={{ width: '18rem' }}>
@@ -53,9 +53,14 @@ export default function AboutUs() {
 
 
 const Deck = styled(CardDeck)`
-    margin-right: 0px;
-    margin-left: 0px;
-    margin-bottom: 100px;
+    margin-right: 10px;
+    margin-left: 10px;
+    margin-bottom: 50px;
+    background-color: #007bff;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
 `;
 const Title = styled(Card.Title)`
     margin-bottom: 10px;
