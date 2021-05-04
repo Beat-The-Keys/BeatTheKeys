@@ -30,6 +30,9 @@ export default function AboutUs() {
         }
     ]
     return (
+        <div id="AboutUs">
+        <br></br><br></br>
+        <h1>About Us</h1>
         <Deck>
             {cards.map(card=>(
                 <Card text="dark" order="info" style={{ width: '18rem' }}>
@@ -44,6 +47,7 @@ export default function AboutUs() {
                 </Card>
             ))}
         </Deck>
+        </div>
     )
 }
 
@@ -56,9 +60,11 @@ const Deck = styled(CardDeck)`
 const Title = styled(Card.Title)`
     margin-bottom: 10px;
     text-align: center;
+    color: black;
 `;
 const Body = styled(Card.Body)`
     padding: 0px 5px 10px;
+    color: black;
 `;
 const Img = styled(Card.Img)`
     width: 100%;
