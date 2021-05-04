@@ -5,7 +5,7 @@ export default function LeaderboardItems(props) {
     return (
       <tr>
         <td>
-          <strong>{props.key}</strong>
+          <strong>{props.index}</strong>
         </td>
         <td>
           <strong>{props.username}</strong>
