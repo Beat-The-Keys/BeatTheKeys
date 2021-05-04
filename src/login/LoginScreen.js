@@ -6,7 +6,7 @@ import styled, { keyframes }from "styled-components";
 import AboutUs from './AboutUs';
 import Guide from './Guide';
 import Why from './Why'
-import { Nav, Navbar } from 'react-bootstrap';
+import { Nav, Navbar, Row} from 'react-bootstrap';
 
 export const socket = io(); // Connects to socket connection
 export const client_id = "658534926731-idi9s66r9j41tj2o844e16s5q4ua1d06.apps.googleusercontent.com";
@@ -167,7 +167,7 @@ const Title = styled.p`
     left:0;
     width: 0;
     height: 100%;
-    color: #ff0000;
+    color: #0275d8;
     -webkit-text-stroke: 0.1vw #000000;
     border-right: #ff0000;
     overflow: hidden;
@@ -194,5 +194,14 @@ const Popin = styled.p`
 `
 const StyledNav = styled(Navbar)`
   color: white;
-  background-color: rgb(0, 0, 0);
+  background-color: #0275d8;
 `
+
+export const LandingPageRow = styled(Row)`
+  z-index: -1;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+  border-radius: 10px;
+  background-color: #007bff;
+  margin: 15px;
+  padding: 15px;
+`;
