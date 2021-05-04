@@ -55,7 +55,7 @@ export default function HomeScreen ({playerName, playerEmail, responseGoogleLogo
     )}else if(showAchievements){
       return(
         <div>
-          <button onClick={()=>setShowAchievements(false)}>Back</button>
+          <Button variant="info" onClick={()=>setShowAchievements(false)}>Back</Button>
           <Achievements achievements={achievements}/>
         </div>
     )}else{
