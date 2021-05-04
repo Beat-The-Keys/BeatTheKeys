@@ -13,7 +13,7 @@ export default function AboutUs() {
         {
             img: 'akash.jpg',
             title: 'Akash Patel',
-            text: 'I am a ReactJS Developer, currently a Senior studying. I like to play games and listen to music, I want to pursue a career in Front-end using ReactJS. One of my achievements is, I am a self-taught ReactJS Programmer, and really great at debugging code.',
+            text: 'I am into ReactJS Development, currently a Senior studying. I like to play games and listen to music, I want to pursue a career in Front-end using ReactJS. One of my achievements is, I am a self-taught ReactJS Programmer, and really great at debugging code.',
             link: 'https://github.com/AP7557'
         },
         {

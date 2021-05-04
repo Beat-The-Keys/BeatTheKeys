@@ -17,8 +17,8 @@ function MainGameScreen({prompt, playerName, room, playerEmail}) {
     if (!playerFinished) {
       let entries = highlightedStopIndex / 5;
       let currentMin = (60 - timeLeft) / 60;
-      let wpm = currentMin === 0 ? 0 : Math.round(entries / currentMin);
-      setWpm(wpm);
+      let curwpm = currentMin === 0 ? wpm : Math.round(entries / currentMin);
+      setWpm(curwpm);
 
       socket.emit('updatePlayerStats', {playerEmail, wpm, room, playerName});
     }
