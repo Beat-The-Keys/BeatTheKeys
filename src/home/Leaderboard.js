@@ -63,6 +63,7 @@ export default function Leaderboard({prop}) {
                 <TableNew striped bordered hover size="sm">
                   <thead>
                     <tr>
+                      <th scope="col">Rank</th>
                       <th scope="col">Users</th>
                       <th scope="col">Best WPM</th>
                       <th scope="col">Average WPM</th>
@@ -76,6 +77,7 @@ export default function Leaderboard({prop}) {
                         key={index}
                         thisEmail={playerEmail}
                         email={dbEmails[index]}
+                        index={index + 1}
                         username={item}
                         bestwpm={dbBestWPM[index]}
                         avgwpm={dbAVGWPM[index]}

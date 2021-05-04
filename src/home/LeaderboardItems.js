@@ -5,6 +5,9 @@ export default function LeaderboardItems(props) {
     return (
       <tr>
         <td>
+          <strong>{props.key}</strong>
+        </td>
+        <td>
           <strong>{props.username}</strong>
         </td>
         <td>
@@ -24,6 +27,7 @@ export default function LeaderboardItems(props) {
   }
   return (
     <tr>
+      <td>{props.index}</td>
       <td>{props.username}</td>
       <td>{props.bestwpm}</td>
       <td>{props.avgwpm}</td>
