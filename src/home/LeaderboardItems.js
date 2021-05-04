@@ -1,6 +1,27 @@
 import React from 'react';
 
 export default function LeaderboardItems(props) {
+  if (props.thisEmail === props.email) {
+    return (
+      <tr>
+        <td>
+          <strong>{props.username}</strong>
+        </td>
+        <td>
+          <strong>{props.bestwpm}</strong>
+        </td>
+        <td>
+          <strong>{props.avgwpm}</strong>
+        </td>
+        <td>
+          <strong>{props.gamesplayed}</strong>
+        </td>
+        <td>
+          <strong>{props.gameswon}</strong>
+        </td>
+      </tr>
+    );
+  }
   return (
     <tr>
       <td>{props.username}</td>
