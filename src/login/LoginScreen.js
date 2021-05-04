@@ -36,14 +36,14 @@ export default function LoginScreen (){
       ? <HomeScreen playerName={playerName} playerEmail={playerEmail} responseGoogleLogout={responseGoogleLogout}/>
       : <div id="BTK">
             <StyledNav variant="dark" sticky="top">
-            <Navbar.Brand href="#BTK">Beat The Keys!</Navbar.Brand>
+            <Navbar.Brand href="#BTK"><img src="fireKey.png" width="100" height="70"/> Beat The Keys!</Navbar.Brand>
             <Nav className="mr-auto">
               <Nav.Link href="#Guide">Guide</Nav.Link>
               <Nav.Link href="#Why">Why</Nav.Link>
               <Nav.Link href="#AboutUs">About Us</Nav.Link>
             </Nav>
             </StyledNav>
-            
+
           <Loginpage>
             <Title data-text="BEAT_THE_KEYS!">BEAT_THE_KEYS!</Title>
             <img src = 'https://img.icons8.com/ios/452/keyboard.png' alt="Loading Keyboard" width="50" height="50" />
@@ -129,7 +129,7 @@ const textAnimation2 = keyframes`
 `;
 
 const Para2 = styled.p`
-  
+
   border-right: solid 5px;
   white-space: nowrap;
   overflow: hidden;
