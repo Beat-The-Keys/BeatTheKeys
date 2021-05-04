@@ -397,7 +397,8 @@ def on_leaderboard_query(data):
         data = sort_avg_wpm(db_usersnames, db_emails, db_bestwpm,
                             calculated_avg, db_gamesplayed, db_gameswon)
         db_usersnames, db_emails, db_bestwpm, db_avgwpm, db_gamesplayed, db_gameswon = data
-    SOCKETIO.emit('updateLeaderboard', {'db_usersnames': db_usersnames,
+    SOCKETIO.emit('updateLeaderboard', {'db_emails': db_emails,
+                                        'db_usersnames': db_usersnames,
                                         'db_bestwpm': db_bestwpm,
                                         'db_avgwpm': db_avgwpm,
                                         'db_gamesplayed': db_gamesplayed,

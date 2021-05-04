@@ -5,9 +5,11 @@ import LeaderboardItems from './LeaderboardItems.js';
 import Table from 'react-bootstrap/Table'
 import styled from 'styled-components';
 
-export default function Leaderboard(playerEmail) {
+export default function Leaderboard({prop}) {
+    const {playerEmail} = prop[0];
     const [sortBy, changeSortBy] = useState("bestwpm");
-    const [title, changeTitle] = useState("Best WPM");
+    const [title, changeTitle] = useState("Sort By");
+    const [dbEmails, orderDBEmails] = useState([]);
     const [dbUsersnames, orderDBUsersnames] = useState([]);
     const [dbBestWPM, orderDBBestWPM] = useState([]);
     const [dbAVGWPM, orderDBAVGWPM] = useState([]);
@@ -17,6 +19,7 @@ export default function Leaderboard(playerEmail) {
     useEffect(() => {
         socket.on('updateLeaderboard', (data) => {
           console.log(data);
+          orderDBEmails(data.db_emails)
           orderDBUsersnames(data.db_usersnames);
           orderDBBestWPM(data.db_bestwpm);
           orderDBAVGWPM(data.db_avgwpm);
@@ -60,6 +63,7 @@ export default function Leaderboard(playerEmail) {
                 <TableNew striped bordered hover size="sm">
                   <thead>
                     <tr>
+                      <th scope="col">Rank</th>
                       <th scope="col">Users</th>
                       <th scope="col">Best WPM</th>
                       <th scope="col">Average WPM</th>
@@ -71,6 +75,9 @@ export default function Leaderboard(playerEmail) {
                     {dbUsersnames.slice(0,10).map((item, index) => (
                         <LeaderboardItems
                         key={index}
+                        thisEmail={playerEmail}
+                        email={dbEmails[index]}
+                        index={index + 1}
                         username={item}
                         bestwpm={dbBestWPM[index]}
                         avgwpm={dbAVGWPM[index]}

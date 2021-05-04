@@ -19,7 +19,11 @@ function MainGameScreen({prompt, playerName, room, playerEmail}) {
       let currentMin = (60 - timeLeft) / 60;
       let curwpm = currentMin === 0 ? wpm : Math.round(entries / currentMin);
       setWpm(curwpm);
-
+      
+      if (timeLeft === 0){ // emit wpm when there is no time left, 
+      socket.emit('playerFinished', {playerName, room, wpm, playerEmail});
+      }
+      
       socket.emit('updatePlayerStats', {playerEmail, wpm, room, playerName});
     }
 
@@ -73,7 +77,8 @@ function MainGameScreen({prompt, playerName, room, playerEmail}) {
   }
 
   function timerFinished() {
-    socket.emit('playerFinished', {playerName, room, wpm, playerEmail});
+    // emit wasnt working here for some reason
+    // socket.emit('playerFinished', {playerName, room, 'wpm' : thiswpm, playerEmail});
     setPlayerFinished(true);
   }
 
