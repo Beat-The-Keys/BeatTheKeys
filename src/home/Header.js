@@ -42,7 +42,7 @@ top: 0;
 right: 0;
 left: 0;
 height: 70px;
-background-color: #090b13;
+background-color: #0275d8;
 display: flex;
 justify-content: space-between;
 align-items: center;
