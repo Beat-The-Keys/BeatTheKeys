@@ -2,6 +2,7 @@ import {useState, React, useEffect} from 'react';
 import {socket} from '../login/LoginScreen.js';
 import {Dropdown, DropdownButton} from 'react-bootstrap';
 import LeaderboardItems from './LeaderboardItems.js';
+import Table from 'react-bootstrap/Table'
 
 export default function Leaderboard(playerEmail) {
     const [sortBy, changeSortBy] = useState("bestwpm");
@@ -42,7 +43,7 @@ export default function Leaderboard(playerEmail) {
 
     return (
             <div>
-            <h3>Sort By:</h3>
+            <center> <h3>Leaderboard:</h3>
                 <DropdownButton
                 alignRight
                 title={title}
@@ -54,7 +55,8 @@ export default function Leaderboard(playerEmail) {
                     <Dropdown.Item eventKey="gamesplayed">Total Games</Dropdown.Item>
                     <Dropdown.Item eventKey="gameswon">Total Wins</Dropdown.Item>
                 </DropdownButton>
-                <table>
+                </center>
+                <Table striped bordered hover size="sm">
                   <thead>
                     <tr>
                       <th scope="col">Users</th>
@@ -76,7 +78,7 @@ export default function Leaderboard(playerEmail) {
                         />
                     ))}
                   </tbody>
-                </table>
+                </Table>
             </div>
       );
 }

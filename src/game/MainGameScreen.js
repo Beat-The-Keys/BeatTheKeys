@@ -42,11 +42,11 @@ function MainGameScreen({prompt, playerName, room, playerEmail}) {
 
   function promptJSX() {
     // Highlight the text
-    return (<div className="prompt-text">
+    return (<Prompt>
               <p style={{backgroundColor:'#5cb85c', display:'inline'}}>{prompt.substring(0, highlightedStopIndex)}</p>
               <p style={{backgroundColor:'#d9534f', display:'inline'}}>{prompt.substring(highlightedStopIndex, incorrectHighlight)}</p>
               <p style={{ display:'inline'}}>{prompt.substring(incorrectHighlight)}</p>
-            </div>);
+            </Prompt>);
   }
 
   function timerJSX() {
@@ -54,7 +54,7 @@ function MainGameScreen({prompt, playerName, room, playerEmail}) {
         <div>
           <center>
           <CountdownCircleTimer
-          size={250}
+            size={150}
             isPlaying={typingBegan && !playerFinished}
             duration={60}
             colors={'#0275d8'}
@@ -81,14 +81,12 @@ function MainGameScreen({prompt, playerName, room, playerEmail}) {
       <GridContainer>
         <GridItem>
           {promptJSX()}
+          <WPM> WPM: {wpm} </WPM>
           <Input type="text" placeholder="Start typing..." disabled={playerFinished} name="name" ref={textboxRef} onChange={onTextChanged} />
         </GridItem>
         <GridItem>
-          <h4>WPM: {wpm}</h4>
-          <PlayerStats room={room}/>
-        </GridItem>
-        <GridItem>
           {timerJSX()}
+          <PlayerStats room={room}/>
         </GridItem>
       </GridContainer>
   );
@@ -114,10 +112,22 @@ const Input = styled.textarea`
  overflow: hidden;
  padding: 12px 20px;
  resize: none;
- margin-top: 50px;
+ margin-top: 20px;
  width: 100%;
  border: 1px solid;
+ border-radius: 10px;
  &:focus{
   background-color: lightblue;
  }
 `;
+
+const WPM = styled.div`
+  font-size: 2rem;
+  font-weight: 200;
+  text-align: center;
+  margin: auto;
+`
+
+const Prompt = styled.div`
+  font-family: DejaVu Sans Mono, monospace;
+`
