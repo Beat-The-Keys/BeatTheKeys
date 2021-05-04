@@ -19,7 +19,7 @@ export default function AboutUs() {
         {
             img: 'yusef.png',
             title: 'Yusef Mustafa',
-            text: 'I am a senior at NJIT studying CS and Pokémon nerd',
+            text: 'I am a senior at NJIT studying CS and a Pokémon nerd.',
             link: 'https://github.com/yusefmustafa'
         },
         {
