@@ -96,6 +96,7 @@ const Form = styled.div`
   text-align: center;
   box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
   border-radius: 10px;
+  background-color: #007bff;
 `;
 
 const textAnimation = keyframes`
@@ -186,9 +187,8 @@ const animatePOP = keyframes`
 
 const Popin = styled.p`
   text-align: center;
-  font-family: Trebuchet MS, sans-serif;
   font-size: 20px;
-  color: #000000;
+  color: white;
   margin-bottom: 0.5rem;
   animation: ${animatePOP} 2s ease-in-out;
 `
