@@ -44,7 +44,6 @@ export const FlexItem = styled(Button)`
 `;
 
 export const ButtonAchievements = styled.button`
-  border-radius: 4px;
   background: #ffc107;
   margin: 20px;
   padding: 20px;
@@ -80,7 +79,6 @@ export const ButtonAchievements = styled.button`
 `
 
 export const ButtonStart = styled(Button)`
-  border-radius: 4px;
   background-color: #28a745;
   margin: 20px;
   padding: 20px;
@@ -117,7 +115,6 @@ export const ButtonStart = styled(Button)`
 `
 
 export const ButtonLeave = styled.button`
-  border-radius: 4px;
   background-color: #dc3545;
   margin: 20px;
   padding: 20px;
