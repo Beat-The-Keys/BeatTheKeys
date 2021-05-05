@@ -37,7 +37,7 @@ export default function LoginScreen (){
       : <div id="BTK">
             <StyledNav variant="dark" sticky="top">
             <img src="fireKey.png" width="100" height="70"/>
-            <Navbar.Brand style={{"marginLeft":"-20px"}}href="#BTK"> Beat The Keys!</Navbar.Brand>
+            <Navbar.Brand style={{"marginLeft":"-20px"}} href="#BTK"> Beat The Keys!</Navbar.Brand>
             <Nav className="mr-auto">
               <Nav.Link href="#Guide">Guide</Nav.Link>
               <Nav.Link href="#Why">Why</Nav.Link>
