@@ -404,7 +404,8 @@ def on_leaderboard_query(data):
                                         'db_gamesplayed': db_gamesplayed,
                                         'db_gameswon': db_gameswon},
                   broadcast=True,
-                  include_self=True)
+                  include_self=True,
+                  room=request.sid)
 
 
 def fetch_db(sort_by):
