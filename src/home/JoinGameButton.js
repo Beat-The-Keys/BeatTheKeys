@@ -57,7 +57,6 @@ export default function JoinGameButton({playerName, room, socket, playerEmail}) 
 }
 
 export const ButtonJoin = styled.button`
-  border-radius: 4px;
   background-color: #17a2b8;
   margin: 20px;
   padding: 20px;
@@ -69,7 +68,6 @@ export const ButtonJoin = styled.button`
   text-align: center;
   font-size: 20px;
   transition: all 0.5s;
-  cursor: pointer;
   cursor: pointer;
   display: inline-block;
   position: relative;
