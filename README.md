@@ -36,8 +36,20 @@ We completed all of the required specs for sprint 1:
     * [client_ci.yml](.github/workflows/client_ci.yml)
     * [server_ci.yml](.github/workflows/server_ci.yml)
 
-## Sprint 2 Plans
-We plan to add several features during sprint 2:
+## Sprint 2 Specs
+We completed all of the required specs for sprint 2:
+1. Deployment: Heroku link [here](https://beat-the-keys-v2.herokuapp.com) 
+1. Beautification: React-Bootstrap as well as styled-components
+1. Landing Page: 
+    * [What the functionality is](https://beat-the-keys-v2.herokuapp.com/#Guide)
+    * [Why it matters](https://beat-the-keys-v2.herokuapp.com/#Why)
+    * [Who made it](https://beat-the-keys-v2.herokuapp.com/#AboutUs)
+
+1. Continuous integration:
+    * [client_ci.yml](.github/workflows/client_ci.yml)
+    * [server_ci.yml](.github/workflows/server_ci.yml)
+
+We implemented several features during sprint 2:
 * Private lobbies
 * Ready-up system
 * More text prompts
@@ -48,5 +60,7 @@ We plan to add several features during sprint 2:
 ## Linting
 Disabled lint rules below:
   * wrong-import-position: disabled in app.py for the `import models` statement
-  * invalid-envvar-default: disabled in app.py to avoid errors for `int(os.getenv('PORT', 8081)`. We may remove this in sprint 2.
+  * invalid-envvar-default: disabled in app.py to avoid errors for `int(os.getenv('PORT', 8081)`
   * ignored-classes=scoped_session,SQLAlchemy: added `scoped_session` and `SQLAlchemy` to avoid `no-member` errors
+  * consider-using-enumerate: disabled in app.py in order to `walk 2 lists at the same time`
+  * too-many-arguments: disabled in app.py to `pass all the DB information`
