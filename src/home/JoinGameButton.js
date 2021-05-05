@@ -75,7 +75,7 @@ export const ButtonJoin = styled.button`
   position: relative;
   transition: 0.5s;
   :after {
-  content: '⌨️';
+  content: '⚔️';
   position: absolute;
   opacity: 0;  
   top: 36px;

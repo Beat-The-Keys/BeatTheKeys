@@ -18,7 +18,7 @@ export default function HomeButtons({prop}) {
 
             <JoinGameButton playerName={playerName} room={room} socket={socket} playerEmail={playerEmail}/>
 
-            { room !== originalRoom && <ButtonC onClick={rejoinOriginalLobby} variant="danger" size="lg">Leave Lobby</ButtonC>}
+            { room !== originalRoom && <ButtonLeave onClick={rejoinOriginalLobby} variant="danger" size="lg">Leave Lobby</ButtonLeave>}
             <ButtonAchievements onClick={viewAchievements} >Achievements</ButtonAchievements>
         </FlexContainer>
     )
@@ -44,24 +44,38 @@ export const FlexItem = styled(Button)`
 `;
 
 export const ButtonAchievements = styled.button`
+  border-radius: 4px;
+  background: #ffc107;
   margin: 20px;
   padding: 20px;
   border-radius: 10px;
   width: 400px;
   height: 100px;
-  display: inline-block;
-  background: #ffc107;
   border: none;
   color: #000000;
+  text-align: center;
   font-size: 20px;
-  padding: 20px 30px;
-  border-radius: 10px;
+  transition: all 0.5s;
   cursor: pointer;
-  -webkit-transition: all ease-in-out 300ms;
-  transition: all ease-in-out 300ms;
-  :hover {
-  -webkit-transform: translate(0px, 0px) scale(1.2);
-          transform: translate(0px, 0px) scale(1.2);
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+  :after {
+  content: '🏆';
+  position: absolute;
+  opacity: 0;  
+  top: 36px;
+  right: -20px;
+  transition: 0.5s;
+  }
+  :hover{
+  padding-right: 25px;
+  padding-left:8px;
+  }
+  :hover:after {
+  opacity: 1;
+  right: 115px;
   }
 `
 
@@ -84,7 +98,7 @@ export const ButtonStart = styled(Button)`
   position: relative;
   transition: 0.5s;
   :after {
-  content: '➾➾➾';
+  content: '⌨️';
   position: absolute;
   opacity: 0;  
   top: 36px;
@@ -92,16 +106,17 @@ export const ButtonStart = styled(Button)`
   transition: 0.5s;
   }
   :hover{
+  background-color: #28a745;
   padding-right: 24px;
   padding-left:8px;
   }
   :hover:after {
   opacity: 1;
-  right: 90px;
+  right: 125px;
   }
 `
 
-export const ButtonC = styled.button`
+export const ButtonLeave = styled.button`
   border-radius: 4px;
   background-color: #dc3545;
   margin: 20px;
@@ -120,7 +135,7 @@ export const ButtonC = styled.button`
   position: relative;
   transition: 0.5s;
   :after {
-  content: '⪡⪡⪡';
+  content: '🚪🚶';
   position: absolute;
   opacity: 0;  
   top: 35px;
@@ -133,6 +148,6 @@ export const ButtonC = styled.button`
   }
   :hover:after {
   opacity: 1;
-  left: 90px;
+  left: 110px;
   }
 `
