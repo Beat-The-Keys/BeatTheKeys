@@ -92,6 +92,7 @@ export default function Leaderboard({prop}) {
 }
 
 const TableNew = styled(Table)`
+    margin-top: 1px;
     border: 3px solid #007bff !important;
     border-radius: 20px;
     color: #000000 !important;

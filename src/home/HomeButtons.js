@@ -14,12 +14,12 @@ export default function HomeButtons({prop}) {
 
     return (
         <FlexContainer>
-            <FlexItem disabled={startDisabled || gameInProgress} onClick={startGame} variant="success" size="lg">{gameInProgress ? "Game in-progress" : "Start Game"}</FlexItem>
+            <ButtonStart disabled={startDisabled || gameInProgress} onClick={startGame} variant="success" size="lg">{gameInProgress ? "Game in-progress" : "Start Game"}</ButtonStart>
 
             <JoinGameButton playerName={playerName} room={room} socket={socket} playerEmail={playerEmail}/>
 
-            { room !== originalRoom && <FlexItem onClick={rejoinOriginalLobby} variant="danger" size="lg">Leave Lobby</FlexItem>}
-            <FlexItem onClick={viewAchievements} variant="warning" size="lg">Achievements</FlexItem>
+            { room !== originalRoom && <ButtonC onClick={rejoinOriginalLobby} variant="danger" size="lg">Leave Lobby</ButtonC>}
+            <ButtonAchievements onClick={viewAchievements} >Achievements</ButtonAchievements>
         </FlexContainer>
     )
 }
@@ -42,3 +42,97 @@ export const FlexItem = styled(Button)`
     height: auto;
   }
 `;
+
+export const ButtonAchievements = styled.button`
+  margin: 20px;
+  padding: 20px;
+  border-radius: 10px;
+  width: 400px;
+  height: 100px;
+  display: inline-block;
+  background: #ffc107;
+  border: none;
+  color: #000000;
+  font-size: 20px;
+  padding: 20px 30px;
+  border-radius: 10px;
+  cursor: pointer;
+  -webkit-transition: all ease-in-out 300ms;
+  transition: all ease-in-out 300ms;
+  :hover {
+  -webkit-transform: translate(0px, 0px) scale(1.2);
+          transform: translate(0px, 0px) scale(1.2);
+  }
+`
+
+export const ButtonStart = styled(Button)`
+  border-radius: 4px;
+  background-color: #28a745;
+  margin: 20px;
+  padding: 20px;
+  border-radius: 10px;
+  width: 400px;
+  height: 100px;
+  border: none;
+  color: #fff;
+  text-align: center;
+  font-size: 20px;
+  transition: all 0.5s;
+  cursor: pointer;
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+  :after {
+  content: '➾➾➾';
+  position: absolute;
+  opacity: 0;  
+  top: 36px;
+  right: -20px;
+  transition: 0.5s;
+  }
+  :hover{
+  padding-right: 24px;
+  padding-left:8px;
+  }
+  :hover:after {
+  opacity: 1;
+  right: 90px;
+  }
+`
+
+export const ButtonC = styled.button`
+  border-radius: 4px;
+  background-color: #dc3545;
+  margin: 20px;
+  padding: 20px;
+  border-radius: 10px;
+  width: 400px;
+  height: 100px;
+  border: none;
+  color: #fff;
+  text-align: center;
+  font-size: 20px;
+  transition: all 0.5s;
+  cursor: pointer;
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+  :after {
+  content: '⪡⪡⪡';
+  position: absolute;
+  opacity: 0;  
+  top: 35px;
+  left: -20px;
+  transition: 0.5s;
+  }
+  :hover{
+  padding-left: 24px;
+  padding-right:8px;
+  }
+  :hover:after {
+  opacity: 1;
+  left: 90px;
+  }
+`
