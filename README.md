@@ -56,7 +56,7 @@ We implemented several features during sprint 2:
 * Player icons will be displayed to everyone in the lobby
 * A live graph/chart that shows all WPMs
 * An updated and polished UI
-* Unlockable Achivements
+* Unlock-able achivements
  
 ## Linting
 Disabled lint rules below:
