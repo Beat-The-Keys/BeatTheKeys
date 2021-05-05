@@ -11,9 +11,10 @@ test("Lobby UI rendered", () => {
     expect(screen.getByText("Join Game")).toBeInTheDocument();
     expect(screen.getByText("Achievements")).toBeInTheDocument();
     expect(screen.getByText(`Logged In: ${playerEmail}`)).toBeInTheDocument();
+    expect(screen.getByText(`Welcome to Beat the Keys, ${playerName}!`)).toBeInTheDocument();
 });
 
-test("Join Modal Renders", () => {
+test("Join modal renders", () => {
     render(<HomeScreen playerName={playerName}/>);
     const startGameButton = screen.getByText("Join Game");
     userEvent.click(startGameButton);
@@ -21,4 +22,15 @@ test("Join Modal Renders", () => {
     expect(screen.getByText("Enter an Invite Code")).toBeInTheDocument();
     expect(document.querySelector(".form-control")).toBeInTheDocument();
     expect(document.querySelector(".btn-primary")).toBeInTheDocument();
+});
+
+test("Leaderboard renders", () => {
+    render(<HomeScreen playerName={playerName}/>);
+    // Verify that the leaderboard columns are visible
+    expect(screen.getByText("Rank")).toBeInTheDocument();
+    expect(screen.getByText("Users")).toBeInTheDocument();
+    expect(screen.getByText("Best WPM")).toBeInTheDocument();
+    expect(screen.getByText("Average WPM")).toBeInTheDocument();
+    expect(screen.getByText("Total Games")).toBeInTheDocument();
+    expect(screen.getByText("Total Wins")).toBeInTheDocument();
 });
