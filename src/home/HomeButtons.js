@@ -91,7 +91,6 @@ export const ButtonStart = styled(Button)`
   font-size: 20px;
   transition: all 0.5s;
   cursor: pointer;
-  cursor: pointer;
   display: inline-block;
   position: relative;
   transition: 0.5s;
