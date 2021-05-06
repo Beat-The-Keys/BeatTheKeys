@@ -36,7 +36,7 @@ export default function LoginScreen (){
       ? <HomeScreen playerName={playerName} playerEmail={playerEmail} responseGoogleLogout={responseGoogleLogout}/>
       : <div id="BTK">
             <StyledNav variant="dark" sticky="top">
-            <Navbar.Brand href="#BTK"><img src="fireKey.png" width="100" height="70"/> Beat The Keys!</Navbar.Brand>
+            <Navbar.Brand href="#BTK"><img src="fireKey.png" width="32" height="35"/> Beat The Keys!</Navbar.Brand>
             <Nav className="mr-auto">
               <Nav.Link href="#Guide">Guide</Nav.Link>
               <Nav.Link href="#Why">Why</Nav.Link>
