@@ -27,7 +27,7 @@ function MainGameScreen({prompt, playerName, room, playerEmail}) {
       socket.emit('updatePlayerStats', {playerEmail, wpm, room, playerName});
     }
 
-  }, [highlightedStopIndex, playerName, room, timeLeft, playerFinished]);
+  }, [highlightedStopIndex, playerName, room, timeLeft, playerFinished, playerEmail, wpm]);
 
   function onTextChanged() {
     // Called when user starts typing

@@ -15,7 +15,6 @@ export default function LoginScreen (){
   const [isLoggedIn, changeIsLoggedIn] = useState(false);
   const [playerName, setPlayerName] = useState("");
   const [playerEmail, setPlayerEmail] = useState("");
-  const [guideUs, setGuideUs] = useState('about');
 
   function responseGoogle(response){
     setPlayerName(response.profileObj.givenName); // changed it to first name only
@@ -36,18 +35,17 @@ export default function LoginScreen (){
       ? <HomeScreen playerName={playerName} playerEmail={playerEmail} responseGoogleLogout={responseGoogleLogout}/>
       : <div id="BTK">
             <StyledNav variant="dark" sticky="top">
-            <img src="fireKey.png" width="100" height="70"/>
-            <Navbar.Brand style={{"marginLeft":"-20px"}} href="#BTK"> Beat The Keys!</Navbar.Brand>
+            <img src="fireKey.png" width="64" height="70" alt="logo"/>
+            <Navbar.Brand style={{"marginLeft":"10px"}} href="#BTK"> Beat The Keys!</Navbar.Brand>
             <Nav className="mr-auto">
               <Nav.Link href="#Guide">Guide</Nav.Link>
               <Nav.Link href="#Why">Why</Nav.Link>
               <Nav.Link href="#AboutUs">About Us</Nav.Link>
             </Nav>
             </StyledNav>
-
           <Loginpage>
             <Title data-text="BEAT_THE_KEYS!">BEAT_THE_KEYS!</Title>
-            <img src="fireKey.png" width="150" height="105"/>
+            <img src="fireKey.png" width="96" height="105" alt="logo"/>
             <Para> Multiplayer typeracing game </Para>
             <Form>
             <Popin>Start game:</Popin>

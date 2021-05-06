@@ -7,7 +7,6 @@ import styled from 'styled-components';
 
 export default function Leaderboard({prop}) {
     const {playerEmail} = prop[0];
-    const [sortBy, changeSortBy] = useState("bestwpm");
     const [title, changeTitle] = useState("Sort By");
     const [dbEmails, orderDBEmails] = useState([]);
     const [dbUsersnames, orderDBUsersnames] = useState([]);
@@ -30,7 +29,6 @@ export default function Leaderboard({prop}) {
     }, []);
     function changeSortOrder(sort_query) {
         socket.emit('leaderboard', {sort_query});
-        changeSortBy(sort_query);
         if(sort_query==="bestwpm"){
             changeTitle("Best WPM");
         }
