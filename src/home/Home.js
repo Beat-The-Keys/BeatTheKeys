@@ -1,10 +1,10 @@
-import {React, useEffect} from 'react'
+import { React, useEffect } from 'react'
 import styled from 'styled-components';
 import UserList from './UserList.js';
 import HomeButtons from './HomeButtons.js';
-import {Container, Row, Col} from 'react-bootstrap'
+import { Row, Col } from 'react-bootstrap'
 import Leaderboard from './Leaderboard.js';
-import {socket} from '../login/LoginScreen.js';
+import { socket } from '../login/LoginScreen.js';
 
 export default function Home({prop}) {
     
