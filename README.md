@@ -23,12 +23,12 @@ We completed all of the required specs for sprint 1:
 3. Client-server architecture: Flask for backend and React for frontend
 4. User login: all players are required to login with Google
 5. Persisted data via database: player icons are persisted using our Heroku database
-6. 2 mocked server tests: 
+6. 1 mocked server tests: 
     * [add_to_db_test.py](server/add_to_db_test.py)
-    * [get_users_from_db_test.py](server/get_users_from_db_test.py)
-7. 2 unmocked server tests:
+7. 3 unmocked server tests:
     * [finished_test.py](server/finished_test.py)
     * [update_player_test.py](server/update_player_test.py)
+    * [find_average_test.py](server/find_average_test.py)
 9. 2 client tests:
     * [App.test.js](src/App.test.js)
 10. Linting and formatting: Pylint for Python and ESLint (default) for JS. View disabled linting rules [below](#linting).
@@ -39,13 +39,12 @@ We completed all of the required specs for sprint 1:
 ## Sprint 2 Specs
 We completed all of the required specs for sprint 2:
 1. Deployment: Heroku link [here](https://beat-the-keys-v2.herokuapp.com) 
-1. Beautification: React-Bootstrap as well as styled-components
-1. Landing Page: 
+2. Beautification: React-Bootstrap as well as styled-components
+3. Landing Page: 
     * [What the functionality is](https://beat-the-keys-v2.herokuapp.com/#Guide)
     * [Why it matters](https://beat-the-keys-v2.herokuapp.com/#Why)
     * [Who made it](https://beat-the-keys-v2.herokuapp.com/#AboutUs)
-
-1. Continuous integration:
+4. Continuous integration:
     * [client_ci.yml](.github/workflows/client_ci.yml)
     * [server_ci.yml](.github/workflows/server_ci.yml)
 
@@ -63,5 +62,5 @@ Disabled lint rules below:
   * wrong-import-position: disabled in app.py for the `import models` statement
   * invalid-envvar-default: disabled in app.py to avoid errors for `int(os.getenv('PORT', 8081)`
   * ignored-classes=scoped_session,SQLAlchemy: added `scoped_session` and `SQLAlchemy` to avoid `no-member` errors
-  * consider-using-enumerate: disabled in app.py in order to `walk 2 lists at the same time`
-  * too-many-arguments: disabled in app.py to `pass all the DB information`
+  * consider-using-enumerate: disabled in app.py in order to walk 2 lists at the same time
+  * too-many-arguments: disabled in app.py to pass all the DB information
