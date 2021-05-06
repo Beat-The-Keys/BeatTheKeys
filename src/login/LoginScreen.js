@@ -45,7 +45,7 @@ export default function LoginScreen (){
 
           <Loginpage>
             <Title data-text="BEAT_THE_KEYS!">BEAT_THE_KEYS!</Title>
-            <img src = 'https://img.icons8.com/ios/452/keyboard.png' alt="Loading Keyboard" width="50" height="50" alt="logo"/>
+            <img src='https://img.icons8.com/ios/452/keyboard.png' alt="logo" width="50" height="50"/>
             <Para> Multiplayer typeracing game </Para>
             <Form>
             <Popin>Start game:</Popin>
