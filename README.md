@@ -9,7 +9,7 @@ Beat the Keys is a browser-based multiplayer typeracing game. To play the curren
 3. If you're using AWS C9, run `echo "DANGEROUSLY_DISABLE_HOST_CHECK=true" > .env.development.local` in the project directory
 
 ## Start the App
-1. Run command in terminal (in your project directory): `python app.py`
+1. Run command in terminal (in your project directory): `python server/app.py`
 2. Run command in another terminal, `cd` into the project directory, and run `npm run start`. 
 3. The app will open automatically if you're running it locally. If you're using AWS C9. preview the web page in browser with '/'.
 
@@ -26,7 +26,7 @@ We completed all of the required specs for sprint 1:
 6. 1 mocked server tests: 
     * [add_to_db_test.py](server/add_to_db_test.py)
 7. 3 unmocked server tests:
-    * [finished_test.py](server/finished_test.py)
+    * [ready_up_test.py](server/ready_up_test.py)
     * [update_player_test.py](server/update_player_test.py)
     * [find_average_test.py](server/find_average_test.py)
 9. 2 client tests:
