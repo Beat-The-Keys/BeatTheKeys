@@ -14,12 +14,12 @@ export default function HomeButtons({prop}) {
 
     return (
         <FlexContainer>
-            <FlexItem disabled={startDisabled || gameInProgress} onClick={startGame} variant="success" size="lg">{gameInProgress ? "Game in-progress" : "Start Game"}</FlexItem>
+            <ButtonStart disabled={startDisabled || gameInProgress} onClick={startGame} variant="success" size="lg">{gameInProgress ? "Game in-progress" : "Start Game"}</ButtonStart>
 
             <JoinGameButton playerName={playerName} room={room} socket={socket} playerEmail={playerEmail}/>
 
-            { room !== originalRoom && <FlexItem onClick={rejoinOriginalLobby} variant="danger" size="lg">Leave Lobby</FlexItem>}
-            <FlexItem onClick={viewAchievements} variant="warning" size="lg">Achievements</FlexItem>
+            { room !== originalRoom && <ButtonLeave onClick={rejoinOriginalLobby} variant="danger" size="lg">Leave Lobby</ButtonLeave>}
+            <ButtonAchievements onClick={viewAchievements} >Achievements</ButtonAchievements>
         </FlexContainer>
     )
 }
@@ -42,3 +42,106 @@ export const FlexItem = styled(Button)`
     height: auto;
   }
 `;
+
+export const ButtonAchievements = styled.button`
+  background: #ffc107;
+  margin: 20px;
+  padding: 20px;
+  border-radius: 10px;
+  width: 400px;
+  height: 100px;
+  border: none;
+  color: #000000;
+  text-align: center;
+  font-size: 20px;
+  transition: all 0.5s;
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+  :after {
+  content: '🏆';
+  position: absolute;
+  opacity: 0;  
+  top: 36px;
+  right: -20px;
+  transition: 0.5s;
+  }
+  :hover{
+  padding-right: 25px;
+  padding-left:8px;
+  }
+  :hover:after {
+  opacity: 1;
+  right: 115px;
+  }
+`
+
+export const ButtonStart = styled(Button)`
+  background-color: #28a745;
+  margin: 20px;
+  padding: 20px;
+  border-radius: 10px;
+  width: 400px;
+  height: 100px;
+  border: none;
+  color: #fff;
+  text-align: center;
+  font-size: 20px;
+  transition: all 0.5s;
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+  :after {
+  content: '⌨️';
+  position: absolute;
+  opacity: 0;  
+  top: 36px;
+  right: -20px;
+  transition: 0.5s;
+  }
+  :hover{
+  background-color: #28a745;
+  padding-right: 24px;
+  padding-left:8px;
+  }
+  :hover:after {
+  opacity: 1;
+  right: 125px;
+  }
+`
+
+export const ButtonLeave = styled.button`
+  background-color: #dc3545;
+  margin: 20px;
+  padding: 20px;
+  border-radius: 10px;
+  width: 400px;
+  height: 100px;
+  border: none;
+  color: #fff;
+  text-align: center;
+  font-size: 20px;
+  transition: all 0.5s;
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+  :after {
+  content: '🚪🚶';
+  position: absolute;
+  opacity: 0;  
+  top: 35px;
+  left: -20px;
+  transition: 0.5s;
+  }
+  :hover{
+  padding-left: 24px;
+  padding-right:8px;
+  }
+  :hover:after {
+  opacity: 1;
+  left: 110px;
+  }
+`

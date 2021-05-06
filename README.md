@@ -23,12 +23,12 @@ We completed all of the required specs for sprint 1:
 3. Client-server architecture: Flask for backend and React for frontend
 4. User login: all players are required to login with Google
 5. Persisted data via database: player icons are persisted using our Heroku database
-6. 2 mocked server tests: 
+6. 1 mocked server tests: 
     * [add_to_db_test.py](server/add_to_db_test.py)
-    * [get_users_from_db_test.py](server/get_users_from_db_test.py)
-7. 2 unmocked server tests:
+7. 3 unmocked server tests:
     * [finished_test.py](server/finished_test.py)
     * [update_player_test.py](server/update_player_test.py)
+    * [find_average_test.py](server/find_average_test.py)
 9. 2 client tests:
     * [App.test.js](src/App.test.js)
 10. Linting and formatting: Pylint for Python and ESLint (default) for JS. View disabled linting rules [below](#linting).

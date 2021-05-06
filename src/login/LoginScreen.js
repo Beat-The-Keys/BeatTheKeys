@@ -35,17 +35,17 @@ export default function LoginScreen (){
       ? <HomeScreen playerName={playerName} playerEmail={playerEmail} responseGoogleLogout={responseGoogleLogout}/>
       : <div id="BTK">
             <StyledNav variant="dark" sticky="top">
-            <Navbar.Brand href="#BTK"><img src="fireKey.png" width="100" height="70" alt="logo"/> Beat The Keys!</Navbar.Brand>
+            <img src="fireKey.png" width="100" height="70" alt="logo"/>
+            <Navbar.Brand style={{"marginLeft":"-20px"}} href="#BTK"> Beat The Keys!</Navbar.Brand>
             <Nav className="mr-auto">
               <Nav.Link href="#Guide">Guide</Nav.Link>
               <Nav.Link href="#Why">Why</Nav.Link>
               <Nav.Link href="#AboutUs">About Us</Nav.Link>
             </Nav>
             </StyledNav>
-
           <Loginpage>
             <Title data-text="BEAT_THE_KEYS!">BEAT_THE_KEYS!</Title>
-            <img src='https://img.icons8.com/ios/452/keyboard.png' alt="logo" width="50" height="50"/>
+            <img src="fireKey.png" width="150" height="105" alt="logo"/>
             <Para> Multiplayer typeracing game </Para>
             <Form>
             <Popin>Start game:</Popin>
