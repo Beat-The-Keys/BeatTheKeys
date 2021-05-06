@@ -1,7 +1,7 @@
 # Beat the Keys (CS490 Group 4 Project)
 
 ## Overview
-Beat the Keys is a browser-based multiplayer typeracing game. To play the current version, view our Heroku app [here](https://beat-the-keys.herokuapp.com/). If you would like to run the app locally, follow the steps below.
+Beat the Keys is a browser-based multiplayer typeracing game. To play the current version, view our Heroku app [here](https://beat-the-keys-v2.herokuapp.com/). If you would like to run the app locally, follow the steps below.
 
 ## Setup
 1. `npm install`
